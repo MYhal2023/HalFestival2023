@@ -78,7 +78,6 @@ public:
 	BOOL			skillUse;		//スキルを使っているか否か
 	BOOL			skillAble;		//スキルを使えるか否か
 	int				attackSE;		//攻撃時のSE
-	void StateCheck(int i);			//配列の添え字を引数に持ってくる
 };
 
 //プレイヤーの線形補間データを保存
@@ -131,26 +130,13 @@ HRESULT InitPlayer(void);
 void UninitPlayer(void);
 void UpdatePlayer(void);
 void AttackChar(int i);
-void HealChar(int i);
 void DrawPlayer(void);
 
-void BlockEnemy(void);
 PLAYER *GetPlayer(void);
 PlayerParts *GetPlayerParts(void);
-INTERPOLATION_DATA *GetInterPorationData(void);
 void PlayerStandLiner(int i);
 void PlayerInterPoration(int i);
-void PlayerSkill(int i);
-void CheckEnemyTarget(int i);
-void CheckHealTarget(int i);
-void IncreaseSP(int i);
-void SetPlayer(XMFLOAT3 pos);
-void SetNeutrophils(XMFLOAT3 pos);
-int GetPlayerNum(void);
-void SetPlayerNum(int s);
 int GetPlayerPartsNum(void);
 void SetPlayerPartsNum(int s);
-void DrawPlayerLife(void);
-void DrawPlayerSP(void);
 HRESULT MakeVertexPlayerVar(void);
 #endif

@@ -5,7 +5,6 @@
 //
 //=============================================================================
 #pragma once
-#include "team.h"
 
 class Reserve
 {
@@ -33,8 +32,6 @@ public:
 
 enum ButtonType
 {
-	UnitPowerUp,
-	UnitConfirm,
 	ReserveHelp,
 	GameStart,
 };
@@ -86,19 +83,3 @@ void DrawNumberRe(int numb, float px, float py, float sx, float sy, XMFLOAT4 col
 void DrawTextReserve(int k, float px, float py, float sx, float sy, XMFLOAT4 color);
 void NormalRserveMode(void);
 void NormalRserveModeDraw(void);
-void UnitPowerUpMode(void);
-void UnitConfirmMode(void);
-void PowerUpButton(void);
-void ConfirmButton(void); 
-void ReserveHelpButton(void);
-void GameStartButton(void);
-int GetDay(void);
-void DrawReserveChar(void);
-void DrawCharStatus(XMFLOAT2 pos, int k);
-void DrawCharAllStatus(XMFLOAT2 pos, int k);
-void DrawNeedMaterial(XMFLOAT2 pos, float size, int no);
-BOOL CheckPowerUpMaterial(PlayerStatus *member);
-void ReduceMaterial(PlayerStatus *member);
-void ReserveHelpMode(void);
-void DrawReserveHelp(void);
-void DrawMaxLevelChar(XMFLOAT2 pos, int k);

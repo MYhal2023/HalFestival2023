@@ -127,29 +127,6 @@ void UpdateBullet(void)
 		if (g_Bullet[i].use != TRUE)	//使われてないバレットは処理をスキップ
 			continue;
 
-		//絶対に弾が当たるように
-		XMVECTOR v1 = XMLoadFloat3(&g_Bullet[i].enemy->pos) - XMLoadFloat3(&g_Bullet[i].pos);
-		XMFLOAT3 countData;
-		XMStoreFloat3(&countData, v1);
-		float angle = atan2f(countData.x, countData.z);
-		g_Bullet[i].rot.y = angle;
-
-		// 弾の移動処理
-		g_Bullet[i].pos.x += sinf(g_Bullet[i].rot.y) * g_Bullet[i].spd;
-		g_Bullet[i].pos.z += cosf(g_Bullet[i].rot.y) * g_Bullet[i].spd;
-
-		// 影の位置設定
-		SetPositionShadow(g_Bullet[i].shadowIdx, XMFLOAT3(g_Bullet[i].pos.x, 0.1f, g_Bullet[i].pos.z));
-		g_Bullet[i].life--;
-		XMFLOAT3 pos = { g_Bullet[i].pos.x, 10.0f, g_Bullet[i].pos.z };
-		XMFLOAT3 pos2 = { g_Bullet[i].enemy->pos.x, 10.0f, g_Bullet[i].enemy->pos.z };
-		//弾を消す処理
-		if(g_Bullet[i].enemy->use == FALSE ||
-			CollisionBC(pos, pos2, 10.0f, 0.0f) ||
-			g_Bullet[i].life <= 0)
-		{
-			g_Bullet[i].use = FALSE;
-		}
 
 	}
 
@@ -276,33 +253,6 @@ HRESULT MakeVertexBullet(void)
 	return S_OK;
 }
 
-//=============================================================================
-// 弾のパラメータをセット
-//=============================================================================
-int SetBullet(XMFLOAT3 pos, XMFLOAT3 rot, float scl, ENEMY *enemy)
-{
-	int nIdxBullet = -1;
-
-	for (int nCntBullet = 0; nCntBullet < MAX_BULLET; nCntBullet++)
-	{
-		if (!g_Bullet[nCntBullet].use)
-		{
-			g_Bullet[nCntBullet].pos = pos;
-			g_Bullet[nCntBullet].rot = rot;
-			g_Bullet[nCntBullet].scl = { scl, scl, scl };
-			g_Bullet[nCntBullet].use = TRUE;
-			g_Bullet[nCntBullet].life = 30;
-			nIdxBullet = nCntBullet;
-			g_Bullet[nCntBullet].enemy = enemy;
-			// 発射音
-			//PlaySound(SOUND_LABEL_SE_shot000);
-
-			break;
-		}
-	}
-
-	return nIdxBullet;
-}
 
 //=============================================================================
 // 弾の取得

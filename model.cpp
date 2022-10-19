@@ -9,7 +9,6 @@
 #include "model.h"
 #include "camera.h"
 #include "player.h"
-#include "enemy.h"
 
 //*****************************************************************************
 // É}ÉNÉçíËã`

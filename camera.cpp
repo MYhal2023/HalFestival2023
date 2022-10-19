@@ -11,7 +11,6 @@
 #include "player.h"
 #include "time.h"
 #include "debugproc.h"
-#include "fieldchip.h"
 
 //*****************************************************************************
 // É}ÉNÉçíËã`

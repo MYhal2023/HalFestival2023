@@ -9,7 +9,6 @@
 #include "sprite.h"
 #include "renderer.h"
 #include "input.h"
-#include "base.h"
 #include "fade.h"
 #include "text_texture.h"
 #include "debugproc.h"
@@ -101,7 +100,6 @@ void UninitOver(void)
 //=============================================================================
 void UpdateOver(void)
 {
-	Base *base = GetBase();
 	if (!CheckGameover())return;
 	//ここからはゲームオーバーとなった時に入る
 	switch (g_Overtype)

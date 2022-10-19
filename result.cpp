@@ -14,7 +14,6 @@
 #include "debugproc.h"
 #include "fade.h"
 #include "reserve.h"
-#include "playerSet.h"
 #include "sound.h"
 //*****************************************************************************
 // マクロ定義
@@ -223,9 +222,6 @@ void WinResult(void)
 	}
 	if (GetKeyboardTrigger(DIK_RETURN) && !once)
 	{
-		Reserve* rs = GetReserve();
-		rs->day++;
-		IncreaseReward(&g_Reward);
 		once = TRUE;
 		SetFade(FADE_OUT, MODE_RESERVE, BlackFade);	//現状ループするように
 	}
@@ -277,24 +273,6 @@ void SetReward(int id, int value)
 	g_Reward.num++;
 }
 
-void IncreaseReward(Reward *reward)
-{
-	Reserve *reserve = GetReserve();
-	for (int i = 0; i < reward->num; i++) {
-		switch (reward->ID[i])
-		{
-		case energy:
-			reserve->energy += reward->value[i];
-			break;
-		case oxygen:
-			reserve->oxygen += reward->value[i];
-			break;
-		case iron:
-			reserve->iron += reward->value[i];
-			break;
-		}
-	}
-}
 
 Reward *GetReward(void) { return &g_Reward; };
 
@@ -345,56 +323,5 @@ void DrawResultNumber(int numb, float px, float py, float sx, float sy, XMFLOAT4
 		// ポリゴン描画
 		GetDeviceContext()->Draw(4, 0);
 		numb /= 10;
-	}
-}
-
-//=============================================================================
-// キャラボックス描画処理
-//=============================================================================
-void DrawResultChar(void)
-{
-	const float boxsize = 180.0f;	//ボックスサイズ定義
-	const float boxbuff = 24.0f;
-	float buffx = 0.0f;	//ボックス間の距離を少し開ける
-	float buffy = 0.0f;	//ボックス間の距離を少し開ける
-	const int rowNum = 5;
-	int k = 0;
-	for (int i = 0; i < MAX_PLAYER_SET; i++)
-	{
-		PlayerStatus *member = GetTeam();
-
-		if (member[i].use != TRUE)continue;	//未使用編成枠はスルー
-
-		if (k % rowNum != 0)buffx = boxbuff * (k % rowNum);
-		else buffx = 0.0f;
-
-		if (k >= rowNum)buffy = boxbuff;
-
-		//右から順番に、編成の最後尾から描画
-		XMFLOAT2 pos = { (SCREEN_WIDTH * 0.25f) + (k %ROW_NUM) * boxsize + buffx, (SCREEN_HEIGHT *0.2f) + boxsize * (0.5f + (float)(k / ROW_NUM)) + buffy };
-		//キャラの下にボックスを描画
-		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[result_var]);
-
-		// １枚のポリゴンの頂点とテクスチャ座標を設定
-		SetSpriteColor(g_VertexBuffer, pos.x, pos.y, boxsize, boxsize, 0.0f, 0.0f, 1.0f, 1.0f,
-			XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
-
-		// ポリゴン描画
-		GetDeviceContext()->Draw(4, 0);
-
-		//キャラIDを抽出してキャラクターを最初に描画
-		int id = member[i].charID;
-		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_CharTexture[id]);
-		// １枚のポリゴンの頂点とテクスチャ座標を設定
-		SetSpriteColor(g_VertexBuffer, pos.x, pos.y, boxsize, boxsize, 0.0f, 0.0f, 1.0f, 1.0f,
-			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-
-		// ポリゴン描画
-		GetDeviceContext()->Draw(4, 0);
-
-		k++;
-
 	}
 }

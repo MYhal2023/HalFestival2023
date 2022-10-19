@@ -19,17 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="base.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="collision.h" />
-    <ClInclude Include="cost.h" />
     <ClInclude Include="debugproc.h" />
-    <ClInclude Include="enemy.h" />
-    <ClInclude Include="enemyLinerData.h" />
-    <ClInclude Include="enemySet.h" />
     <ClInclude Include="fade.h" />
-    <ClInclude Include="fieldchip.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gameover.h" />
@@ -40,32 +34,24 @@
     <ClInclude Include="model.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerLinerData.h" />
-    <ClInclude Include="playerSet.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="reserve.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="shadow.h" />
     <ClInclude Include="shadow_renderer.h" />
-    <ClInclude Include="skill.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="sprite.h" />
-    <ClInclude Include="team.h" />
     <ClInclude Include="text_texture.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="ui.h" />
     <ClInclude Include="unitdata.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="base.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collision.cpp" />
-    <ClCompile Include="cost.cpp" />
     <ClCompile Include="debugproc.cpp" />
-    <ClCompile Include="enemy.cpp" />
-    <ClCompile Include="enemySet.cpp" />
     <ClCompile Include="fade.cpp" />
-    <ClCompile Include="fieldchip.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gameovera.cpp" />
@@ -75,16 +61,13 @@
     <ClCompile Include="meshfield.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="playerSet.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="reserve.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="shadow.cpp" />
     <ClCompile Include="shadow_renderer.cpp" />
-    <ClCompile Include="skill.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="sprite.cpp" />
-    <ClCompile Include="team.cpp" />
     <ClCompile Include="text_texture.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="ui.cpp" />

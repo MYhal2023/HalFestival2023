@@ -22,7 +22,6 @@
 #include "result.h"
 #include "title.h"
 #include "reserve.h"
-#include "team.h"
 #include "player.h"
 
 //*****************************************************************************
@@ -243,14 +242,6 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// フェードの初期化
 	InitFade();
 
-	//チームに関する変数初期化。上書きは各々のモードで。起動時のこの中身は空
-	InitTeam();
-	SetNeutro(0);
-	SetMacrophages(1);
-	SetHelpeerT(2);
-	SetKillerT(3);
-	SetNK(4);
-	SetKouen(5);
 	// 最初のモードをセット
 	SetMode(g_Mode);	// ここはSetModeのままで！
 
@@ -267,8 +258,6 @@ void Uninit(void)
 {
 	// 終了のモードをセット
 	SetMode(MODE_MAX);
-
-	UninitTeam();
 	
 	// サウンド終了処理
 	UninitSound();

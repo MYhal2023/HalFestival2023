@@ -5,7 +5,6 @@
 //
 //=============================================================================
 #pragma once
-#include "enemy.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -30,7 +29,6 @@ typedef struct
 	int			shadowIdx;		// 影ID
 	int			life;
 	BOOL		use;			// 使用しているかどうか
-	ENEMY		*enemy;			//攻撃対象
 
 } BULLET;
 
@@ -42,8 +40,6 @@ HRESULT InitBullet(void);
 void UninitBullet(void);
 void UpdateBullet(void);
 void DrawBullet(void);
-
-int SetBullet(XMFLOAT3 pos, XMFLOAT3 rot, float scl, ENEMY *enemy);
 
 BULLET *GetBullet(void);
 
