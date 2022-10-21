@@ -57,6 +57,7 @@ enum SKILL_TYPE
 class PLAYER:public Unit
 {
 public:
+	XMFLOAT3		moveVec;
 	// 階層アニメーション用のメンバー変数
 	PLAYER				*parent;	// 自分が親ならNULL、自分が子供なら親のenemyアドレス
 
@@ -75,6 +76,7 @@ public:
 	int				intervalSP;		//spを増やす間隔を図る為の変数
 	int				skillTime;
 	int				skillTimeMax;
+	float				spd;
 	BOOL			skillUse;		//スキルを使っているか否か
 	BOOL			skillAble;		//スキルを使えるか否か
 	int				attackSE;		//攻撃時のSE
@@ -131,7 +133,8 @@ void UninitPlayer(void);
 void UpdatePlayer(void);
 void AttackChar(int i);
 void DrawPlayer(void);
-
+void MovePlayer(void);
+void ControlPlayer(void);
 PLAYER *GetPlayer(void);
 PlayerParts *GetPlayerParts(void);
 void PlayerStandLiner(int i);

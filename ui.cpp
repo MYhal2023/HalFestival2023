@@ -236,10 +236,6 @@ void DrawUI(void)
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
 
-	DrawUIbg();
-	DrawButtonNorD();
-	DrawButtonStop();
-	DrawHelpButton();
 	SetDepthEnable(TRUE);
 
 	// ライティングを無効

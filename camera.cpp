@@ -45,7 +45,7 @@ static int				g_ViewPortType = TYPE_FULL_SCREEN;
 //=============================================================================
 void InitCamera(void)
 {
-	g_Cam.pos = { 0.0f, 300.0f, 350.0f };
+	g_Cam.pos = { 0.0f, 100.0f, 350.0f };
 	g_Cam.at = { 0.0f, 0.0f, 0.0f };
 	g_Cam.atPos = { 0.0f, 0.0f, 0.0f };
 	g_Cam.up  = { 0.0f, 1.0f, 0.0f };
@@ -80,6 +80,14 @@ void UninitCamera(void)
 //=============================================================================
 void UpdateCamera(void)
 {
+	XMFLOAT3 pos, pos2;
+	PLAYER *player = GetPlayer();
+	pos2 = player[0].pos;
+	const float dist = 0.0f;
+	pos.x = pos2.x + sinf(g_Cam.rot.y)*dist;
+	pos.y =pos2.y + 100.0f;
+	pos.z = pos2.z + cosf(g_Cam.rot.y)*dist;
+	g_Cam.pos = pos;
 	if (GetKeyboardPress(DIK_Q) || IsButtonPressed(0, BUTTON_R_LEFT))
 	{// 注視点旋回「左」
 		g_Cam.rot.y -= VALUE_ROTATE_CAMERA;
@@ -151,6 +159,7 @@ void UpdateCamera(void)
 		XMStoreFloat3(&g_Cam.atPos, s0 + scl * time);
 
 	}
+	PrintDebugProc("\nカメラ回転y:%f\n", g_Cam.rot.y);
 }
 
 
@@ -273,21 +282,8 @@ void SetCameraAT(XMFLOAT3 pos)
 	pos.z += g_Cam.atPos.z;
 	// カメラの注視点をセット
 	g_Cam.at = { pos.x,pos.y,pos.z };
-	g_Cam.rot = { 0.0f, 0.0f, 0.0f };
 
 	// カメラの視点をカメラのY軸回転に対応させている
 	g_Cam.pos.x = g_Cam.at.x - sinf(g_Cam.rot.y) * g_Cam.len;
 	g_Cam.pos.z = g_Cam.at.z - cosf(g_Cam.rot.y) * g_Cam.len;
-}
-
-void SetCharaCamera(XMFLOAT3 pos)
-{
-	// カメラの注視点をセット
-	g_Cam.at = { pos.x,pos.y,pos.z };
-
-	XMVECTOR v1 = XMLoadFloat3(&pos) - XMLoadFloat3(&g_Cam.pos);
-	XMFLOAT3 fpos;
-	XMStoreFloat3(&fpos, v1);
-	float angle = atan2f(fpos.z, fpos.x);
-	g_Cam.rot.y = angle;
 }

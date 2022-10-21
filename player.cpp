@@ -97,7 +97,7 @@ HRESULT InitPlayer(void)
 		g_Player[i].load = FALSE;
 		g_Player[i].pos = { 0.0f, PLAYER_OFFSET_Y, 0.0f };
 		g_Player[i].rot = { 0.0f, -XM_PI * 0.5f, 0.0f };
-		g_Player[i].scl = { 0.8f, 1.0f, 1.0f };
+		g_Player[i].scl = { 1.0f, 1.0f, 1.0f };
 
 		g_Player[i].size = PLAYER_SIZE;	// 当たり判定の大きさ
 		g_Player[i].use = FALSE;
@@ -112,6 +112,7 @@ HRESULT InitPlayer(void)
 		g_Player[i].partsNum = 0;
 		g_Player[i].startNum = 0;
 		g_Player[i].keyNum = 99;
+		g_Player[i].spd = 0.0f;
 		// 階層アニメーション用の初期化処理
 		g_Player[i].parent = NULL;			// 本体（親）なのでNULLを入れる
 		g_Playerline[i].pos = { 0.0f, 0.0f, 0.0f };
@@ -125,6 +126,8 @@ HRESULT InitPlayer(void)
 		g_Parts[i].use = FALSE;
 	}
 	
+	g_Player[0].use = TRUE;
+	LoadModel(MODEL_NEUTROPHILS, &g_Player[0].model);
 	g_Load = TRUE;
 	playerNum = 0;
 	partsNum = 0;
@@ -181,7 +184,12 @@ void UpdatePlayer(void)
 		if (g_Player[i].use != TRUE)continue;
 
 			AttackChar(i);
+			ControlPlayer();
+			MovePlayer();
 
+			g_Player[i].spd *= 0.7f;
+			g_Player[i].moveVec.x *= 0.8f;
+			g_Player[i].moveVec.z *= 0.8f;
 	}
 #ifdef _DEBUG
 	PrintDebugProc("プレイヤー:%d\n", g_Player[0].atFrameCount);
@@ -195,15 +203,7 @@ void AttackChar(int i)
 	//①ステート遷移
 	if (oldState != g_Player[i].state)
 	{
-		g_Player[i].move_time = 0.0f;
-		g_Player[i].atCount = 0;
-		g_Player[i].attackUse = FALSE;
-		atNum[i] = 0;
-		g_Playerline[i].pos = { 0.0f, 0.0f, 0.0f };
-		g_Playerline[i].rot = { 0.0f, 0.0f, 0.0f };
-		g_Playerline[i].scl = { 0.0f, 0.0f, 0.0f };
-		for (int k = g_Player[i].startNum; k < g_Player[i].startNum + g_Player[i].partsNum; k++)
-			g_Parts[k].move_time = 0.0f;
+
 	}
 	switch (g_Player[i].state)
 	{
@@ -482,7 +482,50 @@ PlayerParts *GetPlayerParts(void)
 	return &g_Parts[0];
 }
 
-
+void MovePlayer(void)
+{
+	CAMERA *cam = GetCamera();
+	// Key入力があったら移動処理する
+	if (g_Player[0].spd > 0.0f)
+	{
+		float angle = atan2f(g_Player[0].moveVec.x, g_Player[0].moveVec.z);
+		g_Player[0].rot.y = angle;
+	}
+	//移動値をベクトル変換して移動させる
+	XMVECTOR moveVec = XMLoadFloat3(&g_Player[0].moveVec);
+	XMVECTOR now = XMLoadFloat3(&g_Player[0].pos);								// 現在の場所
+	XMStoreFloat3(&g_Player[0].pos, now + XMVector3Normalize(moveVec) * g_Player[0].spd);	//単位ベクトルを元に移動
+}
+void ControlPlayer(void)
+{
+	CAMERA *cam = GetCamera();
+	float changeRotCamera = 0.025f; //傾く速度
+	// 移動ボタン
+	if (IsButtonPressed(0, BUTTON_LEFT) || GetKeyboardPress(DIK_A))
+	{	// 左へ移動
+		g_Player[0].spd = VALUE_MOVE;
+		g_Player[0].moveVec.x -= cosf(cam->rot.y) * changeRotCamera;
+		g_Player[0].moveVec.z += sinf(cam->rot.y) * changeRotCamera;
+	}
+	if (IsButtonPressed(0, BUTTON_RIGHT) || GetKeyboardPress(DIK_D))
+	{	// 右へ移動
+		g_Player[0].spd = VALUE_MOVE;
+		g_Player[0].moveVec.x += cosf(cam->rot.y) * changeRotCamera;
+		g_Player[0].moveVec.z -= sinf(cam->rot.y) * changeRotCamera;
+	}
+	if (IsButtonPressed(0, BUTTON_UP) || GetKeyboardPress(DIK_W))
+	{	// 上へ移動
+		g_Player[0].spd = VALUE_MOVE;
+		g_Player[0].moveVec.x += sinf(cam->rot.y) * changeRotCamera;
+		g_Player[0].moveVec.z += cosf(cam->rot.y) * changeRotCamera;
+	}
+	if (IsButtonPressed(0, BUTTON_DOWN) || GetKeyboardPress(DIK_S))
+	{	// 下へ移動
+		g_Player[0].spd = VALUE_MOVE;
+		g_Player[0].moveVec.x -= sinf(cam->rot.y) * changeRotCamera;
+		g_Player[0].moveVec.z -= cosf(cam->rot.y) * changeRotCamera;
+	}
+}
 
 HRESULT MakeVertexPlayerVar(void)
 {

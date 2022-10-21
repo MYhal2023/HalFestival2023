@@ -137,19 +137,7 @@ void UpdateGame(void)
 
 	if (GetHelpButton())return;
 
-	if (g_Slow == TRUE)
-	{
-		mode = 1;
-		s_mode++;
-		if (s_mode > 2)
-		{
-			s_mode = 0;
-		}
-		else return;	//スロー中なら2回に1回だけ処理
-	}
 
-	for (int i = 0; i < mode; i++)
-	{
 		UpdateCamera();
 
 		UpdatePlayer();
@@ -167,7 +155,6 @@ void UpdateGame(void)
 		UpdateSound();
 
 		UpdateUI();
-	}
 }
 
 //=============================================================================
@@ -229,14 +216,17 @@ void DrawGame1(void)
 
 void DrawGame(void)
 {
-	XMFLOAT3 pos, pos2;
+	XMFLOAT3 pos;
 
 	// プレイヤー視点
 	CAMERA *cam = GetCamera();
 	PLAYER *player = GetPlayer();
-	pos2 = player[0].pos;
-	pos.x = pos2.x + sinf(player->rot.y);
-	pos.z = pos2.z + cosf(player->rot.y);
+	pos = player[0].pos;
+	pos.y -= 10.0f;
+	const float dist = 200.0f;
+	pos.x += sinf(cam->rot.y)*dist;
+	pos.z += cosf(cam->rot.y)*dist;
+
 	SetCameraAT(pos);
 	SetCamera();
 
