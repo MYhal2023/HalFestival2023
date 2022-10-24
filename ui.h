@@ -5,6 +5,7 @@
 //
 //=============================================================================
 #pragma once
+#include "rescueLife.h"
 
 class UI
 {
@@ -13,11 +14,18 @@ public:
 	XMFLOAT2 pos;
 	XMFLOAT2 size;
 	BOOL use;
+	ID3D11ShaderResourceView	*g_Texture;
 };
 
 enum UI_TEXTURE
 {
 	var_bg,
+	hp_box,
+	hp_var,
+	hp_var_bg,
+	rescue_ng,
+	rescue_ok,
+	check_mark,
 	number,
 	UI_MAX,
 };
@@ -29,6 +37,8 @@ void UpdateUI(void);
 void DrawUI(void);
 void DrawUIbg(void);
 void DrawNumber(int numb, float px, float py, float sx, float sy, XMFLOAT4 color);
+void DrawTexture(UI* utp);
+void DrawRescueLife(RescueLife* rlp);
 void DrawButtonNorD(void);
 void DrawButtonStop(void);
 void DrawHelpButton(void);

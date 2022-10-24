@@ -37,6 +37,7 @@
     <ClInclude Include="playerArms.h" />
     <ClInclude Include="playerLinerData.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="rescueLife.h" />
     <ClInclude Include="reserve.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="shadow.h" />
@@ -67,6 +68,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerArms.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="rescueLife.cpp" />
     <ClCompile Include="reserve.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="Saw.cpp" />

@@ -155,6 +155,14 @@ void UnloadModel( DX11_MODEL *Model )
 		Model->IndexBuffer->Release();
 		Model->IndexBuffer = NULL;
 	}
+	for (unsigned short i = 0; i < Model->SubsetNum; i++)
+	{
+		if (Model->SubsetArray[i].Material.Texture) 
+		{
+			Model->SubsetArray[i].Material.Texture->Release();
+			Model->SubsetArray[i].Material.Texture = NULL;
+		}
+	}
 
 	if( Model->SubsetArray )		delete[] Model->SubsetArray;
 }

@@ -10,6 +10,7 @@
 #include "game.h"
 #include "ui.h"
 #include "reserve.h"
+#include "debugproc.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -17,14 +18,21 @@
 #define TEXTURE_MAX			(UI_MAX)				// テクスチャの数
 #define NUMBER_SIZE			(30.0f)			// x方向のサイズ
 #define COST_NUMBER_SIZE	(45.0f)			// x方向のサイズ
-
+#define RESCUE_SIZE_X		(150.0f * 0.5f)
+#define RESCUE_STPOS_X		(280.0f)
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 static ID3D11Buffer					*g_VertexBuffer = NULL;	// 頂点情報
-static ID3D11ShaderResourceView		*g_Texture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
 
 static char* g_TextureName[] = {
+	"data/TEXTURE/var.png",
+	"data/TEXTURE/HP_box.png",
+	"data/TEXTURE/HP_bar.png",
+	"data/TEXTURE/HP_bar_bg.png",
+	"data/TEXTURE/rescue_ng.png",
+	"data/TEXTURE/rescue_ok.png",
+	"data/TEXTURE/checkmark.png",
 	"data/TEXTURE/var.png",
 };
 
@@ -43,7 +51,7 @@ HRESULT InitUI(void)
 			g_TextureName[i],
 			NULL,
 			NULL,
-			&g_Texture[i],
+			&g_UI[i].g_Texture,
 			NULL);
 	}
 
@@ -64,6 +72,29 @@ HRESULT InitUI(void)
 		g_UI[i].use = TRUE;
 	}
 
+	const XMFLOAT2 hpPos = { 480.0f, SCREEN_CENTER_Y * 1.575f };
+	const float hpSize = 0.4f;
+	g_UI[hp_box].pos = hpPos;
+	g_UI[hp_box].size = { 1200.0f * hpSize, 400.0f *hpSize };
+
+	g_UI[hp_var_bg].pos = hpPos;
+	g_UI[hp_var_bg].size = { 1200.0f * hpSize, 400.0f *hpSize };
+
+	g_UI[hp_var].pos = hpPos;
+	g_UI[hp_var].size = { 1200.0f * hpSize, 400.0f *hpSize };
+
+	const XMFLOAT2 rescuePos = { RESCUE_STPOS_X, SCREEN_CENTER_Y * 1.775f };
+	const float rescueSize = 0.5f;
+	g_UI[rescue_ng].pos = rescuePos;
+	g_UI[rescue_ng].size = { RESCUE_SIZE_X, 255.0f *rescueSize };
+
+	g_UI[rescue_ok].pos = rescuePos;
+	g_UI[rescue_ok].size = { RESCUE_SIZE_X, 255.0f *rescueSize };
+
+	const XMFLOAT2 checkPos = { RESCUE_STPOS_X, SCREEN_CENTER_Y * 1.775f };
+	const float checkSize = 0.5f;
+	g_UI[check_mark].pos = checkPos;
+	g_UI[check_mark].size = { 140.0f*checkSize, 145.0f *checkSize };
 	g_Load = TRUE;
 	return S_OK;
 }
@@ -85,10 +116,10 @@ void UninitUI(void)
 	// テクスチャの解放
 	for (int i = 0; i < TEXTURE_MAX; i++)
 	{
-		if (g_Texture[i])
+		if (g_UI[i].g_Texture)
 		{
-			g_Texture[i]->Release();
-			g_Texture[i] = NULL;
+			g_UI[i].g_Texture->Release();
+			g_UI[i].g_Texture = NULL;
 		}
 	}
 
@@ -128,27 +159,21 @@ void DrawUI(void)
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
 
+	DrawTexture(&g_UI[hp_var_bg]);
+	DrawTexture(&g_UI[hp_var]);
+	DrawTexture(&g_UI[hp_box]);
+	RescueLife* p = RescueLife::GetRescueLife();
+	DrawRescueLife(p);
+
+	PrintDebugProc("救助:%d", p->GetRescue(0));
 	SetDepthEnable(TRUE);
 
 	// ライティングを無効
 	SetLightEnable(TRUE);
 
-}
-
-
-void DrawUIbg(void)
-{
-	// テクスチャ設定
-	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[var_bg]);
-
-	// １枚のポリゴンの頂点とテクスチャ座標を設定
-	SetSpriteColor(g_VertexBuffer, g_UI[var_bg].pos.x, g_UI[var_bg].pos.y, g_UI[var_bg].size.x, g_UI[var_bg].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
-		g_UI[var_bg].color);
-
-	// ポリゴン描画
-	GetDeviceContext()->Draw(4, 0);
 
 }
+
 
 //引数:表示したい数字、表示座標(x,y)、表示サイズ(x方向,y方向)
 void DrawNumber(int numb, float px, float py, float sx, float sy, XMFLOAT4 color)
@@ -173,7 +198,7 @@ void DrawNumber(int numb, float px, float py, float sx, float sy, XMFLOAT4 color
 		float tx = x * 0.1f;			// テクスチャの左上X座標
 
 		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[number]);
+		GetDeviceContext()->PSSetShaderResources(0, 1, &g_UI[number].g_Texture);
 
 		// １枚のポリゴンの頂点とテクスチャ座標を設定
 		SetSpriteColor(g_VertexBuffer, px, py, sx, sy, tx, 0.0f, 0.1f, 1.0f,
@@ -187,20 +212,40 @@ void DrawNumber(int numb, float px, float py, float sx, float sy, XMFLOAT4 color
 
 
 
-//void DrawButton(void)
-//{
-//	// テクスチャ設定
-//	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[button_s]);
-//
-//	// １枚のポリゴンの頂点とテクスチャ座標を設定
-//	SetSpriteColor(g_VertexBuffer, g_UI[button_s].pos.x, g_UI[button_s].pos.y, g_UI[button_s].size.x, g_UI[button_s].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
-//		g_UI[button_s].color);
-//
-//	// ポリゴン描画
-//	GetDeviceContext()->Draw(4, 0);
-//}
+void DrawTexture(UI* utp)
+{
+	// テクスチャ設定
+	GetDeviceContext()->PSSetShaderResources(0, 1, &utp->g_Texture);
 
+	// １枚のポリゴンの頂点とテクスチャ座標を設定
+	SetSpriteColor(g_VertexBuffer, utp->pos.x, utp->pos.y, utp->size.x, utp->size.y, 0.0f, 0.0f, 1.0f, 1.0f,
+		utp->color);
 
+	// ポリゴン描画
+	GetDeviceContext()->Draw(4, 0);
+}
+
+void DrawRescueLife(RescueLife* rlp)
+{
+	XMFLOAT2 rescuePos = { RESCUE_STPOS_X, SCREEN_CENTER_Y * 1.75f };
+
+	for (int i = 0; i < rlp->GetRemain(); i++)
+	{
+		rescuePos.x = RESCUE_STPOS_X + (RESCUE_SIZE_X + 16.0f) * i;
+		if (rlp->GetRescue(i)) 
+		{
+			g_UI[rescue_ok].pos.x = rescuePos.x;
+			DrawTexture(&g_UI[rescue_ok]);
+			DrawTexture(&g_UI[check_mark]);
+		}
+		else if(!rlp->GetRescue(i))
+		{
+			g_UI[rescue_ng].pos.x = rescuePos.x;
+			DrawTexture(&g_UI[rescue_ng]);
+		}
+	}
+
+}
 //void DrawHelpButton(void)
 //{
 //	//ボタンアイコン

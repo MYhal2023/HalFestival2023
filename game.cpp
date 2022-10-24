@@ -27,6 +27,7 @@
 #include "result.h"
 #include "bullet.h"
 #include "playerArms.h"
+#include "rescueLife.h"
 
 
 //*****************************************************************************
@@ -81,7 +82,9 @@ void InitSystem(void)
 	//InitTexttex();
 
 
-	//InitUI();
+	InitUI();
+	RescueLife::InitRescue();
+	RescueLife::SetRemain(4);
 	//InitReward();
 	mode = 1;
 	g_bPause = TRUE;
@@ -155,7 +158,7 @@ void UpdateGame(void)
 
 		//UpdateSound();
 
-		//UpdateUI();
+		UpdateUI();
 }
 
 //=============================================================================
@@ -182,7 +185,7 @@ void DrawGame0(void)
 	// ライティングを無効
 	SetLightEnable(FALSE);
 
-	//DrawUI();
+	DrawUI();
 
 	//DrawOver();
 
