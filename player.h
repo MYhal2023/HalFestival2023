@@ -14,17 +14,9 @@
 //*****************************************************************************
 #define	MODEL_PLAYER		"data/MODEL/dendritic_cells.obj"			// 読み込むモデル名
 #define	MODEL_NEUTROPHILS	"data/MODEL/neutrophils.obj"			// 読み込むモデル名
-#define	MODEL_MACRO			"data/MODEL/Macrophages.obj"			// 読み込むモデル名
-#define	MODEL_MACRO_ARM		"data/MODEL/Macrophages_arm.obj"			// 読み込むモデル名
-#define	MODEL_MACRO_LEG		"data/MODEL/Macrophages_leg.obj"			// 読み込むモデル名
-#define	MODEL_NK			"data/MODEL/sniper.obj"			// 読み込むモデル名
-#define	MODEL_HELPT			"data/MODEL/thelper.obj"			// 読み込むモデル名
-#define	MODEL_HELPTTOP		"data/MODEL/thelpertop.obj"			// 読み込むモデル名
-#define	MODEL_KILLT			"data/MODEL/tkiller.obj"			// 読み込むモデル名
-#define	MODEL_KILLAXE		"data/MODEL/axe.obj"			// 読み込むモデル名
-#define	MODEL_KOUEN			"data/MODEL/kouenn.obj"			// 読み込むモデル名
-#define	MODEL_KOUEN_ARM001	"data/MODEL/kouenn_arm.obj"			// 読み込むモデル名
-#define	MODEL_KOUEN_ARM002	"data/MODEL/kouenn_arm2.obj"			// 読み込むモデル名
+#define	MODEL_BODY			"data/MODEL/mune_notpaint.obj"			// 読み込むモデル名
+#define	MODEL_HEAD			"data/MODEL/atama_notpaint.obj"			// 読み込むモデル名
+#define	MODEL_LEG			"data/MODEL/ashi_notpaint.obj"			// 読み込むモデル名
 
 #define MAX_PLAYER		(10)					// プレイヤーの数
 #define MAX_TARGET		(10)					// プレイヤーの数

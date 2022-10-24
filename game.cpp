@@ -26,6 +26,7 @@
 #include "reserve.h"
 #include "result.h"
 #include "bullet.h"
+#include "playerArms.h"
 
 
 //*****************************************************************************
@@ -68,20 +69,20 @@ void InitSystem(void)
 
 	InitPlayer();
 
-	InitBullet();	
+	//InitBullet();	
 	// フィールドの初期化
 	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD_X, FIELD_Z, BLOCK_SIZE, BLOCK_SIZE, WATER);
 
-	InitOver();
+	//InitOver();
 
 
-	InitCharFade();
+	//InitCharFade();
 
-	InitTexttex();
+	//InitTexttex();
 
 
-	InitUI();
-	InitReward();
+	//InitUI();
+	//InitReward();
 	mode = 1;
 	g_bPause = TRUE;
 
@@ -142,19 +143,19 @@ void UpdateGame(void)
 
 		UpdatePlayer();
 
-		UpdateBullet();
-
 		UpdateLight();
 
-		UpdateCharFade();
-		// 影の更新処理
-		UpdateShadow();
+		//UpdateBullet();
 
-		UpdateFog();
+		//UpdateCharFade();
+		//// 影の更新処理
+		//UpdateShadow();
 
-		UpdateSound();
+		//UpdateFog();
 
-		UpdateUI();
+		//UpdateSound();
+
+		//UpdateUI();
 }
 
 //=============================================================================
@@ -171,7 +172,7 @@ void DrawGame0(void)
 
 	DrawPlayer();
 
-	DrawBullet();
+	//DrawBullet();
 
 
 	// 2D座標で物を描画する処理
@@ -181,9 +182,9 @@ void DrawGame0(void)
 	// ライティングを無効
 	SetLightEnable(FALSE);
 
-	DrawUI();
+	//DrawUI();
 
-	DrawOver();
+	//DrawOver();
 
 	//// スコアの描画処理
 	//DrawScore();

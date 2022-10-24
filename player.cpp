@@ -19,6 +19,7 @@
 #include "time.h"
 #include "sound.h"
 #include "bullet.h"
+#include "playerArms.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -127,10 +128,22 @@ HRESULT InitPlayer(void)
 	}
 	
 	g_Player[0].use = TRUE;
+	g_Player[0].load = TRUE;
+	g_Player[0].partsNum = 2;
 	LoadModel(MODEL_NEUTROPHILS, &g_Player[0].model);
+	//LoadModel(MODEL_HEAD, &g_Parts[0].model);
+	//LoadModel(MODEL_LEG, &g_Parts[1].model);
+	//g_Parts[0].parent = &g_Player[0];
+	//g_Parts[1].parent = &g_Player[0];
+	//g_Parts[0].load = TRUE;
+	//g_Parts[1].load = TRUE;
+	//g_Parts[0].use = TRUE;
+	//g_Parts[1].use = TRUE;
 	g_Load = TRUE;
 	playerNum = 0;
 	partsNum = 0;
+	pArm::SetArmParent(&g_Player[0]);	//親情報をここで引き渡す
+
 	for (int i = 0; i < MAX_PLAYER; i++)
 		atNum[i] = 0;
 	return S_OK;

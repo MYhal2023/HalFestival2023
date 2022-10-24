@@ -14,9 +14,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define TEXTURE_MAX			(19)				// テクスチャの数
-#define CHAR_TEXTURE_MAX	(7)				// キャラテクスチャの数
-#define IC_TEXTURE_MAX		(9)				// アイコンテクスチャの数
+#define TEXTURE_MAX			(UI_MAX)				// テクスチャの数
 #define NUMBER_SIZE			(30.0f)			// x方向のサイズ
 #define COST_NUMBER_SIZE	(45.0f)			// x方向のサイズ
 
@@ -25,51 +23,11 @@
 //*****************************************************************************
 static ID3D11Buffer					*g_VertexBuffer = NULL;	// 頂点情報
 static ID3D11ShaderResourceView		*g_Texture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
-static ID3D11ShaderResourceView		*g_CharTexture[CHAR_TEXTURE_MAX] = { NULL };	// テクスチャ情報
-static ID3D11ShaderResourceView		*g_IconTexture[IC_TEXTURE_MAX] = { NULL };	// テクスチャ情報
 
 static char* g_TextureName[] = {
-	"data/TEXTURE/box.png",
 	"data/TEXTURE/var.png",
-	"data/TEXTURE/number.png",
-	"data/TEXTURE/HP_UI.png",
-	"data/TEXTURE/ENEMY_UI.png",
-	"data/TEXTURE/button_normal.png",
-	"data/TEXTURE/button_double.png",
-	"data/TEXTURE/button_stop.png",
-	"data/TEXTURE/costbox.png",
-	"data/TEXTURE/t_help.png",
-	"data/TEXTURE/iconH.png",
-	"data/TEXTURE/battle_help.png",
-	"data/TEXTURE/button.png",
-	"data/TEXTURE/icon101.png",
-	"data/TEXTURE/icon102.png",
-	"data/TEXTURE/icon103.png",
-	"data/TEXTURE/icon104.png",
-	"data/TEXTURE/icon105.png",
-	"data/TEXTURE/icon106.png",
-};
-static char* g_CharTextureName[] = {
-	"data/TEXTURE/neutro.png",
-	"data/TEXTURE/neutro.png",
-	"data/TEXTURE/macro.png",
-	"data/TEXTURE/thelper.png",
-	"data/TEXTURE/tkiller.png",
-	"data/TEXTURE/NK.png",
-	"data/TEXTURE/kouen.png",
 };
 
-static char* g_IconTextureName[IC_TEXTURE_MAX] = {
-	"data/TEXTURE/icon_cost.png",
-	"data/TEXTURE/icon_life.png",
-	"data/TEXTURE/icon_attack.png",
-	"data/TEXTURE/icon_diffend.png",
-	"data/TEXTURE/icon_block.png",
-	"data/TEXTURE/icon_sp.png",
-	"data/TEXTURE/icon_energy.png",
-	"data/TEXTURE/icon_oxygen.png",
-	"data/TEXTURE/icon_iron.png",
-};
 
 static UI g_UI[TEXTURE_MAX];
 static BOOL g_Load = FALSE;
@@ -86,25 +44,6 @@ HRESULT InitUI(void)
 			NULL,
 			NULL,
 			&g_Texture[i],
-			NULL);
-	}
-	// テクスチャ生成
-	for (int i = 0; i < CHAR_TEXTURE_MAX; i++)
-	{
-		D3DX11CreateShaderResourceViewFromFile(GetDevice(),
-			g_CharTextureName[i],
-			NULL,
-			NULL,
-			&g_CharTexture[i],
-			NULL);
-	}
-	for (int i = 0; i < IC_TEXTURE_MAX; i++)
-	{
-		D3DX11CreateShaderResourceViewFromFile(GetDevice(),
-			g_IconTextureName[i],
-			NULL,
-			NULL,
-			&g_IconTexture[i],
 			NULL);
 	}
 
@@ -124,35 +63,6 @@ HRESULT InitUI(void)
 		g_UI[i].size = { 50.0f, 50.0f };
 		g_UI[i].use = TRUE;
 	}
-
-	g_UI[var_bg].pos = { SCREEN_CENTER_X, 50.0f };
-	g_UI[var_bg].size = { 500.0f, 80.0f };
-	g_UI[var_bg].color = { 0.0f, 0.0f, 0.0f, 0.6f };
-	g_UI[baseLife].pos = { g_UI[var_bg].pos.x + 80.0f, 50.0f };
-	g_UI[baseLife].size = { 642.0f * 0.065f, 990.0f*0.065f };
-	g_UI[enemyNum].pos = { g_UI[var_bg].pos.x - 190.0f, 50.0f };
-	g_UI[enemyNum].size = { 65.0f, 65.0f };
-	const float mnp = 0.15f;
-	g_UI[button_n].pos = { 1600.0f, 60.0f };
-	g_UI[button_n].size = { 1000.0f * mnp, 600.0f * mnp };
-	g_UI[button_d].pos = { 1600.0f, 60.0f };
-	g_UI[button_d].size = { 1000.0f * mnp, 600.0f * mnp };
-	g_UI[button_s].pos = { 1800.0f, 60.0f };
-	g_UI[button_s].size = { 1000.0f * mnp, 600.0f * mnp };
-	g_UI[costbox].size = { 160.0f, 160.0f };
-	g_UI[costbox].pos = { SCREEN_WIDTH - g_UI[costbox].size.x*0.5f , SCREEN_HEIGHT - g_UI[costbox].size.y * 0.5f };
-	g_UI[button_help].size = { 1000.0f * mnp, 600.0f * mnp };
-	g_UI[button_help].pos = { 250.0f, SCREEN_HEIGHT - g_UI[button_help].size.y };
-	
-	g_UI[icon_help].size = { 360.0f * mnp, 360.0f * mnp };
-	g_UI[icon_help].pos = { 250.0f - 1000.0f * mnp, SCREEN_HEIGHT - g_UI[button_help].size.y };
-	
-	g_UI[button_bg].size = { 1200.0f * mnp, 600.0f * mnp };
-	g_UI[button_bg].pos = { 250.0f, SCREEN_HEIGHT - g_UI[button_help].size.y };
-	
-	const float help = 1.0f;
-	g_UI[help_texture].size = { 1598 * help, 896 * help };
-	g_UI[help_texture].pos = { SCREEN_CENTER_X, SCREEN_CENTER_Y};
 
 	g_Load = TRUE;
 	return S_OK;
@@ -179,24 +89,6 @@ void UninitUI(void)
 		{
 			g_Texture[i]->Release();
 			g_Texture[i] = NULL;
-		}
-	}
-	// テクスチャの解放
-	for (int i = 0; i < CHAR_TEXTURE_MAX; i++)
-	{
-		if (g_CharTexture[i])
-		{
-			g_CharTexture[i]->Release();
-			g_CharTexture[i] = NULL;
-		}
-	}
-	// テクスチャの解放
-	for (int i = 0; i < IC_TEXTURE_MAX; i++)
-	{
-		if (g_IconTexture[i])
-		{
-			g_IconTexture[i]->Release();
-			g_IconTexture[i] = NULL;
 		}
 	}
 
@@ -295,98 +187,69 @@ void DrawNumber(int numb, float px, float py, float sx, float sy, XMFLOAT4 color
 
 
 
-
-void DrawButtonNorD(void)
-{
-	if (GetSpeedMode() == 1)
-	{
-		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[button_n]);
-
-		// １枚のポリゴンの頂点とテクスチャ座標を設定
-		SetSpriteColor(g_VertexBuffer, g_UI[button_n].pos.x, g_UI[button_n].pos.y, g_UI[button_n].size.x, g_UI[button_n].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
-			g_UI[button_n].color);
-
-		// ポリゴン描画
-		GetDeviceContext()->Draw(4, 0);
-	}
-	else if (GetSpeedMode() == 2)
-	{
-		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[button_d]);
-
-		// １枚のポリゴンの頂点とテクスチャ座標を設定
-		SetSpriteColor(g_VertexBuffer, g_UI[button_d].pos.x, g_UI[button_d].pos.y, g_UI[button_d].size.x, g_UI[button_d].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
-			g_UI[button_d].color);
-
-		// ポリゴン描画
-		GetDeviceContext()->Draw(4, 0);
-	}
-}
-
-void DrawButtonStop(void)
-{
-	// テクスチャ設定
-	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[button_s]);
-
-	// １枚のポリゴンの頂点とテクスチャ座標を設定
-	SetSpriteColor(g_VertexBuffer, g_UI[button_s].pos.x, g_UI[button_s].pos.y, g_UI[button_s].size.x, g_UI[button_s].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
-		g_UI[button_s].color);
-
-	// ポリゴン描画
-	GetDeviceContext()->Draw(4, 0);
-}
+//void DrawButton(void)
+//{
+//	// テクスチャ設定
+//	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[button_s]);
+//
+//	// １枚のポリゴンの頂点とテクスチャ座標を設定
+//	SetSpriteColor(g_VertexBuffer, g_UI[button_s].pos.x, g_UI[button_s].pos.y, g_UI[button_s].size.x, g_UI[button_s].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
+//		g_UI[button_s].color);
+//
+//	// ポリゴン描画
+//	GetDeviceContext()->Draw(4, 0);
+//}
 
 
-void DrawHelpButton(void)
-{
-	//ボタンアイコン
-	// テクスチャ設定
-	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[icon_help]);
-
-	// １枚のポリゴンの頂点とテクスチャ座標を設定
-	SetSpriteColor(g_VertexBuffer, g_UI[icon_help].pos.x, g_UI[icon_help].pos.y, g_UI[icon_help].size.x, g_UI[icon_help].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
-		g_UI[icon_help].color);
-
-	// ポリゴン描画
-	GetDeviceContext()->Draw(4, 0);
-
-	//ボタンヨウ背景
-	// テクスチャ設定
-	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[var_bg]);
-
-	// １枚のポリゴンの頂点とテクスチャ座標を設定
-	SetSpriteColor(g_VertexBuffer, g_UI[button_bg].pos.x, g_UI[button_bg].pos.y, g_UI[button_bg].size.x, g_UI[button_bg].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
-		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
-
-	// ポリゴン描画
-	GetDeviceContext()->Draw(4, 0);
-
-	//ヘルプテキスト
-	// テクスチャ設定
-	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[button_help]);
-
-	// １枚のポリゴンの頂点とテクスチャ座標を設定
-	SetSpriteColor(g_VertexBuffer, g_UI[button_help].pos.x, g_UI[button_help].pos.y, g_UI[button_help].size.x, g_UI[button_help].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
-		g_UI[button_help].color);
-
-	// ポリゴン描画
-	GetDeviceContext()->Draw(4, 0);
-
-	if (g_Help)
-	{
-		//ヘルプテキスト
-		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[help_texture]);
-
-		// １枚のポリゴンの頂点とテクスチャ座標を設定
-		SetSpriteColor(g_VertexBuffer, g_UI[help_texture].pos.x, g_UI[help_texture].pos.y, g_UI[help_texture].size.x, g_UI[help_texture].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
-			g_UI[help_texture].color);
-
-		// ポリゴン描画
-		GetDeviceContext()->Draw(4, 0);
-	}
-}
+//void DrawHelpButton(void)
+//{
+//	//ボタンアイコン
+//	// テクスチャ設定
+//	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[icon_help]);
+//
+//	// １枚のポリゴンの頂点とテクスチャ座標を設定
+//	SetSpriteColor(g_VertexBuffer, g_UI[icon_help].pos.x, g_UI[icon_help].pos.y, g_UI[icon_help].size.x, g_UI[icon_help].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
+//		g_UI[icon_help].color);
+//
+//	// ポリゴン描画
+//	GetDeviceContext()->Draw(4, 0);
+//
+//	//ボタンヨウ背景
+//	// テクスチャ設定
+//	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[var_bg]);
+//
+//	// １枚のポリゴンの頂点とテクスチャ座標を設定
+//	SetSpriteColor(g_VertexBuffer, g_UI[button_bg].pos.x, g_UI[button_bg].pos.y, g_UI[button_bg].size.x, g_UI[button_bg].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
+//		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+//
+//	// ポリゴン描画
+//	GetDeviceContext()->Draw(4, 0);
+//
+//	//ヘルプテキスト
+//	// テクスチャ設定
+//	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[button_help]);
+//
+//	// １枚のポリゴンの頂点とテクスチャ座標を設定
+//	SetSpriteColor(g_VertexBuffer, g_UI[button_help].pos.x, g_UI[button_help].pos.y, g_UI[button_help].size.x, g_UI[button_help].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
+//		g_UI[button_help].color);
+//
+//	// ポリゴン描画
+//	GetDeviceContext()->Draw(4, 0);
+//
+//	if (g_Help)
+//	{
+//		//ヘルプテキスト
+//		// テクスチャ設定
+//		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[help_texture]);
+//
+//		// １枚のポリゴンの頂点とテクスチャ座標を設定
+//		SetSpriteColor(g_VertexBuffer, g_UI[help_texture].pos.x, g_UI[help_texture].pos.y, g_UI[help_texture].size.x, g_UI[help_texture].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
+//			g_UI[help_texture].color);
+//
+//		// ポリゴン描画
+//		GetDeviceContext()->Draw(4, 0);
+//	}
+//}
 
 void SetHelpButton(BOOL flag) { g_Help = flag; }
 BOOL GetHelpButton(void) { return g_Help; }
