@@ -92,7 +92,7 @@ HRESULT InitUI(void)
 	g_UI[rescue_ok].size = { RESCUE_SIZE_X, 255.0f *rescueSize };
 
 	const XMFLOAT2 checkPos = { RESCUE_STPOS_X, SCREEN_CENTER_Y * 1.775f };
-	const float checkSize = 0.5f;
+	const float checkSize = 0.75f;
 	g_UI[check_mark].pos = checkPos;
 	g_UI[check_mark].size = { 140.0f*checkSize, 145.0f *checkSize };
 	g_Load = TRUE;
@@ -229,12 +229,13 @@ void DrawRescueLife(RescueLife* rlp)
 {
 	XMFLOAT2 rescuePos = { RESCUE_STPOS_X, SCREEN_CENTER_Y * 1.75f };
 
-	for (int i = 0; i < rlp->GetRemain(); i++)
+	for (int i = 0; i < GetRemain(); i++)
 	{
 		rescuePos.x = RESCUE_STPOS_X + (RESCUE_SIZE_X + 16.0f) * i;
 		if (rlp->GetRescue(i)) 
 		{
 			g_UI[rescue_ok].pos.x = rescuePos.x;
+			g_UI[check_mark].pos.x = rescuePos.x;
 			DrawTexture(&g_UI[rescue_ok]);
 			DrawTexture(&g_UI[check_mark]);
 		}

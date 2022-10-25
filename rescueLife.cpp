@@ -1,38 +1,40 @@
 #include "rescueLife.h"
 
-static RescueLife g_RscLife;
+static RescueLife g_RscLife[MAX_RESCUE];
+static int remain;					//残り救助者数
 
 void RescueLife::InitRescue(void)
 {
 	for (int i = 0; i < MAX_RESCUE; i++)
 	{
-		g_RscLife.use[i] = false;
-		g_RscLife.rescue[i] = false;
+		g_RscLife[i].use = FALSE;
+		g_RscLife[i].rescue = FALSE;
 	}
+	remain = 0;
 }
 
-int RescueLife::GetRemain(void)
+int GetRemain(void)
 {
-	return g_RscLife.remain;
+	return remain;
 }
 
-bool RescueLife::GetRescue(int i)
+BOOL RescueLife::GetRescue(int i)
 {
-	return g_RscLife.rescue[i];
+	return g_RscLife[i].rescue;
 }
 
 //救助者セット。先頭配列から使用していく
 void RescueLife::SetRemain(int i)
 {
-	g_RscLife.remain = i;
+	remain = i;
 	for (int k = 0; k < i; k++)
 	{
-		g_RscLife.use[k] = true;
-		//g_RscLife.rescue[k] = true;
+		g_RscLife[k].use = TRUE;
+		g_RscLife[k].rescue = TRUE;
 	}
 }
 
 RescueLife * RescueLife::GetRescueLife(void)
 {
-	return &g_RscLife;
+	return &g_RscLife[0];
 }
