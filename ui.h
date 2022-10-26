@@ -26,6 +26,8 @@ enum UI_TEXTURE
 	rescue_ng,
 	rescue_ok,
 	check_mark,
+	arm_UI_gauge,
+	arm_UI_slot,
 	number,
 	UI_MAX,
 };

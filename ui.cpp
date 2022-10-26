@@ -19,7 +19,7 @@
 #define NUMBER_SIZE			(30.0f)			// x方向のサイズ
 #define COST_NUMBER_SIZE	(45.0f)			// x方向のサイズ
 #define RESCUE_SIZE_X		(150.0f * 0.5f)
-#define RESCUE_STPOS_X		(280.0f)
+#define RESCUE_STPOS_X		(240.0f)
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -33,6 +33,8 @@ static char* g_TextureName[] = {
 	"data/TEXTURE/rescue_ng.png",
 	"data/TEXTURE/rescue_ok.png",
 	"data/TEXTURE/checkmark.png",
+	"data/TEXTURE/arm_UI_gauge.png",
+	"data/TEXTURE/arm_UI_tama.png",
 	"data/TEXTURE/var.png",
 };
 
@@ -72,7 +74,7 @@ HRESULT InitUI(void)
 		g_UI[i].use = TRUE;
 	}
 
-	const XMFLOAT2 hpPos = { 480.0f, SCREEN_CENTER_Y * 1.575f };
+	const XMFLOAT2 hpPos = { 400.0f, SCREEN_CENTER_Y * 1.575f };
 	const float hpSize = 0.4f;
 	g_UI[hp_box].pos = hpPos;
 	g_UI[hp_box].size = { 1200.0f * hpSize, 400.0f *hpSize };
@@ -95,6 +97,17 @@ HRESULT InitUI(void)
 	const float checkSize = 0.75f;
 	g_UI[check_mark].pos = checkPos;
 	g_UI[check_mark].size = { 140.0f*checkSize, 145.0f *checkSize };
+
+	const XMFLOAT2 armPos = { 1600.0f, SCREEN_CENTER_Y * 1.6f };
+	const float armSize = 1.1f;
+	const float armSlotSize = 1.0f;
+
+	g_UI[arm_UI_gauge].pos = armPos;
+	g_UI[arm_UI_gauge].size = { 500.0f*armSize, 500.0f *armSize };
+
+	g_UI[arm_UI_slot].pos = armPos;
+	g_UI[arm_UI_slot].size = { 500.0f*armSlotSize, 500.0f *armSlotSize };
+
 	g_Load = TRUE;
 	return S_OK;
 }
@@ -162,6 +175,8 @@ void DrawUI(void)
 	DrawTexture(&g_UI[hp_var_bg]);
 	DrawTexture(&g_UI[hp_var]);
 	DrawTexture(&g_UI[hp_box]);
+	DrawTexture(&g_UI[arm_UI_gauge]);
+	DrawTexture(&g_UI[arm_UI_slot]);
 	RescueLife* p = RescueLife::GetRescueLife();
 	DrawRescueLife(p);
 

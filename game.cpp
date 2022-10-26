@@ -28,6 +28,7 @@
 #include "bullet.h"
 #include "playerArms.h"
 #include "rescueLife.h"
+#include "mapWallModel.h"
 
 
 //*****************************************************************************
@@ -74,6 +75,8 @@ void InitSystem(void)
 	// フィールドの初期化
 	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD_X, FIELD_Z, BLOCK_SIZE, BLOCK_SIZE, GROUND);
 
+	MapWallModel::Init();
+
 	//InitOver();
 
 
@@ -106,6 +109,9 @@ void UninitGame(void)
 	UninitUI();
 
 	UninitTexttex();
+
+	MapWallModel::Uninit();
+
 }
 
 //=============================================================================
@@ -148,6 +154,8 @@ void UpdateGame(void)
 
 		UpdateLight();
 
+		MapWallModel::Update();
+
 		//UpdateBullet();
 
 		//UpdateCharFade();
@@ -172,6 +180,8 @@ void DrawGame0(void)
 	SwapShader(ans);
 
 	DrawMeshField();
+
+	MapWallModel::Draw();
 
 	DrawPlayer();
 
@@ -212,6 +222,8 @@ void DrawGame0(void)
 void DrawGame1(void)
 {
 	DrawMeshField();
+
+	MapWallModel::Draw();
 
 	DrawPlayer();
 

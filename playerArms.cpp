@@ -1,5 +1,5 @@
 #include "playerArms.h"
-#define MAX_ARM (3)
+#define MAX_ARM (2)
 #define MAX_ARM_PARTS (10)
 static pArm g_PlayerArm[3];
 static pArm g_ArmParts[MAX_ARM_PARTS];
@@ -99,9 +99,7 @@ void pArm::SetArmParent(PLAYER *p)
 	}
 }
 
-
-pArm * pArm::GetArm(void)
+void pArm::ChangeArm(void)
 {
-	return &g_PlayerArm[0];
 }
 

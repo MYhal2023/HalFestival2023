@@ -27,12 +27,12 @@
 #define TEXTURE_MAX			(1)								// テクスチャの数
 #define VAR_WIDTH			(50.0f)
 #define VAR_HEIGHT			(5.0f)
-#define	VALUE_MOVE			(2.0f)							// 移動量
+#define	VALUE_MOVE			(10.0f)							// 移動量
 #define	VALUE_AT_MOVE		(4.0f)							// 移動量
 #define	VALUE_ROTATE		(XM_PI * 0.02f)					// 回転量
 
 #define PLAYER_SHADOW_SIZE	(1.0f)							// 影の大きさ
-#define PLAYER_OFFSET_Y		(5.0f)							// プレイヤーの足元をあわせる
+#define PLAYER_OFFSET_Y		(40.0f)							// プレイヤーの足元をあわせる
 #define PLAYER_OFFSET_Z		(-300.0f)							// プレイヤーの足元をあわせる
 #define PLAYER_LIFE			(100)								// プレイヤーのライフ
 
@@ -57,6 +57,7 @@ static PLAYER_VAR	g_PlayerVar;
 static PLAYER		g_Player[MAX_PLAYER];						// プレイヤー
 static Playerliner  g_Playerline[MAX_PLAYER];					//プレイヤーの線形補間データ
 static PlayerParts	g_Parts[MAX_PLAYER_PARTS];					// プレイヤー
+static pArm*		g_PlayerArm[3];	//先端アームの種類数
 static BOOL			g_Load = FALSE;
 static int			playerNum = 0;
 static int			partsNum = 0;
@@ -99,8 +100,9 @@ HRESULT InitPlayer(void)
 		g_Player[i].pos = { 0.0f, PLAYER_OFFSET_Y, 0.0f };
 		g_Player[i].rot = { 0.0f, -XM_PI * 0.5f, 0.0f };
 		g_Player[i].scl = { 1.0f, 1.0f, 1.0f };
+		g_Player[i].moveVec = { 0.0f, 0.0f, 0.0f };
 
-		g_Player[i].size = PLAYER_SIZE;	// 当たり判定の大きさ
+		g_Player[i].size = PLAYER_SIZE;		// 当たり判定の大きさ
 		g_Player[i].use = FALSE;
 		g_Player[i].life = PLAYER_LIFE;
 		g_Player[i].lifeMax = g_Player[i].life;
@@ -108,12 +110,10 @@ HRESULT InitPlayer(void)
 		g_Player[i].diffend = 3;
 		g_Player[i].attack = FALSE;
 		g_Player[i].attackUse = FALSE;
-		g_Player[i].blockMax = 2;
-		g_Player[i].blockNum = 0;
 		g_Player[i].partsNum = 0;
 		g_Player[i].startNum = 0;
-		g_Player[i].keyNum = 99;
 		g_Player[i].spd = 0.0f;
+
 		// 階層アニメーション用の初期化処理
 		g_Player[i].parent = NULL;			// 本体（親）なのでNULLを入れる
 		g_Playerline[i].pos = { 0.0f, 0.0f, 0.0f };
@@ -131,6 +131,7 @@ HRESULT InitPlayer(void)
 	g_Player[0].load = TRUE;
 	g_Player[0].partsNum = 2;
 	LoadModel(MODEL_NEUTROPHILS, &g_Player[0].model);
+	SetPlayerArm();
 	//LoadModel(MODEL_HEAD, &g_Parts[0].model);
 	//LoadModel(MODEL_LEG, &g_Parts[1].model);
 	//g_Parts[0].parent = &g_Player[0];
@@ -199,13 +200,20 @@ void UpdatePlayer(void)
 			AttackChar(i);
 			ControlPlayer();
 			MovePlayer();
+			ControlChangeArm();
 
+			XMFLOAT3 pos;
+			const float dist = 20.0f;
+			pos.x += sinf(g_Player[0].rot.y - XM_PI * 0.25f)*dist;
+			pos.z += cosf(g_Player[0].rot.y + XM_PI * 0.25f)*dist;
+			g_PlayerArm[0]->pos = { g_Player[0].pos.x + pos.x, g_Player[0].pos.y, g_Player[0].pos.z + pos.z };
+			g_PlayerArm[1]->pos = { g_Player[0].pos.x + pos.x, g_Player[0].pos.y, g_Player[0].pos.z + pos.z };
 			g_Player[i].spd *= 0.7f;
 			g_Player[i].moveVec.x *= 0.8f;
 			g_Player[i].moveVec.z *= 0.8f;
 	}
 #ifdef _DEBUG
-	PrintDebugProc("プレイヤー:%d\n", g_Player[0].atFrameCount);
+	PrintDebugProc("プレイヤー座標X:%f, Z:%f\n", g_Player[0].pos.x, g_Player[0].pos.z);
 
 #endif
 }
@@ -537,6 +545,44 @@ void ControlPlayer(void)
 		g_Player[0].spd = VALUE_MOVE;
 		g_Player[0].moveVec.x -= sinf(cam->rot.y) * changeRotCamera;
 		g_Player[0].moveVec.z -= cosf(cam->rot.y) * changeRotCamera;
+	}
+}
+
+void ControlChangeArm(void)
+{
+	if (GetKeyboardTrigger(DIK_F))
+	{
+		ChangePlayerArm(TRUE);
+	}
+	else if (GetKeyboardTrigger(DIK_G))
+	{
+		ChangePlayerArm(FALSE);
+	}
+}
+//初期化段階でのアームセット
+void SetPlayerArm(void)
+{
+	g_PlayerArm[0] = Xgun::GetArm();
+	g_PlayerArm[1] = Braster::GetArm();
+	g_PlayerArm[2] = Saw::GetArm();
+}
+
+//アームの切り替え
+void ChangePlayerArm(BOOL flag)
+{
+	if (flag)
+	{
+		pArm* pp = g_PlayerArm[0];
+		g_PlayerArm[0] = g_PlayerArm[1];
+		g_PlayerArm[1] = g_PlayerArm[2];
+		g_PlayerArm[2] = pp;
+	}
+	else
+	{
+		pArm* pp = g_PlayerArm[2];
+		g_PlayerArm[2] = g_PlayerArm[1];
+		g_PlayerArm[1] = g_PlayerArm[0];
+		g_PlayerArm[0] = pp;
 	}
 }
 

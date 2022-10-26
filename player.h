@@ -5,7 +5,6 @@
 //
 //=============================================================================
 #pragma once
-#ifndef PLAYER_H_
 #define PLAYER_H_
 #include "unitdata.h"
 
@@ -53,25 +52,8 @@ public:
 	// 階層アニメーション用のメンバー変数
 	PLAYER				*parent;	// 自分が親ならNULL、自分が子供なら親のenemyアドレス
 
-	int				blockNum;		//ブロックしている数
-	int				blockMax;		//ブロック可能数
-	int				target;			//ターゲット無しは99で
-	int				targetable[MAX_TARGET];	//ターゲット可能な敵の配列添え字を保存しておくもの。このリストの内から、target変数に引き渡される
-	int				count;					//現在ターゲットにしている数
-	int				keyNum;			//数字キーのどこに対応しているかを保存
-	int				cost;			//設置するために必要なコスト
-	int				level;			//ユニットレベル
-	int				skillID;		//どんなスキルを持っているのか(事前にスキルごとにID振りを行う)
-	int				skillPoint;		//保有しているスキルポイント
-	int				increaseSP;		//一回で増えるsp量
-	int				skillPointMax;	//保有できるスキルポイント。ここまで溜まればスキルが使える
-	int				intervalSP;		//spを増やす間隔を図る為の変数
-	int				skillTime;
-	int				skillTimeMax;
 	float				spd;
-	BOOL			skillUse;		//スキルを使っているか否か
-	BOOL			skillAble;		//スキルを使えるか否か
-	int				attackSE;		//攻撃時のSE
+
 };
 
 //プレイヤーの線形補間データを保存
@@ -127,6 +109,9 @@ void AttackChar(int i);
 void DrawPlayer(void);
 void MovePlayer(void);
 void ControlPlayer(void);
+void ControlChangeArm(void);
+void SetPlayerArm(void);
+void ChangePlayerArm(BOOL flag);
 PLAYER *GetPlayer(void);
 PlayerParts *GetPlayerParts(void);
 void PlayerStandLiner(int i);
@@ -134,4 +119,3 @@ void PlayerInterPoration(int i);
 int GetPlayerPartsNum(void);
 void SetPlayerPartsNum(int s);
 HRESULT MakeVertexPlayerVar(void);
-#endif

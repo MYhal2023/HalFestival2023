@@ -45,11 +45,25 @@ void Obstacle::Draw(void)
 //èâä˙âª
 void Obstacle::Init(void)
 {
+	//LoadModel(MODEL_HEAD, &g_Parts[0].model);
+	//LoadModel(MODEL_LEG, &g_Parts[1].model);
+	for (int i = 0; i < MAX_OBSTACLE; i++)
+	{
 
+	}
 }
 
 void Obstacle::Uninit(void)
 {
+	for (int i = 0; i < MAX_OBSTACLE; i++)
+	{
+		// ÉÇÉfÉãÇÃâï˙èàóù
+		if (g_Obstacle[i].use)
+		{
+			UnloadModel(&g_Obstacle[i].model);
+			g_Obstacle[i].use = FALSE;
+		}
+	}
 }
 
 //çXêV
