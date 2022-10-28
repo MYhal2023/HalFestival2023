@@ -129,17 +129,19 @@ HRESULT InitPlayer(void)
 	
 	g_Player[0].use = TRUE;
 	g_Player[0].load = TRUE;
-	g_Player[0].partsNum = 2;
-	LoadModel(MODEL_NEUTROPHILS, &g_Player[0].model);
+	g_Player[0].partsNum = 5;
+	LoadModel(MODEL_HEAD, &g_Player[0].model);
 	SetPlayerArm();
-	//LoadModel(MODEL_HEAD, &g_Parts[0].model);
-	//LoadModel(MODEL_LEG, &g_Parts[1].model);
-	//g_Parts[0].parent = &g_Player[0];
-	//g_Parts[1].parent = &g_Player[0];
-	//g_Parts[0].load = TRUE;
-	//g_Parts[1].load = TRUE;
-	//g_Parts[0].use = TRUE;
-	//g_Parts[1].use = TRUE;
+	LoadModel(MODEL_HEAD, &g_Parts[1].model);
+	LoadModel(MODEL_HEAD, &g_Parts[2].model);
+	LoadModel(MODEL_HEAD, &g_Parts[3].model);
+	LoadModel(MODEL_HEAD, &g_Parts[4].model);
+	for (int i = 0; i < 5; i++)
+	{
+		g_Parts[i].parent = &g_Player[0];
+		g_Parts[i].load = TRUE;
+
+	}
 	g_Load = TRUE;
 	playerNum = 0;
 	partsNum = 0;
@@ -204,8 +206,8 @@ void UpdatePlayer(void)
 
 			XMFLOAT3 pos;
 			const float dist = 20.0f;
-			pos.x += sinf(g_Player[0].rot.y - XM_PI * 0.25f)*dist;
-			pos.z += cosf(g_Player[0].rot.y + XM_PI * 0.25f)*dist;
+			pos.x = sinf(g_Player[0].rot.y - XM_PI * 0.25f)*dist;
+			pos.z = cosf(g_Player[0].rot.y + XM_PI * 0.25f)*dist;
 			g_PlayerArm[0]->pos = { g_Player[0].pos.x + pos.x, g_Player[0].pos.y, g_Player[0].pos.z + pos.z };
 			g_PlayerArm[1]->pos = { g_Player[0].pos.x + pos.x, g_Player[0].pos.y, g_Player[0].pos.z + pos.z };
 			g_Player[i].spd *= 0.7f;
