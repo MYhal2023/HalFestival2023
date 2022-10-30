@@ -18,8 +18,7 @@
 #define	MODEL_LEG			"data/MODEL/ashi_notpaint.obj"			// 読み込むモデル名
 
 #define MAX_PLAYER		(10)					// プレイヤーの数
-#define MAX_TARGET		(10)					// プレイヤーの数
-#define MAX_PLAYER_PARTS (MAX_PLAYER * 2)
+#define MAX_PLAYER_PARTS (5)
 
 #define	PLAYER_SIZE		(70.0f)				// 当たり判定の大きさ
 #define	HelperT_SIZE		(300.0f)				// 当たり判定の大きさ
@@ -42,6 +41,16 @@ enum SKILL_TYPE
 	kouen_skill,
 	skill_max,		//スキル最大数
 };
+
+enum PLAYER_PARTS
+{
+	//P_BODY,	//これをプレイヤーモデルとする
+	P_HEAD,
+	P_L_ARM,
+	P_R_ARM,
+	P_L_LEG,
+	P_R_LEG,
+};
 //*****************************************************************************
 // 構造体定義
 //*****************************************************************************
@@ -53,7 +62,7 @@ public:
 	PLAYER				*parent;	// 自分が親ならNULL、自分が子供なら親のenemyアドレス
 
 	float				spd;
-
+	int					armType;	//装備中のアームタイプ
 };
 
 //プレイヤーの線形補間データを保存
@@ -112,6 +121,7 @@ void ControlPlayer(void);
 void ControlChangeArm(void);
 void SetPlayerArm(void);
 void ChangePlayerArm(BOOL flag);
+void UpdateArm(void);
 PLAYER *GetPlayer(void);
 PlayerParts *GetPlayerParts(void);
 void PlayerStandLiner(int i);

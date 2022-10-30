@@ -17,15 +17,22 @@ typedef enum
 	FADE_NONE = 0,		// 何もない状態
 	FADE_IN,			// フェードイン処理
 	FADE_OUT,			// フェードアウト処理
+	FADE_BOX_IN,
+	FADE_BOX_OUT,
 	FADE_MAX
 } FADE;
 
 enum FadeTexture
 {
-	battleFade,
-	BlackFade,
+	WhiteBox,
 };
 
+struct FadeBox
+{
+	XMFLOAT2 pos;
+	float size;
+	XMFLOAT4 color;
+};
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
@@ -36,6 +43,5 @@ void DrawFade(void);
 
 void SetFade(FADE fade, int modeNext, int texNo);
 FADE GetFade(void);
-
-
-
+int FadeOutBoxFunc(int i, int k);
+int FadeInBoxFunc(int i, int k);

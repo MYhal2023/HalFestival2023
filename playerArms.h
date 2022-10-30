@@ -4,6 +4,10 @@
 #define	MODEL_XGUN			"data/MODEL/Xgun.obj"			// 読み込むモデル名
 #define	MODEL_BRASTER			"data/MODEL/shoka.obj"			// 読み込むモデル名
 #define	MODEL_SAW		"data/MODEL/setsudan.obj"			// 読み込むモデル名
+#define	MODEL_ARM_HAND		"data/MODEL/arm_hand.obj"			// 読み込むモデル名
+#define	MODEL_ARM_PARTS		"data/MODEL/arm_parts.obj"			// 読み込むモデル名
+#define ARM_VAR			(3)	//アームの種類
+#define MAX_ARM_PARTS (10)
 ////アーム種類列挙
 //enum ArmVar
 //{
@@ -16,7 +20,6 @@ class pArm
 {
 protected:
 	DX11_MODEL			model;		// モデル情報
-	XMFLOAT4X4			mtxWorld;	// ワールドマトリックス
 	XMFLOAT3			rot;		// ポリゴンの向き(回転)
 	XMFLOAT3			scl;		// ポリゴンの大きさ(スケール)
 
@@ -34,14 +37,18 @@ protected:
 	INTERPOLATION_DATA	*tbl_adrA;	// 攻撃アニメデータのテーブル先頭アドレス
 	INTERPOLATION_DATA	*tbl_adrM;	// 移動アニメデータのテーブル先頭アドレス
 	PLAYER* player;
-	pArm* parent;
 	int					slot;
 
 public:
+	XMFLOAT4X4			mtxWorld;	// ワールドマトリックス
 	XMFLOAT3			pos;		// ポリゴンの位置
+	pArm* parent;
 	static void SetArmParent(PLAYER *p);
-	static void ChangeArm(void);
-	static void Draw(void);
+	static void InitArm(void);
+	static pArm* GetArm(void);
+	static pArm* GetArmParts(void);
+	static pArm* GetLeftArmParts(void);
+	void Draw(void);
 };
 
 class Xgun :public pArm
@@ -51,6 +58,7 @@ public:
 	static void Action(void);
 	static void Draw(void);
 	static pArm* GetArm(void);
+	static void SetParent(pArm * p1, pArm * p2);
 }; 
 
 class Braster :public pArm

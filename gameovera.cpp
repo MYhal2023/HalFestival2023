@@ -121,7 +121,7 @@ void UpdateOver(void)
 	}
 	if (GetKeyboardTrigger(DIK_RETURN))
 	{
-		SetFade(FADE_OUT, MODE_RESULT, battleFade);
+		SetFade(FADE_OUT, MODE_RESULT, WhiteBox);
 	}
 }
 

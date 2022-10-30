@@ -16,9 +16,14 @@
 #define TEXTURE_WIDTH				(SCREEN_WIDTH)	// 背景サイズ
 #define TEXTURE_HEIGHT				(SCREEN_HEIGHT)	// 
 #define TEXTURE_MAX					(2)				// テクスチャの数
+#define FADE_BOX_MAX				(145)				// テクスチャの数
+#define FADE_BOX_SIZE				(120.0f)				// テクスチャの数
+#define FADE_BOX_WIDTH_NUM			(SCREEN_WIDTH / 120.0f)				// テクスチャの数
+#define FADE_BOX_HEIGHT_NUM			(SCREEN_HEIGHT / 120.0f)				// テクスチャの数
 
 #define	FADE_RATE					(0.02f)			// フェード係数
-
+#define	BOX_FADE_RATE					(0.2f)			// フェード係数
+#define FADE_FRAME					(1.0f / BOX_FADE_RATE)	//フェードレートに基づく、フェードフレーム数
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
@@ -31,7 +36,7 @@ static ID3D11Buffer				*g_VertexBuffer = NULL;		// 頂点情報
 static ID3D11ShaderResourceView	*g_Texture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
 
 static char *g_TexturName[TEXTURE_MAX] = {
-	"data/TEXTURE/battle_ilust.png",
+	"data/TEXTURE/var.png",
 	"data/TEXTURE/fade_black.png",
 };
 
@@ -44,7 +49,7 @@ static int						g_TexNo;					// テクスチャ番号
 FADE							g_Fade = FADE_IN;			// フェードの状態
 int								g_ModeNext;					// 次のモード
 XMFLOAT4						g_Color;					// フェードのカラー（α値）
-
+static FadeBox					g_FadeBox[64][64];
 static BOOL						g_Load = FALSE;
 
 //=============================================================================
@@ -86,6 +91,19 @@ HRESULT InitFade(void)
 
 	g_Fade  = FADE_IN;
 	g_Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	const float boxsize = 120.0f;
+	int width = (int)(FADE_BOX_WIDTH_NUM);
+	int height = (int)(FADE_BOX_HEIGHT_NUM);
+	for (int i = 0; i < width; i++)
+	{
+		for (int k = 0; k < height; k++)
+		{
+			g_FadeBox[i][k].pos = { (i * boxsize) + (boxsize * 0.5f),  (k * boxsize) + (boxsize * 0.5f) };
+			g_FadeBox[i][k].size = 0.0f;
+			g_FadeBox[i][k].color = { 0.0f, 1.0f, 1.0f, 0.0f };
+		}
+	}
 
 	g_Load = TRUE;
 	return S_OK;
@@ -152,14 +170,109 @@ void UpdateFade(void)
 			}
 
 		}
-	}
+		else if (g_Fade == FADE_BOX_OUT)
+		{
+			int k = (int)(FADE_BOX_HEIGHT_NUM)-1;
+			int i = (int)(FADE_BOX_WIDTH_NUM)-1;
+			if (g_FadeBox[i][k].color.w >= 1.0f)
+			{
+				// 鳴っている曲を全部止める
+				StopSound();
 
+				// フェードイン処理に切り替え
+				SetFade(FADE_BOX_IN, g_ModeNext, g_TexNo);
+
+				// モードを設定
+				SetMode(g_ModeNext);
+
+			}
+			else 
+			{
+				for (int i = 0; i < FADE_BOX_WIDTH_NUM; i++)
+				{
+					//フェードアウト	
+					if (i == 0 && g_FadeBox[i][k].color.w < 1.0f)
+						FadeOutBoxFunc(i, k);
+					else if (i >= 1 && g_FadeBox[i - 1][k / 4].color.w > 0.0f)
+						FadeOutBoxFunc(i, k);
+				}
+			}
+		}
+		else if (g_Fade == FADE_BOX_IN)
+		{
+			int k = (int)(FADE_BOX_HEIGHT_NUM)-1;
+			int i = (int)(FADE_BOX_WIDTH_NUM)-1;
+			for (int i = 0; i < FADE_BOX_WIDTH_NUM; i++)
+			{
+				//フェードイン
+				if (i == 0 && g_FadeBox[i][k].color.w > 0.0f)
+					FadeInBoxFunc(i, k);
+				else if (i >= 1 && g_FadeBox[i - 1][k / 4].color.w <= 0.5f)
+					FadeInBoxFunc(i, k);
+			}
+
+			//フェード終了処理
+			if (g_FadeBox[i][k].color.w <= 0.0f)
+			{
+				//ボックスフェードの初期化
+				const float boxsize = 120.0f;
+				int width = (int)(FADE_BOX_WIDTH_NUM);
+				int height = (int)(FADE_BOX_HEIGHT_NUM);
+				for (int s = 0; s < width; s++)
+				{
+					for (int t = 0; t < height; t++)
+					{
+						g_FadeBox[s][t].size = 0.0f;
+						g_FadeBox[s][t].color = { 0.0f, 1.0f, 1.0f, 0.0f };
+					}
+				}
+
+				SetFade(FADE_NONE, g_ModeNext, g_TexNo);
+			}
+		}
+	}
 
 #ifdef _DEBUG	// デバッグ情報を表示する
 	// PrintDebugProc("\n");
 
 #endif
 
+}
+
+//フェードアウトトランジションの再帰呼び出し
+int FadeOutBoxFunc(int i, int k)
+{
+	if (k < 0)return 0;
+
+	if (k > 0 && g_FadeBox[i][k - 1].color.w >= 0.2f && g_FadeBox[i][k].color.w < 1.0f) {
+		g_FadeBox[i][k].color.w += BOX_FADE_RATE;
+		g_FadeBox[i][k].size += FADE_BOX_SIZE / FADE_FRAME;
+	}
+	else if (k == 0 && g_FadeBox[i][k].color.w < 1.0f) {
+		g_FadeBox[i][k].color.w += BOX_FADE_RATE;
+		g_FadeBox[i][k].size += FADE_BOX_SIZE / FADE_FRAME;
+	}
+
+	k--;
+	return FadeOutBoxFunc(i, k);
+}
+
+//フェードイントランジションの再帰呼び出し
+int FadeInBoxFunc(int i, int k)
+{
+	if (k < 0)return 0;
+
+	if (k > 0 && g_FadeBox[i][k - 1].color.w <= 0.8f && g_FadeBox[i][k].color.w > 0.0f) {
+		g_FadeBox[i][k].color.w -= BOX_FADE_RATE;
+		g_FadeBox[i][k].size -= FADE_BOX_SIZE / FADE_FRAME;
+	}
+	else if (k == 0 && g_FadeBox[i][k].color.w > 0.0f) {
+		g_FadeBox[i][k].color.w -= BOX_FADE_RATE;
+		g_FadeBox[i][k].size -= FADE_BOX_SIZE / FADE_FRAME;
+	}
+
+	k--;
+	return FadeInBoxFunc(i, k);
 }
 
 //=============================================================================
@@ -191,7 +304,8 @@ void DrawFade(void)
 	SetMaterial(material);
 
 
-	// タイトルの背景を描画
+	//背景を描画
+	if(g_Fade == FADE_IN || FADE_OUT)
 	{
 		// テクスチャ設定
 		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
@@ -205,6 +319,29 @@ void DrawFade(void)
 		GetDeviceContext()->Draw(4, 0);
 	}
 
+	if (g_Fade == FADE_BOX_OUT || FADE_BOX_IN)
+	{
+		int width = (int)(FADE_BOX_WIDTH_NUM);
+		int height = (int)(FADE_BOX_HEIGHT_NUM);
+		for (int i = 0; i < width; i++)
+		{
+			for (int k = 0; k < height; k++)
+			{
+				if (g_FadeBox[i][k].color.w <= 0.0f)continue;	//透明なやつはスルー
+				// テクスチャ設定
+				GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
+
+				// １枚のポリゴンの頂点とテクスチャ座標を設定
+				//SetVertex(0.0f, 0.0f, SCREEN_WIDTH, TEXTURE_WIDTH, 0.0f, 0.0f, 1.0f, 1.0f);
+				SetSpriteColor(g_VertexBuffer, g_FadeBox[i][k].pos.x, g_FadeBox[i][k].pos.y, g_FadeBox[i][k].size, g_FadeBox[i][k].size, 0.0f, 0.0f, 1.0f, 1.0f,
+					g_FadeBox[i][k].color);
+
+				// ポリゴン描画
+				GetDeviceContext()->Draw(4, 0);
+			}
+		}
+
+	}
 	SetDepthEnable(TRUE);
 
 	SetLightEnable(TRUE);

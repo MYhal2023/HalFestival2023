@@ -105,6 +105,9 @@
     <ClInclude Include="mapWallModel.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="meshwall.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="text_texture.cpp">
@@ -201,6 +204,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="mapModelWall.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="meshwall.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

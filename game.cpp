@@ -29,6 +29,7 @@
 #include "playerArms.h"
 #include "rescueLife.h"
 #include "mapWallModel.h"
+#include "obstacle.h"
 
 
 //*****************************************************************************
@@ -71,12 +72,15 @@ void InitSystem(void)
 
 	InitPlayer();
 
-	//InitBullet();	
+	pArm::InitArm();
+
+	InitBullet();	
 	// フィールドの初期化
 	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD_X, FIELD_Z, BLOCK_SIZE, BLOCK_SIZE, GROUND);
 
 	MapWallModel::Init();
 
+	Obstacle::Init();
 	//InitOver();
 
 
@@ -109,6 +113,8 @@ void UninitGame(void)
 	UninitUI();
 
 	UninitTexttex();
+
+	Obstacle::Uninit();
 
 	MapWallModel::Uninit();
 
@@ -156,7 +162,9 @@ void UpdateGame(void)
 
 		MapWallModel::Update();
 
-		//UpdateBullet();
+		UpdateBullet();
+
+		Obstacle::Update();
 
 		//UpdateCharFade();
 		//// 影の更新処理
@@ -183,10 +191,12 @@ void DrawGame0(void)
 
 	MapWallModel::Draw();
 
+	Obstacle::Draw();
+
 	DrawPlayer();
 
 	//DrawBullet();
-
+	DrawBulletModel();
 
 	// 2D座標で物を描画する処理
 	// Z比較なし
@@ -224,6 +234,8 @@ void DrawGame1(void)
 	DrawMeshField();
 
 	MapWallModel::Draw();
+
+	Obstacle::Draw();
 
 	DrawPlayer();
 

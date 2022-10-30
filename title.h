@@ -11,6 +11,7 @@ struct Title
 	XMFLOAT2 pos;
 	XMFLOAT2 size;
 	int textNo;
+	ID3D11ShaderResourceView		*g_Texture = NULL;	// テクスチャ情報
 
 };
 
@@ -18,11 +19,13 @@ struct Title
 enum TitleTexture
 {
 	title_bg,
-	title_allies,
-	title_enemy,
-	newgame,
-	loadgame,
 	title_logo,
+	title_start,
+	title_score,
+	title_option,
+	title_finish,
+	title_cursol,
+	TITLE_TEXTURE_MAX,
 };
 
 HRESULT InitTitle(void);
@@ -31,3 +34,4 @@ void UpdateTitle(void);
 void DrawTitle(void);
 void FadeTexture(int type, Title *title);
 void MoveTexture(float speed, Title *title);
+void DrawTexture(Title* title);

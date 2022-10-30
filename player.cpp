@@ -20,6 +20,7 @@
 #include "sound.h"
 #include "bullet.h"
 #include "playerArms.h"
+#include <algorithm>
 
 //*****************************************************************************
 // マクロ定義
@@ -58,6 +59,7 @@ static PLAYER		g_Player[MAX_PLAYER];						// プレイヤー
 static Playerliner  g_Playerline[MAX_PLAYER];					//プレイヤーの線形補間データ
 static PlayerParts	g_Parts[MAX_PLAYER_PARTS];					// プレイヤー
 static pArm*		g_PlayerArm[3];	//先端アームの種類数
+static pArm*		g_Arm[2];		//アームの数
 static BOOL			g_Load = FALSE;
 static int			playerNum = 0;
 static int			partsNum = 0;
@@ -113,6 +115,7 @@ HRESULT InitPlayer(void)
 		g_Player[i].partsNum = 0;
 		g_Player[i].startNum = 0;
 		g_Player[i].spd = 0.0f;
+		g_Player[i].armType = 0;
 
 		// 階層アニメーション用の初期化処理
 		g_Player[i].parent = NULL;			// 本体（親）なのでNULLを入れる
@@ -130,23 +133,26 @@ HRESULT InitPlayer(void)
 	g_Player[0].use = TRUE;
 	g_Player[0].load = TRUE;
 	g_Player[0].partsNum = 5;
-	LoadModel(MODEL_HEAD, &g_Player[0].model);
+	LoadModel(MODEL_HEAD, &g_Player[P_HEAD].model);
 	SetPlayerArm();
-	LoadModel(MODEL_HEAD, &g_Parts[1].model);
-	LoadModel(MODEL_HEAD, &g_Parts[2].model);
-	LoadModel(MODEL_HEAD, &g_Parts[3].model);
-	LoadModel(MODEL_HEAD, &g_Parts[4].model);
-	for (int i = 0; i < 5; i++)
-	{
+	LoadModel(MODEL_HEAD, &g_Parts[P_L_ARM].model);
+	LoadModel(MODEL_HEAD, &g_Parts[P_R_ARM].model);
+	LoadModel(MODEL_HEAD, &g_Parts[P_L_LEG].model);
+	LoadModel(MODEL_HEAD, &g_Parts[P_R_LEG].model);
+
+	for (int i = 0; i < MAX_PLAYER_PARTS; i++) {
 		g_Parts[i].parent = &g_Player[0];
 		g_Parts[i].load = TRUE;
-
+		g_Parts[i].pos = { 0.0f, 0.0f, 0.0f };
+		g_Parts[i].rot = { 0.0f, 0.0f, 0.0f };
+		g_Parts[i].scl = { 0.0f, 0.0f, 0.0f };
 	}
 	g_Load = TRUE;
 	playerNum = 0;
-	partsNum = 0;
+	partsNum = 5;
 	pArm::SetArmParent(&g_Player[0]);	//親情報をここで引き渡す
-
+	g_Arm[0] = pArm::GetArm();
+	g_Arm[1] = pArm::GetArm();
 	for (int i = 0; i < MAX_PLAYER; i++)
 		atNum[i] = 0;
 	return S_OK;
@@ -213,9 +219,12 @@ void UpdatePlayer(void)
 			g_Player[i].spd *= 0.7f;
 			g_Player[i].moveVec.x *= 0.8f;
 			g_Player[i].moveVec.z *= 0.8f;
+
+			UpdateArm();
 	}
 #ifdef _DEBUG
 	PrintDebugProc("プレイヤー座標X:%f, Z:%f\n", g_Player[0].pos.x, g_Player[0].pos.z);
+	PrintDebugProc("プレイヤーアーム:%d\n", g_Player[0].armType);
 
 #endif
 }
@@ -262,7 +271,7 @@ void DrawPlayer(void)
 		mtxWorld = XMMatrixMultiply(mtxWorld, mtxScl);
 
 		// 回転を反映
-		mtxRot = XMMatrixRotationRollPitchYaw(g_Player[i].rot.x + g_Playerline[i].rot.x, g_Player[i].rot.y + XM_PI + g_Playerline[i].rot.y, g_Player[i].rot.z + g_Playerline[i].rot.z);
+		mtxRot = XMMatrixRotationRollPitchYaw(g_Player[i].rot.x + g_Playerline[i].rot.x, g_Player[i].rot.y - XM_PI * 0.5f + g_Playerline[i].rot.y, g_Player[i].rot.z + g_Playerline[i].rot.z);
 		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
 		// 移動を反映
@@ -315,6 +324,8 @@ void DrawPlayer(void)
 			// モデル描画
 			DrawModel(&g_Parts[k].model);
 		}
+		//アームモデル描画
+		g_Arm[0]->Draw();		
 	}
 
 	// カリング設定を戻す
@@ -574,17 +585,33 @@ void ChangePlayerArm(BOOL flag)
 {
 	if (flag)
 	{
-		pArm* pp = g_PlayerArm[0];
-		g_PlayerArm[0] = g_PlayerArm[1];
-		g_PlayerArm[1] = g_PlayerArm[2];
-		g_PlayerArm[2] = pp;
+		g_Player[0].armType++;
+		if (g_Player[0].armType >= ARM_VAR)
+			g_Player[0].armType = 0;
 	}
 	else
 	{
-		pArm* pp = g_PlayerArm[2];
-		g_PlayerArm[2] = g_PlayerArm[1];
-		g_PlayerArm[1] = g_PlayerArm[0];
-		g_PlayerArm[0] = pp;
+		g_Player[0].armType--;
+		if (g_Player[0].armType < 0)
+			g_Player[0].armType = ARM_VAR - 1;
+	}
+}
+
+void UpdateArm(void)
+{
+	if (GetKeyboardTrigger(DIK_1))
+	{
+		switch (g_Player[0].armType)
+		{
+		case 0:
+			Xgun::Action();
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+
+		}
 	}
 }
 

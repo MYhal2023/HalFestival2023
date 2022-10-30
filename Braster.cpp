@@ -5,7 +5,10 @@ void Braster::InitArm(void)
 {
 	LoadModel(MODEL_BRASTER, &g_PlayerArm.model);
 	g_PlayerArm.use = TRUE;
-
+	g_PlayerArm.parent = pArm::GetArmParts();
+	g_PlayerArm.pos = { 0.0f, 0.0f, 0.0f };
+	g_PlayerArm.rot = { 0.0f, 0.0f, 0.0f };
+	g_PlayerArm.scl = { 1.0f, 1.0f, 1.0f };
 }
 
 void Braster::Action(void)
@@ -36,10 +39,12 @@ void Braster::Draw(void)
 	mtxTranslate = XMMatrixTranslation(g_PlayerArm.pos.x, g_PlayerArm.pos.y, g_PlayerArm.pos.z);
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
-	// ワールドマトリックスの設定
-	SetWorldMatrix(&mtxWorld);
+	mtxWorld = XMMatrixMultiply(mtxWorld, XMLoadFloat4x4(&g_PlayerArm.parent->mtxWorld));
 
 	XMStoreFloat4x4(&g_PlayerArm.mtxWorld, mtxWorld);
+
+	// ワールドマトリックスの設定
+	SetWorldMatrix(&mtxWorld);
 
 	// モデル描画
 	DrawModel(&g_PlayerArm.model);

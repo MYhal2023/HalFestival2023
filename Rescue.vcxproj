@@ -32,6 +32,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="mapWallModel.h" />
     <ClInclude Include="meshfield.h" />
+    <ClInclude Include="meshwall.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="player.h" />
@@ -65,6 +66,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mapModelWall.cpp" />
     <ClCompile Include="meshfield.cpp" />
+    <ClCompile Include="meshwall.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="player.cpp" />

@@ -223,7 +223,7 @@ void WinResult(void)
 	if (GetKeyboardTrigger(DIK_RETURN) && !once)
 	{
 		once = TRUE;
-		SetFade(FADE_OUT, MODE_RESERVE, BlackFade);	//現状ループするように
+		SetFade(FADE_OUT, MODE_RESERVE, WhiteBox);	//現状ループするように
 	}
 }
 
@@ -236,7 +236,7 @@ void LoseResult(void)
 	if (GetKeyboardTrigger(DIK_RETURN) && !once)
 	{
 		once = TRUE;
-		SetFade(FADE_OUT, MODE_RESERVE, BlackFade);	//現状ループするように
+		SetFade(FADE_OUT, MODE_RESERVE, WhiteBox);	//現状ループするように
 	}
 }
 

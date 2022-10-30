@@ -11,6 +11,7 @@
 #include "sound.h"
 #include "camera.h"
 #include "collision.h"
+#include "obstacle.h"
 
 
 //*****************************************************************************
@@ -37,10 +38,11 @@ HRESULT MakeVertexBullet(void);
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
+static DX11_MODEL			model[MAX_BULLET_VAR];		// モデル情報
 static ID3D11Buffer					*g_VertexBuffer = NULL;	// 頂点バッファ
 static ID3D11ShaderResourceView		*g_Texture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
 
-static BULLET						g_Bullet[MAX_BULLET];	// 木ワーク
+static BULLET						g_Bullet[MAX_BULLET];	// 弾ワーク
 static int							g_TexNo;				// テクスチャ番号
 
 static char *g_TextureName[TEXTURE_MAX] =
@@ -85,9 +87,11 @@ HRESULT InitBullet(void)
 		g_Bullet[nCntBullet].fWidth = BULLET_WIDTH;
 		g_Bullet[nCntBullet].fHeight = BULLET_HEIGHT;
 		g_Bullet[nCntBullet].use = FALSE;
-
 	}
 
+	LoadModel(MODEL_BULLET_SAW, &model[Bullet_XGun]);
+	LoadModel(MODEL_BULLET_SAW, &model[Bullet_Braster]);
+	LoadModel(MODEL_BULLET_SAW, &model[Bullet_Saw]);
 	g_Load = TRUE;
 	return S_OK;
 }
@@ -114,6 +118,12 @@ void UninitBullet(void)
 		g_VertexBuffer = NULL;
 	}
 
+	for (int i = 0; i < MAX_BULLET_VAR; i++)
+	{
+		// モデルの解放処理
+		UnloadModel(&model[i]);
+	}
+
 	g_Load = FALSE;
 }
 
@@ -122,14 +132,44 @@ void UninitBullet(void)
 //=============================================================================
 void UpdateBullet(void)
 {
+
 	for (int i = 0; i < MAX_BULLET; i++)
 	{
 		if (g_Bullet[i].use != TRUE)	//使われてないバレットは処理をスキップ
 			continue;
 
+		// 弾の移動処理
+		g_Bullet[i].pos.x += sinf(g_Bullet[i].rot.y) * g_Bullet[i].spd;
+		g_Bullet[i].pos.z += cosf(g_Bullet[i].rot.y) * g_Bullet[i].spd;
+
+		g_Bullet[i].life--;
+
+		Obstacle* ob = Obstacle::GetObstacle();
+		for (int k = 0; k < MAX_OBSTACLE; k++)
+		{
+			if (!ob[k].use)continue;
+			if (CollisionBC(ob[k].pos, g_Bullet[i].pos, ob[k].size, g_Bullet[i].size))
+			{
+				g_Bullet[i].life = 0;
+				ob[k].durability -= g_Bullet[i].attack;
+				g_Bullet[i].efSwitch = TRUE;
+			}
+		}
+		//弾を消す処理
+		if (g_Bullet[i].life <= 0)
+		{
+			g_Bullet[i].use = FALSE;
+		}
 
 	}
 
+	for (int i = 0; i < MAX_BULLET; i++)
+	{
+		if (g_Bullet[i].efSwitch)continue;
+
+		//エフェクトコード記述
+
+	}
 }
 
 //=============================================================================
@@ -206,6 +246,47 @@ void DrawBullet(void)
 
 }
 
+//3Dモデルの弾の描画
+void DrawBulletModel(void)
+{
+	// カリング無効
+	SetCullingMode(CULL_MODE_NONE);
+
+	XMMATRIX mtxScl, mtxRot, mtxTranslate, mtxWorld;
+
+	// パーツの階層アニメーション
+	for (int k = 0; k < MAX_BULLET; k++)
+	{
+		if (!g_Bullet[k].use)continue;
+
+		// ワールドマトリックスの初期化
+		mtxWorld = XMMatrixIdentity();
+
+		// スケールを反映
+		mtxScl = XMMatrixScaling(g_Bullet[k].scl.x, g_Bullet[k].scl.y, g_Bullet[k].scl.z);
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxScl);
+
+		// 回転を反映
+		mtxRot = XMMatrixRotationRollPitchYaw(g_Bullet[k].rot.x, g_Bullet[k].rot.y, g_Bullet[k].rot.z);
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
+
+		// 移動を反映
+		mtxTranslate = XMMatrixTranslation(g_Bullet[k].pos.x, g_Bullet[k].pos.y, g_Bullet[k].pos.z);
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
+
+
+		XMStoreFloat4x4(&g_Bullet[k].mtxWorld, mtxWorld);
+
+		// ワールドマトリックスの設定
+		SetWorldMatrix(&mtxWorld);
+
+		DrawModel(&model[g_Bullet[k].model_num]);
+	}
+
+	// カリング設定を戻す
+	SetCullingMode(CULL_MODE_BACK);
+
+}
 //=============================================================================
 // 頂点情報の作成
 //=============================================================================
@@ -262,3 +343,32 @@ BULLET *GetBullet(void)
 	return &(g_Bullet[0]);
 }
 
+void SetBullet(XMFLOAT3 pos, XMFLOAT3 rot, float spd, float attack, int life, int model_num)
+{
+	for (int i = 0; i < MAX_BULLET; i++)
+	{
+		if (g_Bullet[i].use)continue;	//未使用配列へアクセス
+
+		g_Bullet[i].use = TRUE;
+		g_Bullet[i].pos = pos;
+		g_Bullet[i].rot = rot;
+		g_Bullet[i].spd = spd;
+		g_Bullet[i].attack = attack;
+		g_Bullet[i].life = life;
+		g_Bullet[i].model_num = model_num;
+		switch (model_num)
+		{
+		case Bullet_XGun:
+			g_Bullet[i].size = 5.0f;
+			break;
+		case Bullet_Braster:
+			g_Bullet[i].size = 5.0f;
+			break;
+		case Bullet_Saw:
+			g_Bullet[i].size = 5.0f;
+			break;
+
+		}
+		break;
+	}
+}
