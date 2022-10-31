@@ -9,13 +9,7 @@
 class Reserve
 {
 public:
-	int	day;	//何日目か
-	int	energy;	//所持エネルギー量
-	int oxygen; //所持酸素量
-	int iron;	//所持鉄分
 	int mode;	//ボタンを押した時の画面変化に使う
-	int selectPw; //強化画面で何を選択しているか
-	BOOL pwMode;
 };
 
 class Button
@@ -27,7 +21,7 @@ public:
 	int texNo;
 	BOOL use;
 	BOOL cursol;	//選択されているか
-
+	ID3D11ShaderResourceView		*g_Texture;
 };
 
 enum ButtonType
@@ -36,28 +30,17 @@ enum ButtonType
 	GameStart,
 };
 
-enum PwButtonType
-{
-	CanselButton,
-	LevelupButton
-};
 
 //ヘルプ画像は連続させる
 enum Reserve_TEXTURE
 {
-	Button_bg,
-	Button_tx,
-	Reserve_bg,
-	re_number,
-	re_box,
-	arRight,
-	TEXT_CONFIRM,
-	TEXT_DAY,
-	TEXT_POWERUP,
-	TEXT_START,
-	TEXT_LUP,
-	TEXT_CANCEL,
-	Help_ReserveTex,
+	rs_vigilance,	//警戒度
+	rs_rank,		//プレイヤーのランク
+	rs_start,		//スタートボタン
+	rs_Button_tx,	//ボタン下地
+	rs_number,		//数字テクスチャ
+	RESERVE_TEXTURE_MAX
+
 };
 enum Icon_TEXTURE
 {
@@ -80,6 +63,4 @@ void DrawReserve(void);
 Reserve *GetReserve(void);
 void DrawButton(XMFLOAT4 color, float px, float py, float sx, float sy);
 void DrawNumberRe(int numb, float px, float py, float sx, float sy, XMFLOAT4 color);
-void DrawTextReserve(int k, float px, float py, float sx, float sy, XMFLOAT4 color);
-void NormalRserveMode(void);
-void NormalRserveModeDraw(void);
+void DrawTexture(Button* bt);

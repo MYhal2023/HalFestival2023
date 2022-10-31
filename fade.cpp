@@ -24,6 +24,10 @@
 #define	FADE_RATE					(0.02f)			// フェード係数
 #define	BOX_FADE_RATE					(0.2f)			// フェード係数
 #define FADE_FRAME					(1.0f / BOX_FADE_RATE)	//フェードレートに基づく、フェードフレーム数
+#define	BOX_FADE_RED					(0.0f)			// フェード係数
+#define	BOX_FADE_BLUE					(1.0f)			// フェード係数
+#define	BOX_FADE_GREEN					(1.0f)			// フェード係数
+
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
@@ -101,7 +105,7 @@ HRESULT InitFade(void)
 		{
 			g_FadeBox[i][k].pos = { (i * boxsize) + (boxsize * 0.5f),  (k * boxsize) + (boxsize * 0.5f) };
 			g_FadeBox[i][k].size = 0.0f;
-			g_FadeBox[i][k].color = { 0.0f, 1.0f, 1.0f, 0.0f };
+			g_FadeBox[i][k].color = { 0.0f, 0.0f, 0.0f, 0.0f };
 		}
 	}
 
@@ -223,7 +227,7 @@ void UpdateFade(void)
 					for (int t = 0; t < height; t++)
 					{
 						g_FadeBox[s][t].size = 0.0f;
-						g_FadeBox[s][t].color = { 0.0f, 1.0f, 1.0f, 0.0f };
+						g_FadeBox[s][t].color = { 0.0f, 0.0f, 0.0f, 0.0f };
 					}
 				}
 
@@ -247,10 +251,16 @@ int FadeOutBoxFunc(int i, int k)
 	if (k > 0 && g_FadeBox[i][k - 1].color.w >= 0.2f && g_FadeBox[i][k].color.w < 1.0f) {
 		g_FadeBox[i][k].color.w += BOX_FADE_RATE;
 		g_FadeBox[i][k].size += FADE_BOX_SIZE / FADE_FRAME;
+		g_FadeBox[i][k].color.x += BOX_FADE_RED / FADE_FRAME;
+		g_FadeBox[i][k].color.y += BOX_FADE_BLUE / FADE_FRAME;
+		g_FadeBox[i][k].color.z += BOX_FADE_GREEN / FADE_FRAME;
 	}
 	else if (k == 0 && g_FadeBox[i][k].color.w < 1.0f) {
 		g_FadeBox[i][k].color.w += BOX_FADE_RATE;
 		g_FadeBox[i][k].size += FADE_BOX_SIZE / FADE_FRAME;
+		g_FadeBox[i][k].color.x += BOX_FADE_RED / FADE_FRAME;
+		g_FadeBox[i][k].color.y += BOX_FADE_BLUE / FADE_FRAME;
+		g_FadeBox[i][k].color.z += BOX_FADE_GREEN / FADE_FRAME;
 	}
 
 	k--;
@@ -265,10 +275,16 @@ int FadeInBoxFunc(int i, int k)
 	if (k > 0 && g_FadeBox[i][k - 1].color.w <= 0.8f && g_FadeBox[i][k].color.w > 0.0f) {
 		g_FadeBox[i][k].color.w -= BOX_FADE_RATE;
 		g_FadeBox[i][k].size -= FADE_BOX_SIZE / FADE_FRAME;
+		g_FadeBox[i][k].color.x += BOX_FADE_RED / FADE_FRAME;
+		g_FadeBox[i][k].color.y += BOX_FADE_BLUE / FADE_FRAME;
+		g_FadeBox[i][k].color.z += BOX_FADE_GREEN / FADE_FRAME;
 	}
 	else if (k == 0 && g_FadeBox[i][k].color.w > 0.0f) {
 		g_FadeBox[i][k].color.w -= BOX_FADE_RATE;
 		g_FadeBox[i][k].size -= FADE_BOX_SIZE / FADE_FRAME;
+		g_FadeBox[i][k].color.x += BOX_FADE_RED / FADE_FRAME;
+		g_FadeBox[i][k].color.y += BOX_FADE_BLUE / FADE_FRAME;
+		g_FadeBox[i][k].color.z += BOX_FADE_GREEN / FADE_FRAME;
 	}
 
 	k--;

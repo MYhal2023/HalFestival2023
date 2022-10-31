@@ -20,6 +20,7 @@
 #include "sound.h"
 #include "bullet.h"
 #include "playerArms.h"
+#include "particle.h"
 #include <algorithm>
 
 //*****************************************************************************

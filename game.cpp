@@ -30,6 +30,7 @@
 #include "rescueLife.h"
 #include "mapWallModel.h"
 #include "obstacle.h"
+#include "particle.h"
 
 
 //*****************************************************************************
@@ -88,7 +89,7 @@ void InitSystem(void)
 
 	//InitTexttex();
 
-
+	InitParticle();
 	InitUI();
 	RescueLife::InitRescue();
 	RescueLife::SetRemain(4);
@@ -111,6 +112,8 @@ void UninitGame(void)
 	UninitBullet();
 
 	UninitUI();
+
+	UninitParticle();
 
 	UninitTexttex();
 
@@ -166,6 +169,7 @@ void UpdateGame(void)
 
 		Obstacle::Update();
 
+		UpdateParticle();
 		//UpdateCharFade();
 		//// âeÇÃçXêVèàóù
 		//UpdateShadow();
@@ -197,6 +201,8 @@ void DrawGame0(void)
 
 	//DrawBullet();
 	DrawBulletModel();
+
+	DrawParticle();
 
 	// 2Dç¿ïWÇ≈ï®Çï`âÊÇ∑ÇÈèàóù
 	// Zî‰ärÇ»Çµ
