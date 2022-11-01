@@ -3,7 +3,7 @@
 #define	MODEL_OBSTACLE	"data/MODEL/neutrophils.obj"			// 読み込むモデル名
 #define MAX_OBSTACLE (30)
 #define FALL_SPEED	(5.0f)
-//障害物クラス(基底)
+//障害物クラス(設置)
 class Obstacle
 {
 protected:

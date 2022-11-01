@@ -3,6 +3,6 @@
 #define MAX_OBSTACLE_POS	(30)
 class Map
 {
-protected:
+public:
 	static void InitMap(void);
 };

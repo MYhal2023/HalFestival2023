@@ -13,12 +13,19 @@
 //*****************************************************************************
 #define	MODEL_PLAYER		"data/MODEL/dendritic_cells.obj"			// 読み込むモデル名
 #define	MODEL_NEUTROPHILS	"data/MODEL/neutrophils.obj"			// 読み込むモデル名
-#define	MODEL_BODY			"data/MODEL/mune_notpaint.obj"			// 読み込むモデル名
-#define	MODEL_HEAD			"data/MODEL/atama.obj"			// 読み込むモデル名
-#define	MODEL_LEG			"data/MODEL/ashi_notpaint.obj"			// 読み込むモデル名
+#define	MODEL_BODY			"data/MODEL/mune.obj"			// 読み込むモデル名
+#define	MODEL_HEAD			"data/MODEL/kao.obj"			// 読み込むモデル名
+#define	MODEL_R_SHOULDER	"data/MODEL/migikata.obj"			// 読み込むモデル名
+#define	MODEL_R_ARM			"data/MODEL/migiude.obj"			// 読み込むモデル名
+#define	MODEL_L_SHOULDER	"data/MODEL/hidarikata.obj"			// 読み込むモデル名
+#define	MODEL_L_ARM			"data/MODEL/hidariude.obj"			// 読み込むモデル名
+#define	MODEL_R_THIGH		"data/MODEL/migifutomomo.obj"			// 読み込むモデル名
+#define	MODEL_R_FOOT		"data/MODEL/migiashi.obj"			// 読み込むモデル名
+#define	MODEL_L_THIGH		"data/MODEL/hidarifutomomo.obj"			// 読み込むモデル名
+#define	MODEL_L_FOOT		"data/MODEL/hidariashi.obj"			// 読み込むモデル名
 
-#define MAX_PLAYER		(10)					// プレイヤーの数
-#define MAX_PLAYER_PARTS (5)
+#define MAX_PLAYER		(1)					// プレイヤーの数
+#define MAX_PLAYER_PARTS (9)
 
 #define	PLAYER_SIZE		(70.0f)				// 当たり判定の大きさ
 #define	HelperT_SIZE		(300.0f)				// 当たり判定の大きさ
@@ -46,10 +53,14 @@ enum PLAYER_PARTS
 {
 	//P_BODY,	//これをプレイヤーモデルとする
 	P_HEAD,
+	P_L_SHOULDER,
+	P_R_SHOULDER,
 	P_L_ARM,
 	P_R_ARM,
-	P_L_LEG,
-	P_R_LEG,
+	P_L_THIGH,
+	P_R_THIGH,
+	P_L_FOOT,
+	P_R_FOOT,
 };
 //*****************************************************************************
 // 構造体定義
@@ -123,9 +134,6 @@ void SetPlayerArm(void);
 void ChangePlayerArm(BOOL flag);
 void UpdateArm(void);
 PLAYER *GetPlayer(void);
-PlayerParts *GetPlayerParts(void);
 void PlayerStandLiner(int i);
 void PlayerInterPoration(int i);
-int GetPlayerPartsNum(void);
-void SetPlayerPartsNum(int s);
 HRESULT MakeVertexPlayerVar(void);

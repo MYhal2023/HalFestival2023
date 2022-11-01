@@ -1,5 +1,6 @@
 #pragma once
 #define MAX_RESCUE (10)
+#define	MODEL_RESCUE001	"data/MODEL/neutrophils.obj"			// ì«Ç›çûÇﬁÉÇÉfÉãñº
 #include "main.h"
 #include "model.h"
 
@@ -21,8 +22,10 @@ private:
 	BOOL				rescue;	//ã~èïé“ÇèïÇØÇΩÇ©
 public:
 	static void InitRescue(void);
+	static void UninitRescue(void);
+	static void DrawRescue(void);
 	static BOOL GetRescue(int i);
-	static void SetRemain(int i);
+	static void SetRemain(XMFLOAT3 pos, XMFLOAT3 rot, char* model);
 	static RescueLife* GetRescueLife(void);
 };
 

@@ -21,6 +21,7 @@
 #include "bullet.h"
 #include "playerArms.h"
 #include "particle.h"
+#include "meshwall.h"
 #include <algorithm>
 
 //*****************************************************************************
@@ -34,7 +35,7 @@
 #define	VALUE_ROTATE		(XM_PI * 0.02f)					// 回転量
 
 #define PLAYER_SHADOW_SIZE	(1.0f)							// 影の大きさ
-#define PLAYER_OFFSET_Y		(40.0f)							// プレイヤーの足元をあわせる
+#define PLAYER_OFFSET_Y		(0.0f)							// プレイヤーの足元をあわせる
 #define PLAYER_OFFSET_Z		(-300.0f)							// プレイヤーの足元をあわせる
 #define PLAYER_LIFE			(100)								// プレイヤーのライフ
 
@@ -58,12 +59,11 @@ static char* g_TextureName[] = {
 static PLAYER_VAR	g_PlayerVar;
 static PLAYER		g_Player[MAX_PLAYER];						// プレイヤー
 static Playerliner  g_Playerline[MAX_PLAYER];					//プレイヤーの線形補間データ
-static PlayerParts	g_Parts[MAX_PLAYER_PARTS];					// プレイヤー
+static PLAYER		g_Parts[MAX_PLAYER_PARTS];					// プレイヤー
 static pArm*		g_PlayerArm[3];	//先端アームの種類数
 static pArm*		g_Arm[2];		//アームの数
 static BOOL			g_Load = FALSE;
 static int			playerNum = 0;
-static int			partsNum = 0;
 static int			atNum[MAX_PLAYER];
 static char name[2][64];
 
@@ -113,7 +113,7 @@ HRESULT InitPlayer(void)
 		g_Player[i].diffend = 3;
 		g_Player[i].attack = FALSE;
 		g_Player[i].attackUse = FALSE;
-		g_Player[i].partsNum = 0;
+		g_Player[i].partsNum = 9;
 		g_Player[i].startNum = 0;
 		g_Player[i].spd = 0.0f;
 		g_Player[i].armType = 0;
@@ -133,24 +133,39 @@ HRESULT InitPlayer(void)
 	
 	g_Player[0].use = TRUE;
 	g_Player[0].load = TRUE;
-	g_Player[0].partsNum = 5;
-	LoadModel(MODEL_HEAD, &g_Player[P_HEAD].model);
+	g_Player[0].partsNum = 9;
+	LoadModel(MODEL_BODY, &g_Player[0].model);
 	SetPlayerArm();
-	LoadModel(MODEL_HEAD, &g_Parts[P_L_ARM].model);
-	LoadModel(MODEL_HEAD, &g_Parts[P_R_ARM].model);
-	LoadModel(MODEL_HEAD, &g_Parts[P_L_LEG].model);
-	LoadModel(MODEL_HEAD, &g_Parts[P_R_LEG].model);
 
 	for (int i = 0; i < MAX_PLAYER_PARTS; i++) {
 		g_Parts[i].parent = &g_Player[0];
 		g_Parts[i].load = TRUE;
 		g_Parts[i].pos = { 0.0f, 0.0f, 0.0f };
 		g_Parts[i].rot = { 0.0f, 0.0f, 0.0f };
-		g_Parts[i].scl = { 0.0f, 0.0f, 0.0f };
+		g_Parts[i].scl = { 1.0f,1.0f, 1.0f };
 	}
+	//モデル読み込みとペアレント付けを行う
+	LoadModel(MODEL_HEAD, &g_Parts[P_HEAD].model);
+	LoadModel(MODEL_L_SHOULDER, &g_Parts[P_L_SHOULDER].model);
+	LoadModel(MODEL_R_SHOULDER, &g_Parts[P_R_SHOULDER].model);
+
+	LoadModel(MODEL_L_ARM, &g_Parts[P_L_ARM].model);
+	g_Parts[P_L_ARM].parent = &g_Parts[P_L_SHOULDER];
+
+	LoadModel(MODEL_R_ARM, &g_Parts[P_R_ARM].model);
+	g_Parts[P_R_ARM].parent = &g_Parts[P_R_SHOULDER];
+
+	LoadModel(MODEL_L_THIGH, &g_Parts[P_L_THIGH].model);
+	LoadModel(MODEL_R_THIGH, &g_Parts[P_R_THIGH].model);
+
+	LoadModel(MODEL_L_FOOT, &g_Parts[P_L_FOOT].model);
+	g_Parts[P_L_FOOT].parent = &g_Parts[P_L_THIGH];
+
+	LoadModel(MODEL_R_FOOT, &g_Parts[P_R_FOOT].model);
+	g_Parts[P_R_FOOT].parent = &g_Parts[P_R_THIGH];
+
 	g_Load = TRUE;
 	playerNum = 0;
-	partsNum = 5;
 	pArm::SetArmParent(&g_Player[0]);	//親情報をここで引き渡す
 	g_Arm[0] = pArm::GetArm();
 	g_Arm[1] = pArm::GetArm();
@@ -217,9 +232,11 @@ void UpdatePlayer(void)
 			pos.z = cosf(g_Player[0].rot.y + XM_PI * 0.25f)*dist;
 			g_PlayerArm[0]->pos = { g_Player[0].pos.x + pos.x, g_Player[0].pos.y, g_Player[0].pos.z + pos.z };
 			g_PlayerArm[1]->pos = { g_Player[0].pos.x + pos.x, g_Player[0].pos.y, g_Player[0].pos.z + pos.z };
+
 			g_Player[i].spd *= 0.7f;
 			g_Player[i].moveVec.x *= 0.8f;
 			g_Player[i].moveVec.z *= 0.8f;
+
 
 			UpdateArm();
 	}
@@ -495,15 +512,6 @@ void PlayerInterPoration(int i)
 }
 
 
-int GetPlayerPartsNum(void)
-{
-	return partsNum;
-}
-
-void SetPlayerPartsNum(int s)
-{
-	partsNum += s;
-}
 //=============================================================================
 // プレイヤー情報を取得
 //=============================================================================
@@ -512,14 +520,12 @@ PLAYER *GetPlayer(void)
 	return &g_Player[0];
 }
 
-PlayerParts *GetPlayerParts(void)
-{
-	return &g_Parts[0];
-}
 
 void MovePlayer(void)
 {
 	CAMERA *cam = GetCamera();
+	float old_x = g_Player[0].pos.x;
+	float old_z = g_Player[0].pos.z;
 	// Key入力があったら移動処理する
 	if (g_Player[0].spd > 0.0f)
 	{
@@ -530,6 +536,8 @@ void MovePlayer(void)
 	XMVECTOR moveVec = XMLoadFloat3(&g_Player[0].moveVec);
 	XMVECTOR now = XMLoadFloat3(&g_Player[0].pos);								// 現在の場所
 	XMStoreFloat3(&g_Player[0].pos, now + XMVector3Normalize(moveVec) * g_Player[0].spd);	//単位ベクトルを元に移動
+	MeshWallHit(g_Player[0].pos, 10.0f, old_x, old_z);
+
 }
 void ControlPlayer(void)
 {

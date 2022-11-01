@@ -13,6 +13,57 @@ void RescueLife::InitRescue(void)
 	remain = 0;
 }
 
+void RescueLife::UninitRescue(void)
+{
+	for (int i = 0; i < MAX_RESCUE; i++)
+	{
+		if (g_RscLife[i].load)
+		{
+			UnloadModel(&g_RscLife[i].model);
+			g_RscLife[i].load = FALSE;
+		}
+	}
+}
+
+void RescueLife::DrawRescue(void)
+{
+	// カリング無効
+	SetCullingMode(CULL_MODE_NONE);
+
+	XMMATRIX mtxScl, mtxRot, mtxTranslate, mtxWorld;
+
+	for (int i = 0; i < MAX_RESCUE; i++)
+	{
+		if (g_RscLife[i].use != TRUE)continue;
+		// ワールドマトリックスの初期化
+		mtxWorld = XMMatrixIdentity();
+
+		// スケールを反映
+		mtxScl = XMMatrixScaling(g_RscLife[i].scl.x, g_RscLife[i].scl.y, g_RscLife[i].scl.z);
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxScl);
+
+		// 回転を反映
+		mtxRot = XMMatrixRotationRollPitchYaw(g_RscLife[i].rot.x, g_RscLife[i].rot.y, g_RscLife[i].rot.z);
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
+
+		// 移動を反映
+		mtxTranslate = XMMatrixTranslation(g_RscLife[i].pos.x, g_RscLife[i].pos.y, g_RscLife[i].pos.z);
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
+
+		// ワールドマトリックスの設定
+		SetWorldMatrix(&mtxWorld);
+
+		XMStoreFloat4x4(&g_RscLife[i].mtxWorld, mtxWorld);
+
+		// モデル描画
+		DrawModel(&g_RscLife[i].model);
+
+	}
+
+	// カリング設定を戻す
+	SetCullingMode(CULL_MODE_BACK);
+}
+
 int GetRemain(void)
 {
 	return remain;
@@ -24,13 +75,20 @@ BOOL RescueLife::GetRescue(int i)
 }
 
 //救助者セット。先頭配列から使用していく
-void RescueLife::SetRemain(int i)
+void RescueLife::SetRemain(XMFLOAT3 pos, XMFLOAT3 rot, char* model)
 {
-	remain = i;
-	for (int k = 0; k < i; k++)
+	for (int i = 0; i < MAX_RESCUE; i++)
 	{
-		g_RscLife[k].use = TRUE;
-		g_RscLife[k].rescue = TRUE;
+		if (g_RscLife[i].load)continue;	//ロード済みならスルー
+
+		LoadModel(model, &g_RscLife[i].model);
+		g_RscLife[i].use = TRUE;
+		g_RscLife[i].rescue = TRUE;
+		g_RscLife[i].load = TRUE;
+		g_RscLife[i].pos = pos;
+		g_RscLife[i].rot = rot;
+		remain++;
+		break;
 	}
 }
 

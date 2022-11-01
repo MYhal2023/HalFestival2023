@@ -11,7 +11,7 @@
 //*****************************************************************************
 #define	MAX_MESH_WALL		(100)					// •Ç‚Ì‘”
 
-#define	WAVE_POS_Y			(-20.0f)	// ”g‚ª”­¶‚µ‚Ä‚¢‚éˆ×A•Ç‚ð­‚µ‰º‚°‚é
+#define	WAVE_POS_Y			(-20.0f)	// •Ç‚ð­‚µ‰º‚°‚é
 #define	WALL_A_POS_XZ		(500.0f)	// •ÇA‚ÌÀ•W
 #define	WALL_B_POS_XZ		(100.0f)	// •ÇB‚ÌÀ•W
 
@@ -25,8 +25,6 @@
 
 enum WALL_TEX
 {
-	WALL_BLACK,
-	WALL_WHITE,
 	WALL_GRAY,
 	WALL_RAY,
 };

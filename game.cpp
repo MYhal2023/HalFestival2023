@@ -31,6 +31,8 @@
 #include "mapWallModel.h"
 #include "obstacle.h"
 #include "particle.h"
+#include "map.h"
+#include "meshwall.h"
 
 
 //*****************************************************************************
@@ -79,9 +81,8 @@ void InitSystem(void)
 	// フィールドの初期化
 	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD_X, FIELD_Z, BLOCK_SIZE, BLOCK_SIZE, GROUND);
 
-	MapWallModel::Init();
+	Map::InitMap();
 
-	Obstacle::Init();
 	//InitOver();
 
 
@@ -92,7 +93,6 @@ void InitSystem(void)
 	InitParticle();
 	InitUI();
 	RescueLife::InitRescue();
-	RescueLife::SetRemain(4);
 	//InitReward();
 	mode = 1;
 	g_bPause = TRUE;
@@ -121,6 +121,9 @@ void UninitGame(void)
 
 	MapWallModel::Uninit();
 
+	RescueLife::UninitRescue();
+
+	UninitMeshWall();
 }
 
 //=============================================================================
@@ -195,7 +198,11 @@ void DrawGame0(void)
 
 	MapWallModel::Draw();
 
+	DrawMeshWall();
+
 	Obstacle::Draw();
+
+	RescueLife::DrawRescue();
 
 	DrawPlayer();
 
