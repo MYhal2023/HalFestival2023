@@ -27,13 +27,18 @@ void Map::InitMap(void)
 	InitMeshWall(XMFLOAT3(0.0f, WAVE_POS_Y, -FIELD_Z_LIMIT), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
 		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, FIELD_X_LIMIT * 2.0f, WALL_BLOCK_SIZE_Y, WALL_RAY);
 
-	//設置障害物(ランダム)
+	//設置障害物
 	//SetObstacle();
+	XMFLOAT3 p = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 r = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 m = { 1.0f, 1.0f, 1.0f };
+	Obstacle::SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_OBSTACLE);
 
-
-	//設置救助者
-	//RescueLife()
-
+	////設置救助者
+	////RescueLife()
+	//p = { 50.0f, 0.0f, 0.0f };
+	//r = { 0.0f, 0.0f, 0.0f };
+	//RescueLife::SetRemain(p, r, MODEL_RESCUE001);
 	//設置オブジェクト
 
 

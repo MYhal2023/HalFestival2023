@@ -8,6 +8,7 @@ void RescueLife::InitRescue(void)
 	for (int i = 0; i < MAX_RESCUE; i++)
 	{
 		g_RscLife[i].use = FALSE;
+		g_RscLife[i].load = FALSE;
 		g_RscLife[i].rescue = FALSE;
 	}
 	remain = 0;
