@@ -21,8 +21,8 @@ void Xgun::Action(void)
 	PLAYER *player = GetPlayer();
 	XMFLOAT3 pos = player[0].pos;
 	XMFLOAT3 pos2 = player[0].pos;
-	const float dist = 10.0f;
-	const float high = 10.0f;
+	const float dist = 5.0f;
+	float high = player[0].pos.y + 40.0f;
 	pos.x += sinf(player[0].rot.y + XM_PI * 0.20f) * dist;
 	pos.y += high;
 	pos.z += cosf(player[0].rot.y + XM_PI * 0.20f) * dist;

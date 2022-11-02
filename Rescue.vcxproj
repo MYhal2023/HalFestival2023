@@ -27,6 +27,7 @@
     <ClInclude Include="file.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gameover.h" />
+    <ClInclude Include="IPArmData.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="light.h" />
@@ -39,7 +40,7 @@
     <ClInclude Include="particle.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerArms.h" />
-    <ClInclude Include="playerLinerData.h" />
+    <ClInclude Include="playerIPData.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="rescueLife.h" />
     <ClInclude Include="reserve.h" />

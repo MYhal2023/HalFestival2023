@@ -5,9 +5,9 @@
 #define	MODEL_BRASTER			"data/MODEL/shoka.obj"			// 読み込むモデル名
 #define	MODEL_SAW		"data/MODEL/setsudan.obj"			// 読み込むモデル名
 #define	MODEL_ARM_HAND		"data/MODEL/arm_hand.obj"			// 読み込むモデル名
-#define	MODEL_ARM_PARTS		"data/MODEL/arm_parts.obj"			// 読み込むモデル名
+#define	MODEL_ARM_PARTS		"data/MODEL/ARMpart0.obj"			// 読み込むモデル名
 #define ARM_VAR			(3)	//アームの種類
-#define MAX_ARM_PARTS (10)
+#define MAX_ARM_PARTS (7)
 ////アーム種類列挙
 //enum ArmVar
 //{
@@ -34,8 +34,8 @@ protected:
 	//攻撃
 	BOOL			attack;			//攻撃中か否か
 
-	INTERPOLATION_DATA	*tbl_adrA;	// 攻撃アニメデータのテーブル先頭アドレス
-	INTERPOLATION_DATA	*tbl_adrM;	// 移動アニメデータのテーブル先頭アドレス
+	INTERPOLATION_DATA	*tbl_adrXgun;	// 攻撃アニメデータのテーブル先頭アドレス
+	INTERPOLATION_DATA	*tbl_adr;	// 移動アニメデータのテーブル先頭アドレス
 	PLAYER* player;
 	int					slot;
 
@@ -45,6 +45,8 @@ public:
 	pArm* parent;
 	static void SetArmParent(PLAYER *p);
 	static void InitArm(void);
+	static void UpdateArm(void);
+	static void IPArm(pArm* p, INTERPOLATION_DATA* i);
 	static pArm* GetArm(void);
 	static pArm* GetArmParts(void);
 	static pArm* GetLeftArmParts(void);

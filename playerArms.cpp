@@ -1,4 +1,5 @@
 #include "playerArms.h"
+#include "IPArmData.h"
 #define MAX_ARM (2)
 static pArm g_PlayerArm[2];
 static pArm g_ArmParts[MAX_ARM_PARTS * 2];
@@ -19,18 +20,19 @@ void pArm::InitArm(void)
 		g_ArmParts[i].use = TRUE;
 		//添え字によって、腕の先端部分かそうでないかを判断
 		if (i == MAX_ARM_PARTS - 1) 
-			LoadModel(MODEL_NEUTROPHILS, &g_ArmParts[i].model);
+			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
 		else
-			LoadModel(MODEL_NEUTROPHILS, &g_ArmParts[i].model);
+			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
 
+		//0はプレイヤーモデルを親としているため、別途設定
 		if (i == 0) {
-			g_ArmParts[i].pos = { 0.0f, 0.0f, -10.0f };
-			g_ArmParts[i].rot = { 0.0f, 0.0f, 0.0f };
-			g_ArmParts[i].scl = { 0.75f, 0.75f, 0.75f };
+			g_ArmParts[i].pos = { -5.0f, 40.0f, -5.0f };
+			g_ArmParts[i].rot = { XM_PI * 0.0f , 0.0f, XM_PI * 0.5f };
+			g_ArmParts[i].scl = { 1.0f, 1.0f, 1.0f };
 		}
 		else {
-			g_ArmParts[i].pos = { 0.0f, 2.0f, 0.0f };
-			g_ArmParts[i].rot = { 0.0f, 0.0f, 0.0f };
+			g_ArmParts[i].pos = { 0.0f, 0.0f, 0.0f };
+			g_ArmParts[i].rot = { 0.0f, 0.0f,0.0f };
 			g_ArmParts[i].scl = { 1.0f, 1.0f, 1.0f };
 		}
 	}
@@ -39,20 +41,23 @@ void pArm::InitArm(void)
 		g_ArmParts[i].use = TRUE;
 		//添え字によって、腕の先端部分かそうでないかを判断
 		if (i == MAX_ARM_PARTS * 2 - 1)
-			LoadModel(MODEL_NEUTROPHILS, &g_ArmParts[i].model);
+			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
 		else
-			LoadModel(MODEL_NEUTROPHILS, &g_ArmParts[i].model);
+			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
 
 		if (i == MAX_ARM_PARTS) {
-			g_ArmParts[i].pos = { 0.0f, 0.0f, 10.0f };
-			g_ArmParts[i].rot = { 0.0f, 0.0f, 0.0f };
-			g_ArmParts[i].scl = { 0.75f, 0.75f, 0.75f };
+			g_ArmParts[i].pos = { -5.0f, 40.0f, 5.0f };
+			g_ArmParts[i].rot = { XM_PI * 0.0f, 0.0f, XM_PI * 0.5f };
+			g_ArmParts[i].scl = { 1.0f, 1.0f, 1.0f };
 		}
 		else {
-			g_ArmParts[i].pos = { 0.0f, 2.0f, 0.0f };
+			g_ArmParts[i].pos = { 0.0f, 0.0f, 0.0f };
 			g_ArmParts[i].rot = { 0.0f, 0.0f, 0.0f };
 			g_ArmParts[i].scl = { 1.0f, 1.0f, 1.0f };
 		}
+
+		g_ArmParts[i].tbl_adrXgun = NULL;
+		g_ArmParts[i].tbl_adr = wait_arm;
 	}
 
 	LoadModel(MODEL_XGUN, &g_ArmWeapon[0].model);
@@ -62,6 +67,57 @@ void pArm::InitArm(void)
 	Xgun::InitArm();
 	Braster::InitArm();
 	Saw::InitArm();
+}
+
+void pArm::UpdateArm(void)
+{
+	//片腕ずつ処理(根本部分は除外)
+	for (int i = 1; i < MAX_ARM_PARTS; i++)
+	{
+		IPArm(&g_ArmParts[i], wait_arm);
+	}
+
+	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
+	{
+		IPArm(&g_ArmParts[i], wait_arm);
+	}
+}
+
+void pArm::IPArm(pArm* p, INTERPOLATION_DATA* i)
+{
+//
+// 線形補間の処理
+// 移動処理
+	int		index = (int)p->move_time;
+	float	time = p->move_time - index;
+	int		size = p->tbl_sizeA;
+
+	float dt = 1.0f / i->frame;	// 1フレームで進める時間
+	p->move_time += dt;							// アニメーションの合計時間に足す
+
+	if (index > (size - 2))	// ゴールをオーバーしていたら、データを最初に戻して攻撃を終了
+	{
+		p->move_time = 0.0f;
+		index = 0;
+	}
+	// 座標を求める	X = StartX + (EndX - StartX) * 今の時間
+	XMVECTOR p1 = XMLoadFloat3(&i[index + 1].pos);	// 次の場所
+	XMVECTOR p0 = XMLoadFloat3(&i[index + 0].pos);	// 現在の場所
+	XMVECTOR vec = p1 - p0;
+	XMStoreFloat3(&p->pos, p0 + vec * time);
+
+	// 回転を求める	R = StartX + (EndX - StartX) * 今の時間
+	XMVECTOR r1 = XMLoadFloat3(&i[index + 1].rot);	// 次の角度
+	XMVECTOR r0 = XMLoadFloat3(&i[index + 0].rot);	// 現在の角度
+	XMVECTOR rot = r1 - r0;
+	XMStoreFloat3(&p->rot, r0 + rot * time);
+
+	// scaleを求める S = StartX + (EndX - StartX) * 今の時間
+	XMVECTOR s1 = XMLoadFloat3(&i[index + 1].scl);	// 次のScale
+	XMVECTOR s0 = XMLoadFloat3(&i[index + 0].scl);	// 現在のScale
+	XMVECTOR scl = s1 - s0;
+	XMStoreFloat3(&p->scl, s0 + scl * time);
+
 }
 
 void pArm::Draw(void)

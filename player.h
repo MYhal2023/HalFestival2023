@@ -83,6 +83,7 @@ public:
 	XMFLOAT3			pos;		// ポリゴンの位置
 	XMFLOAT3			rot;		// ポリゴンの向き(回転)
 	XMFLOAT3			scl;		// ポリゴンの大きさ(スケール)
+	float				move_time;
 };
 
 struct PlayerParts
@@ -125,7 +126,6 @@ struct PLAYER_VAR
 HRESULT InitPlayer(void);
 void UninitPlayer(void);
 void UpdatePlayer(void);
-void AttackChar(int i);
 void DrawPlayer(void);
 void MovePlayer(void);
 void ControlPlayer(void);
@@ -135,5 +135,5 @@ void ChangePlayerArm(BOOL flag);
 void UpdateArm(void);
 PLAYER *GetPlayer(void);
 void PlayerStandLiner(int i);
-void PlayerInterPoration(int i);
+void PlayerPartsIP(PLAYER* p);
 HRESULT MakeVertexPlayerVar(void);

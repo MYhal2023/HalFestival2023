@@ -1,9 +1,8 @@
-newmtl Xgun:lambert3SG
+newmtl initialShadingGroup
 illum 4
-Kd 0.00 0.00 0.00
-Ka 0.73 0.73 0.73
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
-map_Kd ARMT.png
 Ni 1.00
 newmtl lambert7SG
 illum 4
@@ -47,14 +46,7 @@ Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd rightshoulder.png
 Ni 1.00
-newmtl setsudan1:lambert4SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd ARMT.png
-Ni 1.00
-newmtl shoka:lambert2SG
+newmtl lambert15SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00

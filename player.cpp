@@ -22,6 +22,7 @@
 #include "playerArms.h"
 #include "particle.h"
 #include "meshwall.h"
+#include "playerIPData.h"
 #include <algorithm>
 
 //*****************************************************************************
@@ -143,6 +144,7 @@ HRESULT InitPlayer(void)
 		g_Parts[i].pos = { 0.0f, 0.0f, 0.0f };
 		g_Parts[i].rot = { 0.0f, 0.0f, 0.0f };
 		g_Parts[i].scl = { 1.0f,1.0f, 1.0f };
+		g_Parts[i].tbl_adrM = NULL;
 	}
 	//モデル読み込みとペアレント付けを行う
 	LoadModel(MODEL_HEAD, &g_Parts[P_HEAD].model);
@@ -151,6 +153,8 @@ HRESULT InitPlayer(void)
 
 	LoadModel(MODEL_L_ARM, &g_Parts[P_L_ARM].model);
 	g_Parts[P_L_ARM].parent = &g_Parts[P_L_SHOULDER];
+	g_Parts[P_L_ARM].tbl_adrM = walk_Larm;
+	g_Parts[P_L_ARM].tbl_sizeM = sizeof(walk_Larm) / sizeof(INTERPOLATION_DATA);
 
 	LoadModel(MODEL_R_ARM, &g_Parts[P_R_ARM].model);
 	g_Parts[P_R_ARM].parent = &g_Parts[P_R_SHOULDER];
@@ -221,7 +225,6 @@ void UpdatePlayer(void)
 	{
 		if (g_Player[i].use != TRUE)continue;
 
-			AttackChar(i);
 			ControlPlayer();
 			MovePlayer();
 			ControlChangeArm();
@@ -237,7 +240,10 @@ void UpdatePlayer(void)
 			g_Player[i].moveVec.x *= 0.8f;
 			g_Player[i].moveVec.z *= 0.8f;
 
-
+			for (int k = 0; k < MAX_PLAYER_PARTS; k++)
+			{
+				PlayerPartsIP(&g_Parts[k]);
+			}
 			UpdateArm();
 	}
 #ifdef _DEBUG
@@ -247,26 +253,6 @@ void UpdatePlayer(void)
 #endif
 }
 
-void AttackChar(int i)
-{
-	int oldState = g_Player[i].state;
-	//①ステート遷移
-	if (oldState != g_Player[i].state)
-	{
-
-	}
-	switch (g_Player[i].state)
-	{
-	case Standby:
-		PlayerStandLiner(i);
-		break;
-
-	case Deffend:
-		PlayerInterPoration(i);
-		break;
-	}
-
-}
 
 //=============================================================================
 // 描画処理
@@ -429,86 +415,42 @@ void PlayerStandLiner(int i)
 	}
 }
 
-//プレイヤーの線形補間。攻撃モーション中にここに来たらダメージ処理も行う
-void PlayerInterPoration(int i)
+//プレイヤーの線形補間
+void PlayerPartsIP(PLAYER* p)
 {
-	if (g_Player[i].tbl_adrA == NULL)return;	// 線形補間を実行する？
-
+	if (p->tbl_adrM == NULL)return;
 	//
 	// 線形補間の処理
 	// 移動処理
-	int		index = (int)g_Player[i].move_time;
-	float	time = g_Player[i].move_time - index;
-	int		size = g_Player[i].tbl_sizeA;
+	int		index = (int)p->move_time;
+	float	time = p->move_time - index;
+	int		size = p->tbl_sizeM;
 
-	float dt = 1.0f / g_Player[i].tbl_adrA[index].frame;	// 1フレームで進める時間
-	g_Player[i].move_time += dt;							// アニメーションの合計時間に足す
+	float dt = 1.0f / p->tbl_adrM[index].frame;	// 1フレームで進める時間
+	p->move_time += dt;							// アニメーションの合計時間に足す
 
 	if (index > (size - 2))	// ゴールをオーバーしていたら、データを最初に戻して攻撃を終了
 	{
-		g_Player[i].move_time = 0.0f;
+		p->move_time = 0.0f;
 		index = 0;
-		g_Player[i].atCount = 0;
-		g_Player[i].state = Standby;
-		g_Player[i].attackUse = FALSE;
-		atNum[i] = 0;
-		g_Playerline[i].pos = { 0.0f, 0.0f, 0.0f };
-		g_Playerline[i].rot = { 0.0f, 0.0f, 0.0f };
-		g_Playerline[i].scl = { 0.0f, 0.0f, 0.0f };
 	}
 	// 座標を求める	X = StartX + (EndX - StartX) * 今の時間
-	XMVECTOR p1 = XMLoadFloat3(&g_Player[i].tbl_adrA[index + 1].pos);	// 次の場所
-	XMVECTOR p0 = XMLoadFloat3(&g_Player[i].tbl_adrA[index + 0].pos);	// 現在の場所
+	XMVECTOR p1 = XMLoadFloat3(&p->tbl_adrM[index + 1].pos);	// 次の場所
+	XMVECTOR p0 = XMLoadFloat3(&p->tbl_adrM[index + 0].pos);	// 現在の場所
 	XMVECTOR vec = p1 - p0;
-	XMStoreFloat3(&g_Playerline[i].pos, p0 + vec * time);
+	XMStoreFloat3(&p->pos, p0 + vec * time);
 
 	// 回転を求める	R = StartX + (EndX - StartX) * 今の時間
-	XMVECTOR r1 = XMLoadFloat3(&g_Player[i].tbl_adrA[index + 1].rot);	// 次の角度
-	XMVECTOR r0 = XMLoadFloat3(&g_Player[i].tbl_adrA[index + 0].rot);	// 現在の角度
+	XMVECTOR r1 = XMLoadFloat3(&p->tbl_adrM[index + 1].rot);	// 次の角度
+	XMVECTOR r0 = XMLoadFloat3(&p->tbl_adrM[index + 0].rot);	// 現在の角度
 	XMVECTOR rot = r1 - r0;
-	XMStoreFloat3(&g_Playerline[i].rot, r0 + rot * time);
+	XMStoreFloat3(&p->rot, r0 + rot * time);
 
 	// scaleを求める S = StartX + (EndX - StartX) * 今の時間
-	XMVECTOR s1 = XMLoadFloat3(&g_Player[i].tbl_adrA[index + 1].scl);	// 次のScale
-	XMVECTOR s0 = XMLoadFloat3(&g_Player[i].tbl_adrA[index + 0].scl);	// 現在のScale
+	XMVECTOR s1 = XMLoadFloat3(&p->tbl_adrM[index + 1].scl);	// 次のScale
+	XMVECTOR s0 = XMLoadFloat3(&p->tbl_adrM[index + 0].scl);	// 現在のScale
 	XMVECTOR scl = s1 - s0;
-	XMStoreFloat3(&g_Playerline[i].scl, s0 + scl * time);
-
-	for (int k = g_Player[i].startNum; k < g_Player[i].startNum + g_Player[i].partsNum; k++)
-	{
-		if (g_Parts[k].tbl_adrA == NULL)continue;;	// 線形補間を実行する？
-
-		int		index = (int)g_Parts[k].move_time;
-		float	time = g_Parts[k].move_time - index;
-		int		size = g_Parts[k].tbl_sizeA;
-
-		float dt = 1.0f / g_Parts[k].tbl_adrA[index].frame;	// 1フレームで進める時間
-		g_Parts[k].move_time += dt;							// アニメーションの合計時間に足す
-
-		if (index > (size - 2))	// ゴールをオーバーしていたら、データを最初に戻して攻撃を終了
-		{
-			g_Parts[k].move_time = 0.0f;
-			index = 0;
-		}
-
-		// 座標を求める	X = StartX + (EndX - StartX) * 今の時間
-		XMVECTOR p1 = XMLoadFloat3(&g_Parts[k].tbl_adrA[index + 1].pos);	// 次の場所
-		XMVECTOR p0 = XMLoadFloat3(&g_Parts[k].tbl_adrA[index + 0].pos);	// 現在の場所
-		XMVECTOR vec = p1 - p0;
-		XMStoreFloat3(&g_Parts[k].pos, p0 + vec * time);
-
-		// 回転を求める	R = StartX + (EndX - StartX) * 今の時間
-		XMVECTOR r1 = XMLoadFloat3(&g_Parts[k].tbl_adrA[index + 1].rot);	// 次の角度
-		XMVECTOR r0 = XMLoadFloat3(&g_Parts[k].tbl_adrA[index + 0].rot);	// 現在の角度
-		XMVECTOR rot = r1 - r0;
-		XMStoreFloat3(&g_Parts[k].rot, r0 + rot * time);
-
-		// scaleを求める S = StartX + (EndX - StartX) * 今の時間
-		XMVECTOR s1 = XMLoadFloat3(&g_Parts[k].tbl_adrA[index + 1].scl);	// 次のScale
-		XMVECTOR s0 = XMLoadFloat3(&g_Parts[k].tbl_adrA[index + 0].scl);	// 現在のScale
-		XMVECTOR scl = s1 - s0;
-		XMStoreFloat3(&g_Parts[k].scl, s0 + scl * time);
-	}
+	XMStoreFloat3(&p->scl, s0 + scl * time);
 }
 
 
@@ -608,6 +550,7 @@ void ChangePlayerArm(BOOL flag)
 
 void UpdateArm(void)
 {
+	pArm::UpdateArm();
 	if (GetKeyboardTrigger(DIK_1))
 	{
 		switch (g_Player[0].armType)
