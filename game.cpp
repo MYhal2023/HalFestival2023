@@ -263,8 +263,8 @@ void DrawGame(void)
 	CAMERA *cam = GetCamera();
 	PLAYER *player = GetPlayer();
 	pos = player[0].pos;
-	pos.y -= 10.0f;
-	const float dist = 200.0f;
+	pos.y += 0.0f;
+	const float dist = 260.0f;
 	pos.x += sinf(cam->rot.y)*dist;
 	pos.z += cosf(cam->rot.y)*dist;
 

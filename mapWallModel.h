@@ -5,6 +5,7 @@
 #define	MODEL_WALL001	"data/MODEL/kabe1.obj"			// 読み込むモデル名
 #define	MODEL_WALL002	"data/MODEL/kabe2.obj"			// 読み込むモデル名
 #define	MODEL_WALL003	"data/MODEL/kabedoor.obj"			// 読み込むモデル名
+#define	MODEL_WALL004	"data/MODEL/MAP_MODEL/kabedoorclosed.obj"			// 読み込むモデル名
 
 //マップの壁モデルクラス
 class MapWallModel

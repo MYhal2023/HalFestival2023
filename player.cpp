@@ -36,7 +36,7 @@
 #define	VALUE_ROTATE		(XM_PI * 0.02f)					// 回転量
 
 #define PLAYER_SHADOW_SIZE	(1.0f)							// 影の大きさ
-#define PLAYER_OFFSET_Y		(0.0f)							// プレイヤーの足元をあわせる
+#define PLAYER_OFFSET_Y		(38.5f)							// プレイヤーの足元をあわせる
 #define PLAYER_OFFSET_Z		(-300.0f)							// プレイヤーの足元をあわせる
 #define PLAYER_LIFE			(100)								// プレイヤーのライフ
 
@@ -59,7 +59,7 @@ static char* g_TextureName[] = {
 };
 static PLAYER_VAR	g_PlayerVar;
 static PLAYER		g_Player[MAX_PLAYER];						// プレイヤー
-static Playerliner  g_Playerline[MAX_PLAYER];					//プレイヤーの線形補間データ
+static Playerliner  g_Playerline[MAX_PLAYER_PARTS + 1];					//プレイヤーの線形補間データ
 static PLAYER		g_Parts[MAX_PLAYER_PARTS];					// プレイヤー
 static pArm*		g_PlayerArm[3];	//先端アームの種類数
 static pArm*		g_Arm[2];		//アームの数
@@ -67,7 +67,6 @@ static BOOL			g_Load = FALSE;
 static int			playerNum = 0;
 static int			atNum[MAX_PLAYER];
 static char name[2][64];
-
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -146,27 +145,46 @@ HRESULT InitPlayer(void)
 		g_Parts[i].scl = { 1.0f,1.0f, 1.0f };
 		g_Parts[i].tbl_adrM = NULL;
 	}
+
+	//パーツごとのモーションデータ
+	for (int i = 0; i < MAX_PLAYER_PARTS + 1; i++) {
+		g_Playerline[i].tbl_adrM = walk_data[i];
+		g_Playerline[i].tbl_sizeM = data_size[i];
+	}
+
+
 	//モデル読み込みとペアレント付けを行う
 	LoadModel(MODEL_HEAD, &g_Parts[P_HEAD].model);
+	g_Parts[P_HEAD].pos = { 5.0f, 5.0f, 0.0f };
+
+
 	LoadModel(MODEL_L_SHOULDER, &g_Parts[P_L_SHOULDER].model);
+	g_Parts[P_L_SHOULDER].pos = { 0.0f, 0.0f, -6.0f };
+
 	LoadModel(MODEL_R_SHOULDER, &g_Parts[P_R_SHOULDER].model);
+	g_Parts[P_R_SHOULDER].pos = { 0.0f, 0.0f, 6.0f };
 
 	LoadModel(MODEL_L_ARM, &g_Parts[P_L_ARM].model);
 	g_Parts[P_L_ARM].parent = &g_Parts[P_L_SHOULDER];
-	g_Parts[P_L_ARM].tbl_adrM = walk_Larm;
-	g_Parts[P_L_ARM].tbl_sizeM = sizeof(walk_Larm) / sizeof(INTERPOLATION_DATA);
+	g_Parts[P_L_ARM].pos = { 0.0f, -8.0f, -3.0f };
 
 	LoadModel(MODEL_R_ARM, &g_Parts[P_R_ARM].model);
 	g_Parts[P_R_ARM].parent = &g_Parts[P_R_SHOULDER];
+	g_Parts[P_R_ARM].pos = { 0.0f, -8.0f, 3.0f };
 
 	LoadModel(MODEL_L_THIGH, &g_Parts[P_L_THIGH].model);
+	g_Parts[P_L_THIGH].pos = { -1.0f, -13.0f, -3.5f };
+
 	LoadModel(MODEL_R_THIGH, &g_Parts[P_R_THIGH].model);
+	g_Parts[P_R_THIGH].pos = { -1.0f, -13.0f, 3.5f };
 
 	LoadModel(MODEL_L_FOOT, &g_Parts[P_L_FOOT].model);
 	g_Parts[P_L_FOOT].parent = &g_Parts[P_L_THIGH];
+	g_Parts[P_L_FOOT].pos = { 1.5f, -12.0f, 0.0f };
 
 	LoadModel(MODEL_R_FOOT, &g_Parts[P_R_FOOT].model);
 	g_Parts[P_R_FOOT].parent = &g_Parts[P_R_THIGH];
+	g_Parts[P_R_FOOT].pos = { 1.5f, -12.0f, 0.0f };
 
 	g_Load = TRUE;
 	playerNum = 0;
@@ -240,9 +258,9 @@ void UpdatePlayer(void)
 			g_Player[i].moveVec.x *= 0.8f;
 			g_Player[i].moveVec.z *= 0.8f;
 
-			for (int k = 0; k < MAX_PLAYER_PARTS; k++)
+			for (int k = 0; k < MAX_PLAYER_PARTS + 1; k++)
 			{
-				PlayerPartsIP(&g_Parts[k]);
+				PlayerPartsIP(&g_Playerline[k]);
 			}
 			UpdateArm();
 	}
@@ -295,19 +313,20 @@ void DrawPlayer(void)
 		// パーツの階層アニメーション
 		for (int k = g_Player[i].startNum; k < g_Player[i].startNum + g_Player[i].partsNum; k++)
 		{
+			int num = k + 1;	//線形補完データの添え字計算
 			// ワールドマトリックスの初期化
 			mtxWorld = XMMatrixIdentity();
 
 			// スケールを反映
-			mtxScl = XMMatrixScaling(g_Parts[k].scl.x, g_Parts[k].scl.y, g_Parts[k].scl.z);
+			mtxScl = XMMatrixScaling(g_Parts[k].scl.x + g_Playerline[num].scl.x, g_Parts[k].scl.y + g_Playerline[num].scl.y, g_Parts[k].scl.z + g_Playerline[num].scl.z);
 			mtxWorld = XMMatrixMultiply(mtxWorld, mtxScl);
 
 			// 回転を反映
-			mtxRot = XMMatrixRotationRollPitchYaw(g_Parts[k].rot.x, g_Parts[k].rot.y, g_Parts[k].rot.z);
+			mtxRot = XMMatrixRotationRollPitchYaw(g_Parts[k].rot.x + g_Playerline[num].rot.x, g_Parts[k].rot.y + g_Playerline[num].rot.y, g_Parts[k].rot.z + g_Playerline[num].rot.z);
 			mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
 			// 移動を反映
-			mtxTranslate = XMMatrixTranslation(g_Parts[k].pos.x, g_Parts[k].pos.y, g_Parts[k].pos.z);
+			mtxTranslate = XMMatrixTranslation(g_Parts[k].pos.x + g_Playerline[num].pos.x, g_Parts[k].pos.y + g_Playerline[num].pos.y, g_Parts[k].pos.z + g_Playerline[num].pos.z);
 			mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
 			if (g_Parts[k].parent != NULL)	// 子供だったら親と結合する
@@ -416,7 +435,7 @@ void PlayerStandLiner(int i)
 }
 
 //プレイヤーの線形補間
-void PlayerPartsIP(PLAYER* p)
+void PlayerPartsIP(Playerliner* p)
 {
 	if (p->tbl_adrM == NULL)return;
 	//

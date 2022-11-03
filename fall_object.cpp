@@ -15,9 +15,6 @@ void FallObject::Init(void)
 		g_Obstacle[i].use = FALSE;
 		g_Obstacle[i].efSwitch = FALSE;
 	}
-	XMFLOAT3 s = { 0.0f, 0.0f, 0.0f };
-	XMFLOAT3 m = { 1.0f, 1.0f, 1.0f };
-	SetObstacle(s, s, m, 100.0f, 50.0f, MODEL_OBSTACLE);
 	
 }
 //èIóπèàóù

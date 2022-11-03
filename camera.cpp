@@ -45,7 +45,7 @@ static int				g_ViewPortType = TYPE_FULL_SCREEN;
 //=============================================================================
 void InitCamera(void)
 {
-	g_Cam.pos = { 0.0f, 100.0f, 350.0f };
+	g_Cam.pos = { 0.0f, 80.0f, 350.0f };
 	g_Cam.at = { 0.0f, 0.0f, 0.0f };
 	g_Cam.atPos = { 0.0f, 0.0f, 0.0f };
 	g_Cam.up  = { 0.0f, 1.0f, 0.0f };
@@ -83,9 +83,9 @@ void UpdateCamera(void)
 	XMFLOAT3 pos, pos2;
 	PLAYER *player = GetPlayer();
 	pos2 = player[0].pos;
-	const float dist = 0.0f;
+	const float dist = -30.0f;
 	pos.x = pos2.x + sinf(g_Cam.rot.y)*dist;
-	pos.y =pos2.y + 100.0f;
+	pos.y =pos2.y + 30.0f;
 	pos.z = pos2.z + cosf(g_Cam.rot.y)*dist;
 	g_Cam.pos = pos;
 	if (GetKeyboardPress(DIK_Q) || IsButtonPressed(0, BUTTON_R_LEFT))
@@ -114,7 +114,7 @@ void UpdateCamera(void)
 
 	if (GetKeyboardPress(DIK_R))
 	{
-		g_Cam.rot.x += 0.1f;
+
 	}
 	else if (GetKeyboardPress(DIK_F))
 	{

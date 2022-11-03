@@ -26,7 +26,7 @@ void pArm::InitArm(void)
 
 		//0はプレイヤーモデルを親としているため、別途設定
 		if (i == 0) {
-			g_ArmParts[i].pos = { -5.0f, 40.0f, -5.0f };
+			g_ArmParts[i].pos = { -5.0f, 0.0f, -5.0f };
 			g_ArmParts[i].rot = { XM_PI * 0.0f , 0.0f, XM_PI * 0.5f };
 			g_ArmParts[i].scl = { 1.0f, 1.0f, 1.0f };
 		}
@@ -46,7 +46,7 @@ void pArm::InitArm(void)
 			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
 
 		if (i == MAX_ARM_PARTS) {
-			g_ArmParts[i].pos = { -5.0f, 40.0f, 5.0f };
+			g_ArmParts[i].pos = { -5.0f, 0.0f, 5.0f };
 			g_ArmParts[i].rot = { XM_PI * 0.0f, 0.0f, XM_PI * 0.5f };
 			g_ArmParts[i].scl = { 1.0f, 1.0f, 1.0f };
 		}

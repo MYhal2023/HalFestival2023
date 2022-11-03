@@ -13,16 +13,16 @@
 //*****************************************************************************
 #define	MODEL_PLAYER		"data/MODEL/dendritic_cells.obj"			// 読み込むモデル名
 #define	MODEL_NEUTROPHILS	"data/MODEL/neutrophils.obj"			// 読み込むモデル名
-#define	MODEL_BODY			"data/MODEL/mune.obj"			// 読み込むモデル名
-#define	MODEL_HEAD			"data/MODEL/kao.obj"			// 読み込むモデル名
-#define	MODEL_R_SHOULDER	"data/MODEL/migikata.obj"			// 読み込むモデル名
-#define	MODEL_R_ARM			"data/MODEL/migiude.obj"			// 読み込むモデル名
-#define	MODEL_L_SHOULDER	"data/MODEL/hidarikata.obj"			// 読み込むモデル名
-#define	MODEL_L_ARM			"data/MODEL/hidariude.obj"			// 読み込むモデル名
-#define	MODEL_R_THIGH		"data/MODEL/migifutomomo.obj"			// 読み込むモデル名
-#define	MODEL_R_FOOT		"data/MODEL/migiashi.obj"			// 読み込むモデル名
-#define	MODEL_L_THIGH		"data/MODEL/hidarifutomomo.obj"			// 読み込むモデル名
-#define	MODEL_L_FOOT		"data/MODEL/hidariashi.obj"			// 読み込むモデル名
+#define	MODEL_BODY			"data/MODEL/chest.obj"			// 読み込むモデル名
+#define	MODEL_HEAD			"data/MODEL/head.obj"			// 読み込むモデル名
+#define	MODEL_R_SHOULDER	"data/MODEL/rightshoulder.obj"			// 読み込むモデル名
+#define	MODEL_R_ARM			"data/MODEL/rightarm.obj"			// 読み込むモデル名
+#define	MODEL_L_SHOULDER	"data/MODEL/leftshoulder.obj"			// 読み込むモデル名
+#define	MODEL_L_ARM			"data/MODEL/leftarm.obj"			// 読み込むモデル名
+#define	MODEL_R_THIGH		"data/MODEL/rightthigh.obj"			// 読み込むモデル名
+#define	MODEL_R_FOOT		"data/MODEL/rightleg.obj"			// 読み込むモデル名
+#define	MODEL_L_THIGH		"data/MODEL/leftthigh.obj"			// 読み込むモデル名
+#define	MODEL_L_FOOT		"data/MODEL/leftleg.obj"			// 読み込むモデル名
 
 #define MAX_PLAYER		(1)					// プレイヤーの数
 #define MAX_PLAYER_PARTS (9)
@@ -76,7 +76,7 @@ public:
 	int					armType;	//装備中のアームタイプ
 };
 
-//プレイヤーの線形補間データを保存
+//プレイヤー及びパーツの線形補間データを保存
 class Playerliner
 {
 public:
@@ -84,6 +84,11 @@ public:
 	XMFLOAT3			rot;		// ポリゴンの向き(回転)
 	XMFLOAT3			scl;		// ポリゴンの大きさ(スケール)
 	float				move_time;
+	INTERPOLATION_DATA	*tbl_adrA;	// アニメデータのテーブル先頭アドレス
+	int					tbl_sizeA;	// 登録したテーブルのレコード総数
+	//歩行時のモーションデータ
+	INTERPOLATION_DATA	*tbl_adrM;	// アニメデータのテーブル先頭アドレス
+	int					tbl_sizeM;	// 登録したテーブルのレコード総数
 };
 
 struct PlayerParts
@@ -135,5 +140,5 @@ void ChangePlayerArm(BOOL flag);
 void UpdateArm(void);
 PLAYER *GetPlayer(void);
 void PlayerStandLiner(int i);
-void PlayerPartsIP(PLAYER* p);
+void PlayerPartsIP(Playerliner* p);
 HRESULT MakeVertexPlayerVar(void);

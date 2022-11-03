@@ -15,10 +15,27 @@ void Obstacle::Init(void)
 		g_Obstacle[i].use = FALSE;
 		g_Obstacle[i].efSwitch = FALSE;
 	}
-	XMFLOAT3 s = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 p = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 r = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT3 m = { 1.0f, 1.0f, 1.0f };
-	SetObstacle(s, s, m, 100.0f, 50.0f, MODEL_OBSTACLE);
-	
+	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_BOOK);
+	//p = { 100.0f, 0.0f, 0.0f };
+
+	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_BOOKSHELF);
+	//p = { 200.0f, 0.0f, 0.0f };
+
+	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_LDESK);
+	//p = {300.0f, 0.0f, 0.0f };
+
+	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_TANK);
+	//p = { 400.0f, 0.0f, 0.0f };
+
+	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_TANKGLASS);
+	//p = { 400.0f, 0.0f, 0.0f };
+
+	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_TROLLEY);
+	//p = { 500.0f, 0.0f, 0.0f };
+
 }
 //èIóπèàóù
 void Obstacle::Uninit(void)
@@ -81,7 +98,7 @@ void Obstacle::SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float durab
 		g_Obstacle[i].scl = scl;
 		g_Obstacle[i].size = size;
 		g_Obstacle[i].durability = durability;
-
+		break;
 	}
 }
 

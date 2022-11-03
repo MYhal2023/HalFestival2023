@@ -29,10 +29,10 @@ void Map::InitMap(void)
 
 	//ê›íuè·äQï®
 	//SetObstacle();
-	XMFLOAT3 p = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 p = { 0.0f, 50.0f, 0.0f };
 	XMFLOAT3 r = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT3 m = { 1.0f, 1.0f, 1.0f };
-	Obstacle::SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_OBSTACLE);
+	Obstacle::SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_TEST);
 
 	////ê›íuã~èïé“
 	////RescueLife()
