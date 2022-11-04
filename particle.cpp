@@ -12,11 +12,12 @@
 #include "shadow.h"
 #include "particle.h"
 #include "player.h"
+#include "math.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define TEXTURE_MAX			(1)			// テクスチャの数
+#define TEXTURE_MAX			(2)			// テクスチャの数
 
 #define	PARTICLE_SIZE_X		(40.0f)		// 頂点サイズ
 #define	PARTICLE_SIZE_Y		(40.0f)		// 頂点サイズ
@@ -43,6 +44,7 @@ typedef struct
 	float			fSizeY;			// 高さ
 	int				nLife;			// 寿命
 	int				nDecay;			// 減衰タイミング(nDecay <= nLife)
+	int				g_TexNo;
 	BOOL			bUse;			// 使用しているかどうか
 
 } PARTICLE;
@@ -71,6 +73,7 @@ static float					g_spd = 0.0f;					// 移動スピード
 static char *g_TextureName[TEXTURE_MAX] =
 {
 	"data/TEXTURE/effect000.jpg",
+	"data/TEXTURE/var.png",
 };
 
 static BOOL						g_Load = FALSE;
@@ -172,9 +175,9 @@ void UpdateParticle(void)
 
 				g_aParticle[nCntParticle].pos.y += g_aParticle[nCntParticle].move.y;
 
-				g_aParticle[nCntParticle].move.x += (0.0f - g_aParticle[nCntParticle].move.x) * 0.015f;
-				g_aParticle[nCntParticle].move.y += (0.0f - g_aParticle[nCntParticle].move.y) * 0.015f;
-				g_aParticle[nCntParticle].move.z += (0.0f - g_aParticle[nCntParticle].move.z) * 0.015f;
+				g_aParticle[nCntParticle].move.x += (g_aParticle[nCntParticle].move.x) * 0.015f;
+				g_aParticle[nCntParticle].move.y += (g_aParticle[nCntParticle].move.y) * 0.015f;
+				g_aParticle[nCntParticle].move.z += (g_aParticle[nCntParticle].move.z) * 0.015f;
 
 				g_aParticle[nCntParticle].nLife--;
 				if(g_aParticle[nCntParticle].nLife <= 0)
@@ -229,6 +232,24 @@ void UpdateParticle(void)
 		//	// ビルボードの設定
 		//	SetParticle(pos, move, XMFLOAT4(0.8f, 0.7f, 0.2f, 0.85f), fSize, fSize, nLife);
 		//}
+		XMFLOAT3 move = { 2.0f, 2.0f, 2.0f, };			//移動基礎量。小さいほど動きがゆっくりになる
+		float fAngle = (float)(rand() % 90) / 100.0f;	//加算する方向(数字が大きいほど、左右にばらつきが出る)
+		float fLength = (float)(rand() % 10) - 3;	//xとz方向の加算速度
+		move.x += sinf(fAngle) * fLength;
+		move.y += (float)(rand() % 5);			//高さの移動加算量
+		move.z += cosf(fAngle) * fLength;
+
+		if (GetKeyboardPress(DIK_SPACE))
+		{
+			PLAYER *player = GetPlayer();
+			XMFLOAT3 pos = { 0.0f, 0.0f, 0.0f };
+			float angle = atan2f(move.y, move.x);
+			pos.z += 200.0f;
+			XMFLOAT3 scl = { 0.05f, 0.4f, 0.05f };	//拡大率
+			XMFLOAT3 rot = { 0.0f, 0.0f, 0.0f };
+			int nLife = rand() % 100 + 50;
+			SetParticle(pos, move, rot, scl, XMFLOAT4(1.0f, 0.3f, 0.3f, 1.0f), nLife, 40, P_T_box);
+		}
 	}
 }
 
@@ -237,7 +258,7 @@ void UpdateParticle(void)
 //=============================================================================
 void DrawParticle(void)
 {
-	XMMATRIX mtxScl, mtxTranslate, mtxWorld, mtxView;
+	XMMATRIX mtxScl, mtxRot,mtxTranslate, mtxWorld, mtxView;
 	CAMERA *cam = GetCamera();
 
 	// ライティングを無効に
@@ -257,13 +278,14 @@ void DrawParticle(void)
 	// プリミティブトポロジ設定
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	// テクスチャ設定
-	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
 
 	for(int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++)
 	{
 		if(g_aParticle[nCntParticle].bUse)
 		{
+			// テクスチャ設定
+			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_aParticle[nCntParticle].g_TexNo]);
+
 			// ワールドマトリックスの初期化
 			mtxWorld = XMMatrixIdentity();
 
@@ -275,7 +297,7 @@ void DrawParticle(void)
 			//mtxWorld.r[3].m128_f32[1] = 0.0f;
 			//mtxWorld.r[3].m128_f32[2] = 0.0f;
 
-			// 処理が速いしお勧め
+						// 処理が速いしお勧め
 			mtxWorld.r[0].m128_f32[0] = mtxView.r[0].m128_f32[0];
 			mtxWorld.r[0].m128_f32[1] = mtxView.r[1].m128_f32[0];
 			mtxWorld.r[0].m128_f32[2] = mtxView.r[2].m128_f32[0];
@@ -291,6 +313,11 @@ void DrawParticle(void)
 			// スケールを反映
 			mtxScl = XMMatrixScaling(g_aParticle[nCntParticle].scale.x, g_aParticle[nCntParticle].scale.y, g_aParticle[nCntParticle].scale.z);
 			mtxWorld = XMMatrixMultiply(mtxWorld, mtxScl);
+
+			// 回転を反映
+			mtxRot = XMMatrixRotationRollPitchYaw(g_aParticle[nCntParticle].rot.x, g_aParticle[nCntParticle].rot.y, g_aParticle[nCntParticle].rot.z);
+			mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
+
 
 			// 移動を反映
 			mtxTranslate = XMMatrixTranslation(g_aParticle[nCntParticle].pos.x, g_aParticle[nCntParticle].pos.y, g_aParticle[nCntParticle].pos.z);
@@ -380,7 +407,7 @@ void SetColorParticle(int nIdxParticle, XMFLOAT4 col)
 //=============================================================================
 // パーティクルの発生処理
 //=============================================================================
-int SetParticle(XMFLOAT3 pos, XMFLOAT3 move, XMFLOAT4 col, float fSizeX, float fSizeY, int nLife, int nDecay)
+int SetParticle(XMFLOAT3 pos, XMFLOAT3 move, XMFLOAT3 rot, XMFLOAT3 scl, XMFLOAT4 col,int nLife, int nDecay, int texNo)
 {
 	int nIdxParticle = -1;
 
@@ -389,15 +416,15 @@ int SetParticle(XMFLOAT3 pos, XMFLOAT3 move, XMFLOAT4 col, float fSizeX, float f
 		if(!g_aParticle[nCntParticle].bUse)
 		{
 			g_aParticle[nCntParticle].pos = pos;
-			g_aParticle[nCntParticle].rot   = { 0.0f, 0.0f, 0.0f };
+			g_aParticle[nCntParticle].rot   = rot;
 			g_aParticle[nCntParticle].scale = { 1.0f, 1.0f, 1.0f };
 			g_aParticle[nCntParticle].move = move;
 			g_aParticle[nCntParticle].material.Diffuse = col;
 			g_aParticle[nCntParticle].col = col;
-			g_aParticle[nCntParticle].fSizeX = fSizeX;
-			g_aParticle[nCntParticle].fSizeY = fSizeY;
+			g_aParticle[nCntParticle].scale = scl;
 			g_aParticle[nCntParticle].nLife = nLife;
 			g_aParticle[nCntParticle].nDecay = nDecay;
+			g_aParticle[nCntParticle].g_TexNo = texNo;
 			g_aParticle[nCntParticle].bUse = TRUE;
 
 			nIdxParticle = nCntParticle;
