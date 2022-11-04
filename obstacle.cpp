@@ -15,13 +15,13 @@ void Obstacle::Init(void)
 		g_Obstacle[i].use = FALSE;
 		g_Obstacle[i].efSwitch = FALSE;
 	}
-	XMFLOAT3 p = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 p = { 0.0f, 50.0f, 0.0f };
 	XMFLOAT3 r = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT3 m = { 1.0f, 1.0f, 1.0f };
-	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_BOOK);
+
 	//p = { 100.0f, 0.0f, 0.0f };
 
-	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_BOOKSHELF);
+	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_LDESK);
 	//p = { 200.0f, 0.0f, 0.0f };
 
 	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_LDESK);

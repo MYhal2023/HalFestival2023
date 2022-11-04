@@ -36,6 +36,7 @@ void pArm::InitArm(void)
 			g_ArmParts[i].scl = { 1.0f, 1.0f, 1.0f };
 		}
 	}
+
 	for (int i = MAX_ARM_PARTS; i < MAX_ARM_PARTS * 2; i++)
 	{
 		g_ArmParts[i].use = TRUE;

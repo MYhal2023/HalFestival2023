@@ -1,12 +1,12 @@
 #pragma once
 #include "model.h"
-#define	MODEL_BOOK		"data/MODEL/OBSTACLE_MODEL/book.obj"			// 読み込むモデル名
-#define	MODEL_BOOKSHELF	"data/MODEL/OBSTACLE_MODEL/bookshelf.obj"			// 読み込むモデル名
-#define	MODEL_LDESK		"data/MODEL/OBSTACLE_MODEL/Ldesk.obj"			// 読み込むモデル名
-#define	MODEL_TANK			"data/MODEL/OBSTACLE_MODEL/tank.obj"			// 読み込むモデル名
-#define	MODEL_TANKGLASS		"data/MODEL/OBSTACLE_MODEL/tankglass.obj"			// 読み込むモデル名
-#define	MODEL_TROLLEY		"data/MODEL/OBSTACLE_MODEL/trolley.obj"			// 読み込むモデル名
-#define	MODEL_TEST		"data/MODEL/OBSTACLE_MODEL/neutrophils.obj"			// 読み込むモデル名
+#define	MODEL_BOOK			"data/MODEL/book.obj"			// 読み込むモデル名
+#define	MODEL_BOOKSHELF		"data/MODEL/bookshelf.obj"		// 読み込むモデル名
+#define	MODEL_LDESK			"data/MODEL/Ldesk.obj"			// 読み込むモデル名
+#define	MODEL_TANK			"data/MODEL/tank.obj"			// 読み込むモデル名
+#define	MODEL_TANKGLASS		"data/MODEL/tankglass.obj"			// 読み込むモデル名
+#define	MODEL_TROLLEY		"data/MODEL/trolley.obj"			// 読み込むモデル名
+#define	MODEL_TEST			"data/MODEL/neutrophils.obj"			// 読み込むモデル名
 #define MAX_OBSTACLE (30)
 #define FALL_SPEED	(5.0f)
 //障害物クラス(設置)

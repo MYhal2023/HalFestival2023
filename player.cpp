@@ -23,6 +23,7 @@
 #include "particle.h"
 #include "meshwall.h"
 #include "playerIPData.h"
+#include "obstacle.h"
 #include <algorithm>
 
 //*****************************************************************************

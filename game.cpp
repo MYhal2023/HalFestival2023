@@ -78,10 +78,12 @@ void InitSystem(void)
 	pArm::InitArm();
 
 	InitBullet();	
+
 	// フィールドの初期化
 	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD_X, FIELD_Z, BLOCK_SIZE, BLOCK_SIZE, GROUND);
 
 	Map::InitMap();
+
 
 	//InitOver();
 
@@ -197,6 +199,7 @@ void DrawGame0(void)
 	DrawMeshField();
 
 	MapWallModel::Draw();
+
 
 	DrawMeshWall();
 
