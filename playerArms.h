@@ -7,7 +7,7 @@
 #define	MODEL_ARM_HAND		"data/MODEL/arm_hand.obj"			// 読み込むモデル名
 #define	MODEL_ARM_PARTS		"data/MODEL/ARMpart0.obj"			// 読み込むモデル名
 #define ARM_VAR			(3)	//アームの種類
-#define MAX_ARM_PARTS (7)
+#define MAX_ARM_PARTS (10)
 ////アーム種類列挙
 //enum ArmVar
 //{
@@ -27,6 +27,7 @@ protected:
 	int					tbl_sizeA;	// 登録したテーブルのレコード総数
 	int					tbl_sizeM;	// 登録したテーブルのレコード総数
 	float				move_time;	// 実行時間
+	INTERPOLATION_DATA*					old_tbl;	//現在の使用テーブル
 
 	int					partsNum;	//アームのパーツ数
 
@@ -46,6 +47,7 @@ public:
 	static void SetArmParent(PLAYER *p);
 	static void InitArm(void);
 	static void UpdateArm(void);
+	static INTERPOLATION_DATA* CheckMotionData(PLAYER *p);
 	static void IPArm(pArm* p, INTERPOLATION_DATA* i);
 	static pArm* GetArm(void);
 	static pArm* GetArmParts(void);

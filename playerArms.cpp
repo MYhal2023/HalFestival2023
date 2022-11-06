@@ -58,7 +58,8 @@ void pArm::InitArm(void)
 		}
 
 		g_ArmParts[i].tbl_adrXgun = NULL;
-		g_ArmParts[i].tbl_adr = wait_arm;
+		g_ArmParts[i].tbl_adr = wait_armLeft;
+		g_ArmParts[i].move_time = 0.0f;
 	}
 
 	LoadModel(MODEL_XGUN, &g_ArmWeapon[0].model);
@@ -70,19 +71,45 @@ void pArm::InitArm(void)
 	Saw::InitArm();
 }
 
+//player.cppのUpdateArm()関数に入れる
 void pArm::UpdateArm(void)
 {
 	//片腕ずつ処理(根本部分は除外)
+	//左腕
 	for (int i = 1; i < MAX_ARM_PARTS; i++)
 	{
-		IPArm(&g_ArmParts[i], wait_arm);
+		if (i < MAX_ARM_PARTS / 2) {	//下半分のモーション
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL001];
+			IPArm(&g_ArmParts[i], AttackArmSawLeft001);
+		}
+		else if (i >= MAX_ARM_PARTS / 2)	//上半分のモーション
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL002];
+			IPArm(&g_ArmParts[i], AttackArmSawLeft002);
+		}
 	}
 
+	//右腕
 	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
 	{
-		IPArm(&g_ArmParts[i], wait_arm);
+		if (i < MAX_ARM_PARTS / 2) {
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL001];
+			IPArm(&g_ArmParts[i], AttackArmSawLeft001);
+		}
+		else if (i >= MAX_ARM_PARTS / 2)
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL002];
+			IPArm(&g_ArmParts[i], AttackArmSawLeft002);
+		}
 	}
+
 }
+
+INTERPOLATION_DATA * pArm::CheckMotionData(PLAYER *p)
+{
+	return nullptr;
+}
+
 
 void pArm::IPArm(pArm* p, INTERPOLATION_DATA* i)
 {

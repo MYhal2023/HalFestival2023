@@ -489,7 +489,7 @@ void MovePlayer(void)
 	float old_x = g_Player[0].pos.x;
 	float old_z = g_Player[0].pos.z;
 	// Key“ü—Í‚ª‚ ‚Á‚½‚çˆÚ“®ˆ—‚·‚é
-	if (g_Player[0].spd > 0.0f)
+	if (g_Player[0].spd > 0.1f)
 	{
 		float angle = atan2f(g_Player[0].moveVec.x, g_Player[0].moveVec.z);
 		g_Player[0].rot.y = angle;

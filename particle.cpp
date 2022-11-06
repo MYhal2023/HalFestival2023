@@ -298,17 +298,17 @@ void DrawParticle(void)
 			//mtxWorld.r[3].m128_f32[2] = 0.0f;
 
 						// èàóùÇ™ë¨Ç¢ÇµÇ®ä©Çﬂ
-			mtxWorld.r[0].m128_f32[0] = mtxView.r[0].m128_f32[0];
-			mtxWorld.r[0].m128_f32[1] = mtxView.r[1].m128_f32[0];
-			mtxWorld.r[0].m128_f32[2] = mtxView.r[2].m128_f32[0];
+			//mtxWorld.r[0].m128_f32[0] = mtxView.r[0].m128_f32[0];
+			//mtxWorld.r[0].m128_f32[1] = mtxView.r[1].m128_f32[0];
+			//mtxWorld.r[0].m128_f32[2] = mtxView.r[2].m128_f32[0];
 
-			mtxWorld.r[1].m128_f32[0] = mtxView.r[0].m128_f32[1];
-			mtxWorld.r[1].m128_f32[1] = mtxView.r[1].m128_f32[1];
-			mtxWorld.r[1].m128_f32[2] = mtxView.r[2].m128_f32[1];
+			//mtxWorld.r[1].m128_f32[0] = mtxView.r[0].m128_f32[1];
+			//mtxWorld.r[1].m128_f32[1] = mtxView.r[1].m128_f32[1];
+			//mtxWorld.r[1].m128_f32[2] = mtxView.r[2].m128_f32[1];
 
-			mtxWorld.r[2].m128_f32[0] = mtxView.r[0].m128_f32[2];
-			mtxWorld.r[2].m128_f32[1] = mtxView.r[1].m128_f32[2];
-			mtxWorld.r[2].m128_f32[2] = mtxView.r[2].m128_f32[2];
+			//mtxWorld.r[2].m128_f32[0] = mtxView.r[0].m128_f32[2];
+			//mtxWorld.r[2].m128_f32[1] = mtxView.r[1].m128_f32[2];
+			//mtxWorld.r[2].m128_f32[2] = mtxView.r[2].m128_f32[2];
 
 			// ÉXÉPÅ[ÉãÇîΩâf
 			mtxScl = XMMatrixScaling(g_aParticle[nCntParticle].scale.x, g_aParticle[nCntParticle].scale.y, g_aParticle[nCntParticle].scale.z);
