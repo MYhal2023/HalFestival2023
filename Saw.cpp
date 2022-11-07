@@ -1,6 +1,13 @@
 #include "playerArms.h"
+#include "collision.h"
+#include "obstacle.h"
+#include "particle.h"
+#include "camera.h"
 static Saw g_PlayerArm;
-
+static XMFLOAT3 efPos[3];
+static XMFLOAT3 efRot[3];
+static BOOL efSwitch[3];
+static float efTime[3];
 void Saw::InitArm(void)
 {
 	LoadModel(MODEL_SAW, &g_PlayerArm.model);
@@ -9,11 +16,82 @@ void Saw::InitArm(void)
 	g_PlayerArm.pos = { 0.0f, 0.0f, 0.0f };
 	g_PlayerArm.rot = { 0.0f, 0.0f, 0.0f };
 	g_PlayerArm.scl = { 1.0f, 1.0f, 1.0f };
+	g_PlayerArm.attack = 10.0f;
+	g_PlayerArm.atInterval = 10.0f;
+	g_PlayerArm.atCount = 0.0f;
+	g_PlayerArm.motionTime = 60.0f;
+	for (int i = 0; i < 3; i++)
+	{
+		efSwitch[i] = FALSE;
+	}
+
 }
 
 void Saw::Action(void)
 {
+	pArm* arm = GetArmParts();
+	Obstacle* ob = Obstacle::GetObstacle();
+	PLAYER *player = GetPlayer();
+	CAMERA *camera = GetCamera();
+	g_PlayerArm.atCount += 1.0f;
+	if (g_PlayerArm.atCount >= g_PlayerArm.atInterval)
+	{
+		for (int k = 0; k < MAX_OBSTACLE; k++)
+		{
+			if (!ob[k].use)continue;
 
+			XMFLOAT3 pos = player[0].pos;
+			float dist = 30.0f;
+			pos.x += sinf(player[0].rot.y) * dist;
+			pos.z += cosf(player[0].rot.y) * dist;
+			if (CollisionBC(pos, ob[k].pos, 1.0f, ob[k].size))
+			{
+				ob[k].durability -= g_PlayerArm.attack;
+				g_PlayerArm.atCount = 0.0f;
+				SetEffect(pos, camera->rot.y, 10.0f);
+			}
+		}
+	}
+
+	Effect();
+}
+
+void Saw::SetEffect(XMFLOAT3 pos, float rot, float time)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		if (efSwitch[i])continue;
+
+		efSwitch[i] = TRUE;
+		efPos[i] = pos;
+		efRot[i] = {0.0f, rot, 0.0f};
+		efTime[i] = time;
+	}
+}
+
+void Saw::Effect(void)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		if (!efSwitch[i])continue;
+
+		XMFLOAT3 move = { 2.0f, 2.0f, 2.0f, };			//ˆÚ“®Šî‘b—ÊB¬‚³‚¢‚Ù‚Ç“®‚«‚ª‚ä‚Á‚­‚è‚É‚È‚é
+		float fAngle = (float)(rand() % 90) / 100.0f;	//‰ÁŽZ‚·‚é•ûŒü(”Žš‚ª‘å‚«‚¢‚Ù‚ÇA¶‰E‚É‚Î‚ç‚Â‚«‚ªo‚é)
+		float fLength = (float)(rand() % 10) - 3;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x
+		move.x += sinf(fAngle) * fLength;
+		move.y += (float)(rand() % 5);			//‚‚³‚ÌˆÚ“®‰ÁŽZ—Ê
+		move.z += cosf(fAngle) * fLength;
+
+		float angle = atan2f(move.y, move.x);
+		XMFLOAT3 scl = { 0.025f, 0.4f, 0.025f };	//Šg‘å—¦
+		XMFLOAT3 rot = efRot[i];
+		int nLife = rand() % 100 + 50;
+		SetParticle(efPos[i], move, rot, scl, XMFLOAT4(1.0f, 0.3f, 0.3f, 1.0f), nLife, 40, P_T_box);
+		efTime[i] -= 1.0f;
+
+		if (efTime[i] <= 0.0f)
+			efSwitch[i] = FALSE;
+	}
 }
 
 void Saw::Draw(void)

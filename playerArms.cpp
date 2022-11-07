@@ -1,9 +1,10 @@
 #include "playerArms.h"
 #include "IPArmData.h"
+#include "debugproc.h"
 #define MAX_ARM (2)
 static pArm g_PlayerArm[2];
 static pArm g_ArmParts[MAX_ARM_PARTS * 2];
-static pArm g_ArmWeapon[ARM_VAR];
+static pArm g_ArmWeapon[ARM_VAR + 1];
 void pArm::InitArm(void)
 {
 	for (int i = 0; i < MAX_ARM; i++)
@@ -65,6 +66,7 @@ void pArm::InitArm(void)
 	LoadModel(MODEL_XGUN, &g_ArmWeapon[0].model);
 	LoadModel(MODEL_BRASTER, &g_ArmWeapon[1].model);
 	LoadModel(MODEL_SAW, &g_ArmWeapon[2].model);
+	LoadModel(MODEL_ARM_SAW_BLADE, &g_ArmWeapon[3].model);
 
 	Xgun::InitArm();
 	Braster::InitArm();
@@ -102,7 +104,7 @@ void pArm::UpdateArm(void)
 			IPArm(&g_ArmParts[i], AttackArmSawLeft002);
 		}
 	}
-
+	PrintDebugProc("ƒA[ƒ€À•W:%f\n", g_ArmParts[MAX_ARM_PARTS - 1]);
 }
 
 INTERPOLATION_DATA * pArm::CheckMotionData(PLAYER *p)
@@ -205,6 +207,7 @@ void pArm::Draw(void)
 				break;
 			case 2:
 				DrawModel(&g_ArmWeapon[2].model);
+				DrawModel(&g_ArmWeapon[3].model);
 				break;
 			}
 		}

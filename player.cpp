@@ -118,6 +118,7 @@ HRESULT InitPlayer(void)
 		g_Player[i].startNum = 0;
 		g_Player[i].spd = 0.0f;
 		g_Player[i].armType = 0;
+		g_Player[i].motionTime = 0.0f;
 
 		// 階層アニメーション用の初期化処理
 		g_Player[i].parent = NULL;			// 本体（親）なのでNULLを入れる
@@ -492,6 +493,8 @@ void MovePlayer(void)
 	if (g_Player[0].spd > 0.1f)
 	{
 		float angle = atan2f(g_Player[0].moveVec.x, g_Player[0].moveVec.z);
+
+		if (!g_Player[0].attack)
 		g_Player[0].rot.y = angle;
 	}
 	//移動値をベクトル変換して移動させる
@@ -554,6 +557,8 @@ void SetPlayerArm(void)
 //アームの切り替え
 void ChangePlayerArm(BOOL flag)
 {
+	if (g_Player[0].attack)return;	//攻撃中なら変更不可
+
 	if (flag)
 	{
 		g_Player[0].armType++;
@@ -571,20 +576,39 @@ void ChangePlayerArm(BOOL flag)
 void UpdateArm(void)
 {
 	pArm::UpdateArm();
-	if (GetKeyboardTrigger(DIK_1))
+	//攻撃開始
+	if (GetKeyboardTrigger(DIK_1) && g_Player[0].motionTime <= 0.0f)
+	{
+		g_Player[0].attack = TRUE;
+	}
+	//アーム別に攻撃処理
+	if (g_Player[0].attack)
 	{
 		switch (g_Player[0].armType)
 		{
 		case 0:
 			Xgun::Action();
+			if (g_Player[0].motionTime <= 0.0f)
+				g_Player[0].motionTime = 60.0f;
 			break;
 		case 1:
+			Braster::Action();
+			if (g_Player[0].motionTime <= 0.0f)
+				g_Player[0].motionTime = 30.0f;
 			break;
 		case 2:
+			Saw::Action();
+			if (g_Player[0].motionTime <= 0.0f)
+				g_Player[0].motionTime = 120.0f;
 			break;
 
 		}
+		g_Player[0].motionTime -= 1.0f;
 	}
+
+	//モーション時間で攻撃処理を終了させる
+	if (g_Player[0].motionTime <= 0.0f)
+		g_Player[0].attack = FALSE;
 }
 
 HRESULT MakeVertexPlayerVar(void)

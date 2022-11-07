@@ -74,6 +74,8 @@ public:
 
 	float				spd;
 	int					armType;	//装備中のアームタイプ
+	float				motionTime;
+	BOOL				attack;
 };
 
 //プレイヤー及びパーツの線形補間データを保存

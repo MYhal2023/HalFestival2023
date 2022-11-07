@@ -95,6 +95,7 @@ void InitSystem(void)
 	InitParticle();
 	InitUI();
 	RescueLife::InitRescue();
+	RescueLife::SetRemain(XMFLOAT3(100.0f, 0.0f, 100.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), MODEL_RESCUE001);
 	//InitReward();
 	mode = 1;
 	g_bPause = TRUE;

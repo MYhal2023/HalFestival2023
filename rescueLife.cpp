@@ -84,10 +84,11 @@ void RescueLife::SetRemain(XMFLOAT3 pos, XMFLOAT3 rot, char* model)
 
 		LoadModel(model, &g_RscLife[i].model);
 		g_RscLife[i].use = TRUE;
-		g_RscLife[i].rescue = TRUE;
+		g_RscLife[i].rescue = FALSE;
 		g_RscLife[i].load = TRUE;
 		g_RscLife[i].pos = pos;
 		g_RscLife[i].rot = rot;
+		g_RscLife[i].scl = {1.0f, 1.0f, 1.0f};
 		remain++;
 		break;
 	}

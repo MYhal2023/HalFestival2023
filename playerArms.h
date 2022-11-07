@@ -6,6 +6,7 @@
 #define	MODEL_SAW		"data/MODEL/setsudan.obj"			// 読み込むモデル名
 #define	MODEL_ARM_HAND		"data/MODEL/arm_hand.obj"			// 読み込むモデル名
 #define	MODEL_ARM_PARTS		"data/MODEL/ARMpart0.obj"			// 読み込むモデル名
+#define	MODEL_ARM_SAW_BLADE		"data/MODEL/saw.obj"			// 読み込むモデル名
 #define ARM_VAR			(3)	//アームの種類
 #define MAX_ARM_PARTS (10)
 ////アーム種類列挙
@@ -58,16 +59,21 @@ public:
 class Xgun :public pArm
 {
 public:
+	BOOL	attackUse;
+	float	atInterval;
+	float	atCount;
 	static void InitArm(void);
 	static void Action(void);
 	static void Draw(void);
 	static pArm* GetArm(void);
-	static void SetParent(pArm * p1, pArm * p2);
 }; 
 
 class Braster :public pArm
 {
 public:
+	BOOL	attackUse;
+	float	atInterval;
+	float	atCount;
 	static void InitArm(void);
 	static void Action(void);
 	static void Draw(void);
@@ -77,8 +83,14 @@ public:
 class Saw :public pArm
 {
 public:
+	float attack;
+	float atInterval;
+	float atCount;
+	float motionTime;
 	static void InitArm(void);
 	static void Action(void);
+	static void SetEffect(XMFLOAT3 pos, float rot, float time);
+	static void Effect(void);
 	static void Draw(void);
 	static pArm* GetArm(void);
 };

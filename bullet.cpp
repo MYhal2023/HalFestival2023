@@ -141,7 +141,8 @@ void UpdateBullet(void)
 		// ’e‚ÌˆÚ“®ˆ—
 		g_Bullet[i].pos.x += sinf(g_Bullet[i].rot.y) * g_Bullet[i].spd;
 		g_Bullet[i].pos.z += cosf(g_Bullet[i].rot.y) * g_Bullet[i].spd;
-
+		if (g_Bullet[i].model_num == Bullet_XGun)	//XƒKƒ“‚¾‚¯ƒXƒ[‚É
+			g_Bullet[i].spd *= 0.95f;
 		g_Bullet[i].life--;
 
 		Obstacle* ob = Obstacle::GetObstacle();

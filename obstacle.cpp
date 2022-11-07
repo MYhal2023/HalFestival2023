@@ -2,6 +2,7 @@
 #include "player.h"
 #include "bullet.h"
 #include "collision.h"
+#include "debugproc.h"
 static Obstacle g_Obstacle[MAX_OBSTACLE];
 
 
@@ -58,7 +59,7 @@ void Obstacle::Update(void)
 	{
 		if (!g_Obstacle[i].use)continue;
 
-
+		PrintDebugProc("\n耐久度:%f", g_Obstacle[i].durability);
 
 		Obstacle::Distract(&g_Obstacle[i]);	//壊れてるのかをチェック
 	}
