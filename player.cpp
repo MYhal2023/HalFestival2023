@@ -136,6 +136,8 @@ HRESULT InitPlayer(void)
 	g_Player[0].use = TRUE;
 	g_Player[0].load = TRUE;
 	g_Player[0].partsNum = 9;
+	g_Player[0].lifeMax = 100.0f;
+	g_Player[0].life = g_Player[0].lifeMax;
 	LoadModel(MODEL_BODY, &g_Player[0].model);
 	SetPlayerArm();
 
@@ -269,7 +271,8 @@ void UpdatePlayer(void)
 #ifdef _DEBUG
 	PrintDebugProc("プレイヤー座標X:%f, Z:%f\n", g_Player[0].pos.x, g_Player[0].pos.z);
 	PrintDebugProc("プレイヤーアーム:%d\n", g_Player[0].armType);
-
+	if (GetKeyboardPress(DIK_0))
+		g_Player[0].life -= 0.5f;
 #endif
 }
 

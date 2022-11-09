@@ -166,9 +166,9 @@ void UpdateParticle(void)
 	//g_posBase = pPlayer->pos;
 
 	{
-		for(int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++)
+		for (int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++)
 		{
-			if(g_aParticle[nCntParticle].bUse)
+			if (g_aParticle[nCntParticle].bUse)
 			{// 使用中
 				g_aParticle[nCntParticle].pos.x += g_aParticle[nCntParticle].move.x;
 				g_aParticle[nCntParticle].pos.z += g_aParticle[nCntParticle].move.z;
@@ -180,14 +180,14 @@ void UpdateParticle(void)
 				g_aParticle[nCntParticle].move.z += (g_aParticle[nCntParticle].move.z) * 0.015f;
 
 				g_aParticle[nCntParticle].nLife--;
-				if(g_aParticle[nCntParticle].nLife <= 0)
+				if (g_aParticle[nCntParticle].nLife <= 0)
 				{
 					g_aParticle[nCntParticle].bUse = FALSE;
 				}
 				else
 				{
 					//加算合成なので、透明になっていくように見える
-					if(g_aParticle[nCntParticle].nLife <= g_aParticle[nCntParticle].nDecay)
+					if (g_aParticle[nCntParticle].nLife <= g_aParticle[nCntParticle].nDecay)
 					{
 						g_aParticle[nCntParticle].material.Diffuse.x = g_aParticle[nCntParticle].col.x - (float)(80 - g_aParticle[nCntParticle].nLife) / 80 * g_aParticle[nCntParticle].col.x;
 						g_aParticle[nCntParticle].material.Diffuse.y = g_aParticle[nCntParticle].col.y - (float)(80 - g_aParticle[nCntParticle].nLife) / 80 * g_aParticle[nCntParticle].col.y;
@@ -241,14 +241,23 @@ void UpdateParticle(void)
 
 		if (GetKeyboardPress(DIK_SPACE))
 		{
-			PLAYER *player = GetPlayer();
-			XMFLOAT3 pos = { 0.0f, 0.0f, 0.0f };
-			float angle = atan2f(move.y, move.x);
-			pos.z += 200.0f;
-			XMFLOAT3 scl = { 0.05f, 0.4f, 0.05f };	//拡大率
-			XMFLOAT3 rot = { 0.0f, 0.0f, 0.0f };
-			int nLife = rand() % 100 + 50;
-			SetParticle(pos, move, rot, scl, XMFLOAT4(1.0f, 0.3f, 0.3f, 1.0f), nLife, 40, P_T_box);
+			int num = 1;		//繰り返し数。一度に複数の角度で出したいなどがあれば数字を大きくする
+			for (int i = 0; i < num; i++) {
+				CAMERA *cam = GetCamera();
+				XMFLOAT3 move = { 2.0f, 2.0f, 2.0f, };			//移動基礎量。小さいほど動きがゆっくりに、かつまとまりができるなる
+				float fAngle = (float)(rand() % 90) / 100.0f;	//加算する方向(数式結果の数字が大きいほど、左右にばらつきが出る)
+				float fLength = (float)(rand() % 10) - 3;	//xとz方向の加算速度
+				move.x += sinf(fAngle) * fLength;
+				move.y += (float)(rand() % 5);			//高さの移動加算量
+				move.z += cosf(fAngle) * fLength;
+
+				float angle = atan2f(move.y, move.x);
+				XMFLOAT3 scl = { 0.025f, 0.4f, 0.025f };	//拡大率
+				XMFLOAT3 rot = { 0.0f, cam->rot.y, 0.0f };	//回転率。いじる必要なし
+				int nLife = rand() % 100 + 50;
+				rot.z = angle - XM_PI * 0.5f;
+				SetParticle(XMFLOAT3(0.0f, 2.0f, 100.0f), move, rot, scl, XMFLOAT4(1.0f, 0.3f, 0.3f, 1.0f), nLife, 40, P_T_box);
+			}
 		}
 	}
 }

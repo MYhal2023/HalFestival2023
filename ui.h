@@ -13,6 +13,7 @@ public:
 	XMFLOAT4 color;
 	XMFLOAT2 pos;
 	XMFLOAT2 size;
+	XMFLOAT2 tex;
 	BOOL use;
 	ID3D11ShaderResourceView	*g_Texture;
 };

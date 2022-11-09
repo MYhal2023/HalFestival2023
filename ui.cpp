@@ -11,6 +11,7 @@
 #include "ui.h"
 #include "reserve.h"
 #include "debugproc.h"
+#include "player.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -78,25 +79,31 @@ HRESULT InitUI(void)
 	const float hpSize = 0.4f;
 	g_UI[hp_box].pos = hpPos;
 	g_UI[hp_box].size = { 1200.0f * hpSize, 400.0f *hpSize };
+	g_UI[hp_box].tex = { 1.0f, 1.0f };
 
 	g_UI[hp_var_bg].pos = hpPos;
 	g_UI[hp_var_bg].size = { 1200.0f * hpSize, 400.0f *hpSize };
+	g_UI[hp_var_bg].tex = { 1.0f, 1.0f };
 
 	g_UI[hp_var].pos = hpPos;
 	g_UI[hp_var].size = { 1200.0f * hpSize, 400.0f *hpSize };
+	g_UI[hp_var].tex = { 1.0f, 1.0f };
 
 	const XMFLOAT2 rescuePos = { RESCUE_STPOS_X, SCREEN_CENTER_Y * 1.775f };
 	const float rescueSize = 0.5f;
 	g_UI[rescue_ng].pos = rescuePos;
 	g_UI[rescue_ng].size = { RESCUE_SIZE_X, 255.0f *rescueSize };
+	g_UI[rescue_ng].tex = { 1.0f, 1.0f };
 
 	g_UI[rescue_ok].pos = rescuePos;
 	g_UI[rescue_ok].size = { RESCUE_SIZE_X, 255.0f *rescueSize };
+	g_UI[rescue_ok].tex = { 1.0f, 1.0f };
 
 	const XMFLOAT2 checkPos = { RESCUE_STPOS_X, SCREEN_CENTER_Y * 1.775f };
 	const float checkSize = 0.75f;
 	g_UI[check_mark].pos = checkPos;
 	g_UI[check_mark].size = { 140.0f*checkSize, 145.0f *checkSize };
+	g_UI[check_mark].tex = { 1.0f, 1.0f };
 
 	const XMFLOAT2 armPos = { 1600.0f, SCREEN_CENTER_Y * 1.6f };
 	const float armSize = 1.1f;
@@ -104,9 +111,11 @@ HRESULT InitUI(void)
 
 	g_UI[arm_UI_gauge].pos = armPos;
 	g_UI[arm_UI_gauge].size = { 500.0f*armSize, 500.0f *armSize };
+	g_UI[arm_UI_gauge].tex = { 1.0f, 1.0f };
 
 	g_UI[arm_UI_slot].pos = armPos;
 	g_UI[arm_UI_slot].size = { 500.0f*armSlotSize, 500.0f *armSlotSize };
+	g_UI[arm_UI_slot].tex = { 1.0f, 1.0f };
 
 	g_Load = TRUE;
 	return S_OK;
@@ -144,6 +153,8 @@ void UninitUI(void)
 //=============================================================================
 void UpdateUI(void)
 {
+
+
 }
 
 //=============================================================================
@@ -171,6 +182,16 @@ void DrawUI(void)
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
+
+	PLAYER *player = GetPlayer();
+	if (player[0].life > 0.0f) {
+		float par = (player[0].life) / (player[0].lifeMax);
+		g_UI[hp_var].tex.x = par;
+		g_UI[hp_var].size.x = 1160.0f * 0.4f * par;
+		g_UI[hp_var].pos.x = 420.0f - ((1160.0f * 0.4f * (1.0f - par)) * (0.5f));
+	}
+	else
+		g_UI[hp_var].tex = { 0.0f, 0.0f };
 
 	DrawTexture(&g_UI[hp_var_bg]);
 	DrawTexture(&g_UI[hp_var]);
@@ -233,7 +254,7 @@ void DrawTexture(UI* utp)
 	GetDeviceContext()->PSSetShaderResources(0, 1, &utp->g_Texture);
 
 	// １枚のポリゴンの頂点とテクスチャ座標を設定
-	SetSpriteColor(g_VertexBuffer, utp->pos.x, utp->pos.y, utp->size.x, utp->size.y, 0.0f, 0.0f, 1.0f, 1.0f,
+	SetSpriteColor(g_VertexBuffer, utp->pos.x, utp->pos.y, utp->size.x, utp->size.y, 0.0f, 0.0f, utp->tex.x, utp->tex.y,
 		utp->color);
 
 	// ポリゴン描画

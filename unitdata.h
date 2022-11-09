@@ -37,8 +37,8 @@ public:
 	BOOL			attackUse;		//この攻撃判定が使用されたか
 
 	int				state;
-	int				life;			//プレイヤーHP
-	int				lifeMax;		//プレイヤー最大HP
+	float			life;			//プレイヤーHP
+	float			lifeMax;		//プレイヤー最大HP
 	int				power;
 	int				diffend;
 };

@@ -175,6 +175,8 @@ void UpdateGame(void)
 
 		Obstacle::Update();
 
+		FallObject::Update();
+
 		UpdateParticle();
 		//UpdateCharFade();
 		//// âeÇÃçXêVèàóù
@@ -205,6 +207,8 @@ void DrawGame0(void)
 	DrawMeshWall();
 
 	Obstacle::Draw();
+
+	FallObject::Draw();
 
 	RescueLife::DrawRescue();
 
