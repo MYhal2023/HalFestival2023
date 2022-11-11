@@ -12,6 +12,7 @@
 #include "reserve.h"
 #include "debugproc.h"
 #include "player.h"
+#include "time.h"
 
 //*****************************************************************************
 // ƒ}ƒNƒ’è‹`
@@ -200,6 +201,7 @@ void DrawUI(void)
 	DrawTexture(&g_UI[arm_UI_slot]);
 	RescueLife* p = RescueLife::GetRescueLife();
 	DrawRescueLife(p);
+	DrawTime();
 
 	PrintDebugProc("‹~•:%d", p->GetRescue(0));
 	SetDepthEnable(TRUE);

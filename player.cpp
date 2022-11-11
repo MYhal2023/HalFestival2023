@@ -138,7 +138,8 @@ HRESULT InitPlayer(void)
 	g_Player[0].partsNum = 9;
 	g_Player[0].lifeMax = 100.0f;
 	g_Player[0].life = g_Player[0].lifeMax;
-	LoadModel(MODEL_BODY, &g_Player[0].model);
+	g_Player[0].inv_time = PLAYER_INVINC_FLAME;
+	g_Player[0].invincible = FALSE;
 	SetPlayerArm();
 
 	for (int i = 0; i < MAX_PLAYER_PARTS; i++) {
@@ -157,36 +158,24 @@ HRESULT InitPlayer(void)
 	}
 
 
-	//モデル読み込みとペアレント付けを行う
-	LoadModel(MODEL_HEAD, &g_Parts[P_HEAD].model);
 	g_Parts[P_HEAD].pos = { 5.0f, 5.0f, 0.0f };
 
-
-	LoadModel(MODEL_L_SHOULDER, &g_Parts[P_L_SHOULDER].model);
 	g_Parts[P_L_SHOULDER].pos = { 0.0f, 0.0f, -6.0f };
 
-	LoadModel(MODEL_R_SHOULDER, &g_Parts[P_R_SHOULDER].model);
 	g_Parts[P_R_SHOULDER].pos = { 0.0f, 0.0f, 6.0f };
-
-	LoadModel(MODEL_L_ARM, &g_Parts[P_L_ARM].model);
 	g_Parts[P_L_ARM].parent = &g_Parts[P_L_SHOULDER];
 	g_Parts[P_L_ARM].pos = { 0.0f, -8.0f, -3.0f };
 
-	LoadModel(MODEL_R_ARM, &g_Parts[P_R_ARM].model);
 	g_Parts[P_R_ARM].parent = &g_Parts[P_R_SHOULDER];
 	g_Parts[P_R_ARM].pos = { 0.0f, -8.0f, 3.0f };
 
-	LoadModel(MODEL_L_THIGH, &g_Parts[P_L_THIGH].model);
 	g_Parts[P_L_THIGH].pos = { -1.0f, -13.0f, -3.5f };
 
-	LoadModel(MODEL_R_THIGH, &g_Parts[P_R_THIGH].model);
 	g_Parts[P_R_THIGH].pos = { -1.0f, -13.0f, 3.5f };
 
-	LoadModel(MODEL_L_FOOT, &g_Parts[P_L_FOOT].model);
 	g_Parts[P_L_FOOT].parent = &g_Parts[P_L_THIGH];
 	g_Parts[P_L_FOOT].pos = { 1.5f, -12.0f, 0.0f };
 
-	LoadModel(MODEL_R_FOOT, &g_Parts[P_R_FOOT].model);
 	g_Parts[P_R_FOOT].parent = &g_Parts[P_R_THIGH];
 	g_Parts[P_R_FOOT].pos = { 1.5f, -12.0f, 0.0f };
 
@@ -198,6 +187,53 @@ HRESULT InitPlayer(void)
 	for (int i = 0; i < MAX_PLAYER; i++)
 		atNum[i] = 0;
 	return S_OK;
+}
+
+void InitBootPlayer(void)
+{
+	LoadModel(MODEL_BODY, &g_Player[0].model);
+	GetModelDiffuse(&g_Player[0].model, &g_Player[0].diffuse[0]);
+	//モデル読み込みとペアレント付けを行う
+	LoadModel(MODEL_HEAD, &g_Parts[P_HEAD].model);
+	GetModelDiffuse(&g_Parts[P_HEAD].model, &g_Parts[P_HEAD].diffuse[0]);
+	g_Parts[P_HEAD].pos = { 5.0f, 5.0f, 0.0f };
+
+
+	LoadModel(MODEL_L_SHOULDER, &g_Parts[P_L_SHOULDER].model);
+	GetModelDiffuse(&g_Parts[P_L_SHOULDER].model, &g_Parts[P_L_SHOULDER].diffuse[0]);
+	g_Parts[P_L_SHOULDER].pos = { 0.0f, 0.0f, -6.0f };
+
+	LoadModel(MODEL_R_SHOULDER, &g_Parts[P_R_SHOULDER].model);
+	GetModelDiffuse(&g_Parts[P_R_SHOULDER].model, &g_Parts[P_R_SHOULDER].diffuse[0]);
+	g_Parts[P_R_SHOULDER].pos = { 0.0f, 0.0f, 6.0f };
+	LoadModel(MODEL_L_ARM, &g_Parts[P_L_ARM].model);
+	GetModelDiffuse(&g_Parts[P_L_ARM].model, &g_Parts[P_L_ARM].diffuse[0]);
+	g_Parts[P_L_ARM].parent = &g_Parts[P_L_SHOULDER];
+	g_Parts[P_L_ARM].pos = { 0.0f, -8.0f, -3.0f };
+
+	LoadModel(MODEL_R_ARM, &g_Parts[P_R_ARM].model);
+	GetModelDiffuse(&g_Parts[P_R_ARM].model, &g_Parts[P_R_ARM].diffuse[0]);
+	g_Parts[P_R_ARM].parent = &g_Parts[P_R_SHOULDER];
+	g_Parts[P_R_ARM].pos = { 0.0f, -8.0f, 3.0f };
+
+	LoadModel(MODEL_L_THIGH, &g_Parts[P_L_THIGH].model);
+	GetModelDiffuse(&g_Parts[P_L_THIGH].model, &g_Parts[P_L_THIGH].diffuse[0]);
+	g_Parts[P_L_THIGH].pos = { -1.0f, -13.0f, -3.5f };
+
+	LoadModel(MODEL_R_THIGH, &g_Parts[P_R_THIGH].model);
+	GetModelDiffuse(&g_Parts[P_R_THIGH].model, &g_Parts[P_R_THIGH].diffuse[0]);
+	g_Parts[P_R_THIGH].pos = { -1.0f, -13.0f, 3.5f };
+
+	LoadModel(MODEL_L_FOOT, &g_Parts[P_L_FOOT].model);
+	GetModelDiffuse(&g_Parts[P_L_FOOT].model, &g_Parts[P_L_FOOT].diffuse[0]);
+	g_Parts[P_L_FOOT].parent = &g_Parts[P_L_THIGH];
+	g_Parts[P_L_FOOT].pos = { 1.5f, -12.0f, 0.0f };
+
+	LoadModel(MODEL_R_FOOT, &g_Parts[P_R_FOOT].model);
+	GetModelDiffuse(&g_Parts[P_R_FOOT].model, &g_Parts[P_R_FOOT].diffuse[0]);
+	g_Parts[P_R_FOOT].parent = &g_Parts[P_R_THIGH];
+	g_Parts[P_R_FOOT].pos = { 1.5f, -12.0f, 0.0f };
+
 }
 
 //=============================================================================
@@ -266,6 +302,7 @@ void UpdatePlayer(void)
 			{
 				PlayerPartsIP(&g_Playerline[k]);
 			}
+			InvincibleFunc(&g_Player[i]);
 			UpdateArm();
 	}
 #ifdef _DEBUG
@@ -612,6 +649,32 @@ void UpdateArm(void)
 	//モーション時間で攻撃処理を終了させる
 	if (g_Player[0].motionTime <= 0.0f)
 		g_Player[0].attack = FALSE;
+}
+
+void InvincibleFunc(PLAYER *p)
+{
+	if (!p->invincible)return;
+
+	if (p->inv_time == PLAYER_INVINC_FLAME)
+	{
+		FadeCharacter(&g_Player[0].model, 1);
+		for (int i = 0; i < MAX_PLAYER_PARTS; i++) {
+			FadeCharacter(&g_Parts[i].model, 1);
+		}
+
+	}
+
+	p->inv_time -= 1.0f;
+
+	if (p->inv_time <= 0.0f)
+	{
+		p->invincible = FALSE;
+		p->inv_time = PLAYER_INVINC_FLAME;
+		FadeCharacter(&g_Player[0].model, 0);
+		for (int i = 0; i < MAX_PLAYER_PARTS; i++) {
+			FadeCharacter(&g_Parts[i].model, 0);
+		}
+	}
 }
 
 HRESULT MakeVertexPlayerVar(void)

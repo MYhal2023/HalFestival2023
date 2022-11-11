@@ -51,6 +51,7 @@ typedef struct
 // プロトタイプ宣言
 //*****************************************************************************
 HRESULT InitBullet(void);
+void InitBulletBoot(void);
 void UninitBullet(void);
 void UpdateBullet(void);
 void DrawBullet(void);

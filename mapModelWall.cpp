@@ -7,10 +7,6 @@ static MapWallModel g_MapWallModel[MAX_WALL_MODEL];
 //èâä˙âª
 void MapWallModel::Init(void)
 {
-	//LoadModel(MODEL_WALL001, &g_MapWallModel[0].model);
-	//LoadModel(MODEL_WALL002, &g_MapWallModel[1].model);
-	//LoadModel(MODEL_WALL003, &g_MapWallModel[2].model);
-	//LoadModel(MODEL_WALL003, &g_MapWallModel[3].model);
 	g_MapWallModel[0].pos = { 0.0f, 0.0f, -FIELD_Z_LIMIT };
 	g_MapWallModel[1].pos = { 0.0f, 0.0f, FIELD_Z_LIMIT };
 	g_MapWallModel[2].pos = { FIELD_X_LIMIT, 0.0f, 0.0f };
@@ -21,6 +17,14 @@ void MapWallModel::Init(void)
 		g_MapWallModel[i].rot = { 0.0f, XM_PI * 0.0f, 0.0f };
 		g_MapWallModel[i].scl = { 5.0f, 5.0f, 5.0f };
 	}
+}
+
+void MapWallModel::InitBoot(void)
+{
+	LoadModel(MODEL_WALL001, &g_MapWallModel[0].model);
+	LoadModel(MODEL_WALL002, &g_MapWallModel[1].model);
+	LoadModel(MODEL_WALL003, &g_MapWallModel[2].model);
+	LoadModel(MODEL_WALL004, &g_MapWallModel[3].model);
 }
 
 void MapWallModel::Uninit(void)

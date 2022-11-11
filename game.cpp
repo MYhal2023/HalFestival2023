@@ -21,7 +21,6 @@
 #include "player.h"
 #include "gameover.h"
 #include "ui.h"
-#include "unitdata.h"
 #include "text_texture.h"
 #include "reserve.h"
 #include "result.h"
@@ -33,6 +32,9 @@
 #include "particle.h"
 #include "map.h"
 #include "meshwall.h"
+#include "unitdata.h"
+#include "time.h"
+#include "title.h"
 
 
 //*****************************************************************************
@@ -75,6 +77,7 @@ void InitSystem(void)
 
 	InitPlayer();
 
+
 	pArm::InitArm();
 
 	InitBullet();	
@@ -84,11 +87,11 @@ void InitSystem(void)
 
 	Map::InitMap();
 
-
+	InitTime();
 	//InitOver();
 
 
-	//InitCharFade();
+	InitCharFade();
 
 	//InitTexttex();
 
@@ -102,6 +105,15 @@ void InitSystem(void)
 
 }
 
+//起動時に重い処理はすべて行っておく(モデルのロードなど)
+void InitBoot(void)
+{
+	pArm::InitArmBoot();
+	MapWallModel::InitBoot();
+	FallObject::InitBoot();
+	InitBulletBoot();
+	InitBootPlayer();
+}
 //=============================================================================
 // 終了処理
 //=============================================================================
@@ -129,6 +141,8 @@ void UninitGame(void)
 	RescueLife::UninitRescue();
 
 	UninitMeshWall();
+
+	UninitTime();
 }
 
 //=============================================================================
@@ -179,8 +193,10 @@ void UpdateGame(void)
 
 		FallObject::Update();
 
+		UpdateTime();
+
 		UpdateParticle();
-		//UpdateCharFade();
+		UpdateCharFade();
 		//// 影の更新処理
 		//UpdateShadow();
 
@@ -274,7 +290,7 @@ void DrawGame(void)
 	PLAYER *player = GetPlayer();
 	pos = player[0].pos;
 	pos.y += 0.0f;
-	const float dist = 260.0f;
+	const float dist = 250.0f;
 	pos.x += sinf(cam->rot.y)*dist;
 	pos.z += cosf(cam->rot.y)*dist;
 
@@ -310,6 +326,60 @@ void DrawGame(void)
 
 }
 
+
+void DrawGameTitle(void)
+{
+	XMFLOAT3 pos;
+
+	// プレイヤー視点
+	CAMERA *cam = GetCamera();
+	pos = XMFLOAT3(0.0f, 5.0f, 0.0f);
+	pos.y += 0.0f;
+	const float dist = 0.0f;
+	pos.x += sinf(cam->rot.y)*dist;
+	pos.z += cosf(cam->rot.y)*dist;
+
+	SetCameraAT(pos);
+	SetCamera();
+
+	//シェーダー管理
+//ポストエフェクトをかける場合はここから
+	int ans = MODE_PLANE;
+	SwapShader(ans);
+
+	DrawMeshField();
+
+	MapWallModel::Draw();
+
+	DrawMeshWall();
+
+	Obstacle::Draw();
+
+	RescueLife::DrawRescue();
+
+	DrawParticle();
+
+	// 2D座標で物を描画する処理
+	// Z比較なし
+	SetDepthEnable(FALSE);
+
+	// ライティングを無効
+	SetLightEnable(FALSE);
+
+	//シェーダー管理
+	//シェーダーを元に戻す。ポストエフェクトはここまで
+	ans = MODE_PLANE;
+	SwapShader(ans);
+
+	DrawTitle();
+
+	// ライティングを有効に
+	SetLightEnable(TRUE);
+
+	// Z比較あり
+	SetDepthEnable(TRUE);
+
+}
 
 void SetPlayMode(int playMode)
 {
@@ -385,7 +455,7 @@ float FloatCompare(BOOL flag, float a, float b)
 BOOL CheckGameover(void)
 {
 	BOOL ans = FALSE;
-
+	
 	return ans;
 }
 

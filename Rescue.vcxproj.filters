@@ -117,6 +117,9 @@
     <ClInclude Include="playerIPData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="time.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="text_texture.cpp">
@@ -225,6 +228,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="map.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="time.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

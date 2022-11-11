@@ -9,18 +9,21 @@ static float fall_cool_time = 0.0f;
 //初期化
 void FallObject::Init(void)
 {
-	//LoadModel(MODEL_HEAD, &g_Parts[0].model);
-	//LoadModel(MODEL_LEG, &g_Parts[1].model);
 	for (int i = 0; i < MAX_FALL_OBSTACLE; i++)
 	{
 		g_Obstacle[i].use = FALSE;
 		g_Obstacle[i].load = FALSE;
 		g_Obstacle[i].efSwitch = FALSE;
 	}
-	LoadModel(MODEL_CEILING, &g_Model[0]);
-	LoadModel(MODEL_ROCK, &g_Model[1]);
 	fall_cool_time = 0.0f;
 }
+//起動時の初期化
+void FallObject::InitBoot(void)
+{
+	LoadModel(MODEL_CEILING, &g_Model[0]);
+	LoadModel(MODEL_ROCK, &g_Model[1]);
+}
+
 //終了処理
 void FallObject::Uninit(void)
 {
@@ -44,7 +47,7 @@ void FallObject::Update(void)
 		XMFLOAT3 rot = { (float)(rand() % -157) + 314 / 157.0f ,(float)(rand() % -157) + 314 / 157.0f ,(float)(rand() % -157) + 314 / 157.0f };
 		XMFLOAT3 scl = { 1.0f, 1.0f, 1.0f };
 		int num = rand() % 2;
-		SetObstacle(pos, rot, scl, 100.0f, 50.0f, num);
+		SetObstacle(pos, rot, scl, 100.0f, 20.0f, num);
 		fall_cool_time = (float)(rand() % FALL_RAND_TIME) + FALL_COOL_TIME_BASE;
 	}
 
@@ -52,9 +55,20 @@ void FallObject::Update(void)
 	{
 		if (!g_Obstacle[i].use)continue;
 
+		PLAYER *player = GetPlayer();
+
 		//落下処理
 		if (g_Obstacle[i].pos.y > 0.0f)
 			g_Obstacle[i].pos.y -= FALL_SPEED;
+
+		//当たり判定処理
+		if (CollisionBC(player[0].pos, g_Obstacle[i].pos, player[0].size, g_Obstacle[i].size) &&
+			!player[0].invincible)
+		{
+			g_Obstacle[i].durability -= 0.0f;
+			player[0].life -= 5.0f;
+			player[0].invincible = TRUE;
+		}
 
 		FallObject::Distract(&g_Obstacle[i]);	//壊れてるのかをチェック、ここで壊す
 	}
@@ -113,7 +127,6 @@ FallObject * FallObject::GetObstacle(void)
 
 void FallObject::Draw(void)
 {
-	return;
 	// カリング無効
 	SetCullingMode(CULL_MODE_NONE);
 

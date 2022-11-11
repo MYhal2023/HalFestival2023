@@ -53,7 +53,7 @@ char	g_DebugStr[2048] = WINDOW_NAME;		// デバッグ文字表示用
 
 #endif
 
-int	g_Mode = MODE_GAME;					// 起動時の画面を設定
+int	g_Mode = MODE_TITLE;					// 起動時の画面を設定
 
 
 //=============================================================================
@@ -246,7 +246,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	SetMode(g_Mode);	// ここはSetModeのままで！
 
 	//3Dモデル読み込み
-	InitLoadModel();
+	InitBoot();
 
 	return S_OK;
 }
@@ -256,6 +256,9 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 //=============================================================================
 void Uninit(void)
 {
+	//モデルや頂点情報の解放
+	UninitGame();
+
 	// 終了のモードをセット
 	SetMode(MODE_MAX);
 	
@@ -341,14 +344,12 @@ void Draw(void)
 	case MODE_TITLE:		// タイトル画面の描画
 		SetViewPort(TYPE_FULL_SCREEN);
 
-		// 2Dの物を描画する処理
-		// Z比較なし
-		SetDepthEnable(FALSE);
+		SetSMRenderer();	//シャドウマップセット
+		DrawGame1();
 
-		// ライティングを無効
-		SetLightEnable(FALSE);
+		SetViewPortType(TYPE_FULL_SCREEN);
 		SetRenderer();		//通常描画
-		DrawTitle();
+		DrawGameTitle();
 
 		// ライティングを有効に
 		SetLightEnable(TRUE);
@@ -446,7 +447,6 @@ void SetMode(int mode)
 	StopSound();
 
 	// ゲーム画面の終了処理
-	UninitGame();
 	UninitResult();
 	UninitTitle();
 	g_Mode = mode;	// 次のモードをセットしている
@@ -455,6 +455,7 @@ void SetMode(int mode)
 	{
 	case MODE_TITLE:
 		// タイトル画面の初期化
+		InitGame();
 		InitTitle();
 		break;
 	case MODE_RESERVE:

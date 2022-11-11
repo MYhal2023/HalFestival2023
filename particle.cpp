@@ -244,9 +244,9 @@ void UpdateParticle(void)
 			int num = 1;		//繰り返し数。一度に複数の角度で出したいなどがあれば数字を大きくする
 			for (int i = 0; i < num; i++) {
 				CAMERA *cam = GetCamera();
-				XMFLOAT3 move = { 2.0f, 2.0f, 2.0f, };			//移動基礎量。小さいほど動きがゆっくりに、かつまとまりができるなる
+				XMFLOAT3 move = { 2.0f, 2.0f, 2.0f, };			//移動基礎量。小さいほど動きがゆっくりに、かつまとまりができる
 				float fAngle = (float)(rand() % 90) / 100.0f;	//加算する方向(数式結果の数字が大きいほど、左右にばらつきが出る)
-				float fLength = (float)(rand() % 10) - 3;	//xとz方向の加算速度
+				float fLength = (float)(rand() % 10) - 3;	//xとz方向の加算速度この結果が大きいと素早く動く
 				move.x += sinf(fAngle) * fLength;
 				move.y += (float)(rand() % 5);			//高さの移動加算量
 				move.z += cosf(fAngle) * fLength;

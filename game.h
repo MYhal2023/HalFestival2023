@@ -44,12 +44,14 @@ enum STAGE
 //*****************************************************************************
 HRESULT InitGame(void);
 void InitSystem(void);
+void InitBoot(void);
 void UninitGame(void);
 void UpdateGame(void);
 void DrawGame(void);
 void DrawGame0(void);
 void DrawGame1(void);
 void SetPlayMode(int playMode);
+void DrawGameTitle(void);
 int GetPlayMode(void);
 void SetSlowMode(BOOL flag);
 //void SetPlayStage(int stageNum);

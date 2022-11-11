@@ -6,6 +6,7 @@
 //=============================================================================
 
 #include "unitdata.h"
+#define ALPHA_SPEED (0.02f)
 static UnitFade g_UnitFade[MAX_BATTLE_MODEL];
 void InitCharFade(void){
 	for (int i = 0; i < MAX_BATTLE_MODEL; i++)
@@ -25,7 +26,7 @@ void UpdateCharFade(void)
 
 		if (g_UnitFade[i].type == 0)	//フェードイン
 		{
-			g_UnitFade[i].alpha += 0.01f;
+			g_UnitFade[i].alpha += ALPHA_SPEED;
 			if (g_UnitFade[i].alpha > 1.0f)
 			{
 				g_UnitFade[i].use = FALSE;
@@ -34,8 +35,8 @@ void UpdateCharFade(void)
 		}
 		else if (g_UnitFade[i].type == 1)	//フェードアウト
 		{
-			g_UnitFade[i].alpha -= 0.01f;
-			if (g_UnitFade[i].alpha <= 0.0f)
+			g_UnitFade[i].alpha -= ALPHA_SPEED;
+			if (g_UnitFade[i].alpha <= 0.5f)
 			{
 				g_UnitFade[i].use = FALSE;
 			}
@@ -57,7 +58,7 @@ void FadeCharacter(DX11_MODEL *character, int type)
 			g_UnitFade[i].use = TRUE;
 			g_UnitFade[i].character = character;
 			g_UnitFade[i].type = type;
-			g_UnitFade[i].alpha = 0.0f;
+			g_UnitFade[i].alpha = 0.5f;
 		}
 		else if (type == 1)
 		{

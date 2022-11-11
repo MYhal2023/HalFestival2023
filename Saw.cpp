@@ -10,7 +10,6 @@ static BOOL efSwitch[3];
 static float efTime[3];
 void Saw::InitArm(void)
 {
-	LoadModel(MODEL_SAW, &g_PlayerArm.model);
 	g_PlayerArm.use = TRUE;
 	g_PlayerArm.parent = pArm::GetArmParts();
 	g_PlayerArm.pos = { 0.0f, 0.0f, 0.0f };

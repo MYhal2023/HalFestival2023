@@ -19,11 +19,6 @@ void pArm::InitArm(void)
 	for (int i = 0; i < MAX_ARM_PARTS ; i++)
 	{
 		g_ArmParts[i].use = TRUE;
-		//“Y‚¦Žš‚É‚æ‚Á‚ÄA˜r‚Ìæ’[•”•ª‚©‚»‚¤‚Å‚È‚¢‚©‚ð”»’f
-		if (i == MAX_ARM_PARTS - 1) 
-			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
-		else
-			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
 
 		//0‚ÍƒvƒŒƒCƒ„[ƒ‚ƒfƒ‹‚ðe‚Æ‚µ‚Ä‚¢‚é‚½‚ßA•Ê“rÝ’è
 		if (i == 0) {
@@ -41,11 +36,6 @@ void pArm::InitArm(void)
 	for (int i = MAX_ARM_PARTS; i < MAX_ARM_PARTS * 2; i++)
 	{
 		g_ArmParts[i].use = TRUE;
-		//“Y‚¦Žš‚É‚æ‚Á‚ÄA˜r‚Ìæ’[•”•ª‚©‚»‚¤‚Å‚È‚¢‚©‚ð”»’f
-		if (i == MAX_ARM_PARTS * 2 - 1)
-			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
-		else
-			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
 
 		if (i == MAX_ARM_PARTS) {
 			g_ArmParts[i].pos = { -5.0f, 0.0f, 5.0f };
@@ -63,14 +53,33 @@ void pArm::InitArm(void)
 		g_ArmParts[i].move_time = 0.0f;
 	}
 
+	Xgun::InitArm();
+	Braster::InitArm();
+	Saw::InitArm();
+}
+
+void pArm::InitArmBoot(void)
+{
+	for (int i = 0; i < MAX_ARM_PARTS; i++)
+	{
+		//“Y‚¦Žš‚É‚æ‚Á‚ÄA˜r‚Ìæ’[•”•ª‚©‚»‚¤‚Å‚È‚¢‚©‚ð”»’f
+		if (i == MAX_ARM_PARTS - 1)
+			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
+		else
+			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
+	}
+	for (int i = MAX_ARM_PARTS; i < MAX_ARM_PARTS * 2; i++)
+	{
+		//“Y‚¦Žš‚É‚æ‚Á‚ÄA˜r‚Ìæ’[•”•ª‚©‚»‚¤‚Å‚È‚¢‚©‚ð”»’f
+		if (i == MAX_ARM_PARTS * 2 - 1)
+			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
+		else
+			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
+	}
 	LoadModel(MODEL_XGUN, &g_ArmWeapon[0].model);
 	LoadModel(MODEL_BRASTER, &g_ArmWeapon[1].model);
 	LoadModel(MODEL_SAW, &g_ArmWeapon[2].model);
 	LoadModel(MODEL_ARM_SAW_BLADE, &g_ArmWeapon[3].model);
-
-	Xgun::InitArm();
-	Braster::InitArm();
-	Saw::InitArm();
 }
 
 //player.cpp‚ÌUpdateArm()ŠÖ”‚É“ü‚ê‚é

@@ -89,13 +89,17 @@ HRESULT InitBullet(void)
 		g_Bullet[nCntBullet].use = FALSE;
 	}
 
-	LoadModel(MODEL_BULLET_SAW, &model[Bullet_XGun]);
-	LoadModel(MODEL_BULLET_SAW, &model[Bullet_Braster]);
-	LoadModel(MODEL_BULLET_SAW, &model[Bullet_Saw]);
 	g_Load = TRUE;
 	return S_OK;
 }
 
+//ãNìÆéûÇÃèàóù
+void InitBulletBoot(void)
+{
+	LoadModel(MODEL_BULLET_SAW, &model[Bullet_XGun]);
+	LoadModel(MODEL_BULLET_SAW, &model[Bullet_Braster]);
+	LoadModel(MODEL_BULLET_SAW, &model[Bullet_Saw]);
+}
 //=============================================================================
 // èIóπèàóù
 //=============================================================================

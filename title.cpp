@@ -28,12 +28,12 @@
 //*****************************************************************************
 static ID3D11Buffer					*g_VertexBuffer = NULL;	// 頂点情報
 static char* g_TextureName[] = {
-	"data/TEXTURE/var.png",
-	"data/TEXTURE/var.png",
-	"data/TEXTURE/var.png",
-	"data/TEXTURE/var.png",
-	"data/TEXTURE/var.png",
-	"data/TEXTURE/var.png",
+		"data/TEXTURE/var.png",
+	"data/TEXTURE/title_2.png",
+	"data/TEXTURE/t_start.png",
+	"data/TEXTURE/t_scorebutton.png",
+	"data/TEXTURE/t_optionbutton.png",
+	"data/TEXTURE/t_gameendbutton.png",
 	"data/TEXTURE/var.png",
 };
 static Title g_Title[TEXTURE_MAX];
@@ -102,7 +102,7 @@ HRESULT InitTitle(void)
 			g_Title[i].size = { 400 * 1.0f, 100 * 1.0f };
 			break;
 		case title_cursol:
-			g_Title[i].color = { 1.0f, 0.0f, 0.0f, 1.0f };
+			g_Title[i].color = { 1.0f, 0.0f, 0.0f, 0.5f };
 			g_Title[i].pos = { 0.0f, 0.0f };
 			g_Title[i].size = { 400 * 1.0f, 100 * 1.0f };
 			break;
@@ -156,7 +156,7 @@ void UpdateTitle(void)
 {
 
 	//カーソルの変色
-	if (g_Title[title_cursol].color.w > 1.2f || g_Title[title_cursol].color.w < 0.7f)
+	if (g_Title[title_cursol].color.w > 0.8f || g_Title[title_cursol].color.w < 0.2f)
 		speed[title_cursol] *= -1;
 
 	g_Title[title_cursol].color.w += speed[title_cursol];
@@ -212,7 +212,7 @@ void DrawTitle(void)
 	SetMaterial(material);
 
 
-	DrawTexture(&g_Title[title_bg]);
+	//DrawTexture(&g_Title[title_bg]);
 	DrawTexture(&g_Title[title_logo]);
 	DrawTexture(&g_Title[title_start]);
 	DrawTexture(&g_Title[title_score]);

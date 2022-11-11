@@ -2,10 +2,10 @@
 #pragma once
 #include "model.h"
 #define	MODEL_NEUTROPHILS	"data/MODEL/neutrophils.obj"			// 読み込むモデル名
-#define	MODEL_WALL001	"data/MODEL/kabe1.obj"			// 読み込むモデル名
-#define	MODEL_WALL002	"data/MODEL/kabe2.obj"			// 読み込むモデル名
-#define	MODEL_WALL003	"data/MODEL/kabedoor.obj"			// 読み込むモデル名
-#define	MODEL_WALL004	"data/MODEL/MAP_MODEL/kabedoorclosed.obj"			// 読み込むモデル名
+#define	MODEL_WALL001	"data/MODEL/wall_door_closed.obj"			// 読み込むモデル名
+#define	MODEL_WALL002	"data/MODEL/wall_basic.obj"			// 読み込むモデル名
+#define	MODEL_WALL003	"data/MODEL/wall_window.obj"			// 読み込むモデル名
+#define	MODEL_WALL004	"data/MODEL/wall_door_open.obj"			// 読み込むモデル名
 
 //マップの壁モデルクラス
 class MapWallModel
@@ -20,6 +20,7 @@ private:
 public:
 	static void Draw(void);
 	static void Init(void);
+	static void InitBoot(void);
 	static void Uninit(void);
 	static void Update(void);
 };

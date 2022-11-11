@@ -58,6 +58,7 @@ class FallObject:public Obstacle
 public:
 	static void Draw(void);
 	static void Init(void);
+	static void InitBoot(void);
 	static void Uninit(void);
 	static void Update(void);
 	static void Effect(FallObject* p);
