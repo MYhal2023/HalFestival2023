@@ -94,11 +94,11 @@ void pArm::UpdateArm(void)
 	//‰E˜r
 	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
 	{
-		if (i < MAX_ARM_PARTS / 2) {
+		if (i < (MAX_ARM_PARTS+1) + MAX_ARM_PARTS / 2) {
 			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL001];
 			IPArm(&g_ArmParts[i], AttackArmSawLeft001);
 		}
-		else if (i >= MAX_ARM_PARTS / 2)
+		else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
 		{
 			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL002];
 			IPArm(&g_ArmParts[i], AttackArmSawLeft002);

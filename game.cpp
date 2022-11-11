@@ -124,6 +124,8 @@ void UninitGame(void)
 
 	MapWallModel::Uninit();
 
+	FallObject::Uninit();
+
 	RescueLife::UninitRescue();
 
 	UninitMeshWall();
