@@ -1,6 +1,7 @@
 #include "rescueLife.h"
 
 static RescueLife g_RscLife[MAX_RESCUE];
+static 	DX11_MODEL	model[MODEL_VAR];		// モデル情報
 static int remain;					//残り救助者数
 
 void RescueLife::InitRescue(void)
@@ -14,15 +15,19 @@ void RescueLife::InitRescue(void)
 	remain = 0;
 }
 
+void RescueLife::InitBootRescue(void)
+{
+	for (int i = 0; i < MODEL_VAR; i++)
+	{
+		LoadModel(MODEL_RESCUE001, &model[i]);
+	}
+}
+
 void RescueLife::UninitRescue(void)
 {
-	for (int i = 0; i < MAX_RESCUE; i++)
+	for (int i = 0; i < MODEL_VAR; i++)
 	{
-		if (g_RscLife[i].load)
-		{
-			UnloadModel(&g_RscLife[i].model);
-			g_RscLife[i].load = FALSE;
-		}
+		UnloadModel(&model[i]);
 	}
 }
 
@@ -57,7 +62,7 @@ void RescueLife::DrawRescue(void)
 		XMStoreFloat4x4(&g_RscLife[i].mtxWorld, mtxWorld);
 
 		// モデル描画
-		DrawModel(&g_RscLife[i].model);
+		DrawModel(&model[g_RscLife[i].model_num]);
 
 	}
 
@@ -76,13 +81,13 @@ BOOL RescueLife::GetRescue(int i)
 }
 
 //救助者セット。先頭配列から使用していく
-void RescueLife::SetRemain(XMFLOAT3 pos, XMFLOAT3 rot, char* model)
+void RescueLife::SetRemain(XMFLOAT3 pos, XMFLOAT3 rot, int model)
 {
 	for (int i = 0; i < MAX_RESCUE; i++)
 	{
 		if (g_RscLife[i].load)continue;	//ロード済みならスルー
 
-		LoadModel(model, &g_RscLife[i].model);
+		g_RscLife[i].model_num = model;
 		g_RscLife[i].use = TRUE;
 		g_RscLife[i].rescue = FALSE;
 		g_RscLife[i].load = TRUE;

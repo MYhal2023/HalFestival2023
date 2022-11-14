@@ -285,6 +285,8 @@ void DrawBulletModel(void)
 		// ワールドマトリックスの設定
 		SetWorldMatrix(&mtxWorld);
 
+		if (g_Bullet[k].model_num == 99)continue;
+
 		DrawModel(&model[g_Bullet[k].model_num]);
 	}
 

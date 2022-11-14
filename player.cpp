@@ -113,12 +113,18 @@ HRESULT InitPlayer(void)
 		g_Player[i].power = 5;
 		g_Player[i].diffend = 3;
 		g_Player[i].attack = FALSE;
+		g_Player[i].rescue = FALSE;
+		g_Player[i].rescueUse = FALSE;
 		g_Player[i].attackUse = FALSE;
 		g_Player[i].partsNum = 9;
 		g_Player[i].startNum = 0;
 		g_Player[i].spd = 0.0f;
 		g_Player[i].armType = 0;
 		g_Player[i].motionTime = 0.0f;
+		g_Player[i].n_motionTime = 0.0f;
+		g_Player[i].cntBullet = 0.0f;
+		g_Player[i].rescueBullet[0] = { 0.0f, 0.0f, 0.0f };;
+		g_Player[i].rescueBullet[1] = { 0.0f, 0.0f, 0.0f };;
 
 		// 階層アニメーション用の初期化処理
 		g_Player[i].parent = NULL;			// 本体（親）なのでNULLを入れる
@@ -182,6 +188,7 @@ HRESULT InitPlayer(void)
 	g_Load = TRUE;
 	playerNum = 0;
 	pArm::SetArmParent(&g_Player[0]);	//親情報をここで引き渡す
+	Normal::SetArmParent(&g_Player[0]);	//親情報をここで引き渡す
 	g_Arm[0] = pArm::GetArm();
 	g_Arm[1] = pArm::GetArm();
 	for (int i = 0; i < MAX_PLAYER; i++)
@@ -297,6 +304,10 @@ void UpdatePlayer(void)
 			g_Player[i].spd *= 0.7f;
 			g_Player[i].moveVec.x *= 0.8f;
 			g_Player[i].moveVec.z *= 0.8f;
+			UpdateRescueMode();
+			CheckRescue();
+
+			//レスキューバレット処理
 
 			for (int k = 0; k < MAX_PLAYER_PARTS + 1; k++)
 			{
@@ -307,9 +318,8 @@ void UpdatePlayer(void)
 	}
 #ifdef _DEBUG
 	PrintDebugProc("プレイヤー座標X:%f, Z:%f\n", g_Player[0].pos.x, g_Player[0].pos.z);
-	PrintDebugProc("プレイヤーアーム:%d\n", g_Player[0].armType);
-	if (GetKeyboardPress(DIK_0))
-		g_Player[0].life -= 0.5f;
+	PrintDebugProc("\nプレイヤーアームX:%f\n", g_Player[0].rescueBullet[0].x);
+	PrintDebugProc("プレイヤーアームZ:%f\n", g_Player[0].rescueBullet[0].z);
 #endif
 }
 
@@ -390,7 +400,11 @@ void DrawPlayer(void)
 			DrawModel(&g_Parts[k].model);
 		}
 		//アームモデル描画
-		g_Arm[0]->Draw();		
+		g_Arm[0]->Draw();	
+
+		//救出中だけノーマルアームの描画を行う
+		if (g_Player[0].rescue)
+			Normal::Draw();
 	}
 
 	// カリング設定を戻す
@@ -534,7 +548,7 @@ void MovePlayer(void)
 	{
 		float angle = atan2f(g_Player[0].moveVec.x, g_Player[0].moveVec.z);
 
-		if (!g_Player[0].attack)
+		if (!g_Player[0].attack && !g_Player[0].rescue)
 		g_Player[0].rot.y = angle;
 	}
 	//移動値をベクトル変換して移動させる
@@ -616,10 +630,30 @@ void ChangePlayerArm(BOOL flag)
 void UpdateArm(void)
 {
 	pArm::UpdateArm();
+	//pArm::UpdateReleaseArm();
 	//攻撃開始
-	if (GetKeyboardTrigger(DIK_1) && g_Player[0].motionTime <= 0.0f)
+	if (GetKeyboardTrigger(DIK_Z) && g_Player[0].motionTime <= 0.0f)
 	{
 		g_Player[0].attack = TRUE;
+	}
+	else if (GetKeyboardTrigger(DIK_0) && g_Player[0].n_motionTime <= 0.0f)
+	{
+		g_Player[0].rescue = TRUE;
+		g_Player[0].rescueUse = FALSE;
+		XMFLOAT3 pos = g_Player[0].pos;
+		XMFLOAT3 pos2 = g_Player[0].pos;
+		const float dist = 5.0f;
+		float high = 0.0f;
+		pos.x += sinf(g_Player[0].rot.y + XM_PI * 0.20f) * dist;
+		pos.y = high;
+		pos.z += cosf(g_Player[0].rot.y + XM_PI * 0.20f) * dist;
+
+		pos2.x += sinf(g_Player[0].rot.y - XM_PI * 0.20f) * dist;
+		pos2.y = high;
+		pos2.z += cosf(g_Player[0].rot.y - XM_PI * 0.20f) * dist;
+		g_Player[0].rescueBullet[0] = pos;
+		g_Player[0].rescueBullet[1] = pos2;
+
 	}
 	//アーム別に攻撃処理
 	if (g_Player[0].attack)
@@ -646,9 +680,23 @@ void UpdateArm(void)
 		g_Player[0].motionTime -= 1.0f;
 	}
 
-	//モーション時間で攻撃処理を終了させる
+	if (g_Player[0].rescue)
+	{
+		if (g_Player[0].n_motionTime <= 0.0f)
+			g_Player[0].n_motionTime = 60.0f;
+
+		Normal::UpdateArm();
+		g_Player[0].n_motionTime -= 1.0f;
+	}
+
+	//モーション時間で処理を終了させる
 	if (g_Player[0].motionTime <= 0.0f)
 		g_Player[0].attack = FALSE;
+	//モーション時間で処理を終了させる
+	if (g_Player[0].n_motionTime <= 0.0f) {
+		g_Player[0].rescue = FALSE;
+		g_Player[0].cntBullet = 0.0f;
+	}
 }
 
 void InvincibleFunc(PLAYER *p)
@@ -673,6 +721,48 @@ void InvincibleFunc(PLAYER *p)
 		FadeCharacter(&g_Player[0].model, 0);
 		for (int i = 0; i < MAX_PLAYER_PARTS; i++) {
 			FadeCharacter(&g_Parts[i].model, 0);
+		}
+	}
+}
+
+void UpdateRescueMode(void)
+{
+	if (g_Player[0].rescue && g_Player[0].n_motionTime > 30.0f && !g_Player[0].rescueUse)
+		g_Player[0].cntBullet += VALUE_AT_MOVE;
+	else if ((g_Player[0].rescue && g_Player[0].n_motionTime <= 30.0f) || g_Player[0].rescueUse)
+		g_Player[0].cntBullet -= VALUE_AT_MOVE;
+
+	for (int k = 0; k < 2; k++)
+	{
+		g_Player[0].rescueBullet[k].x = g_Player[0].pos.x + sinf(g_Player[0].rot.y) * g_Player[0].cntBullet;
+		g_Player[0].rescueBullet[k].z = g_Player[0].pos.z + cosf(g_Player[0].rot.y) * g_Player[0].cntBullet;
+	}
+
+	if (g_Player[0].rescueUse && g_Player[0].cntBullet <= 0.0f) {
+		g_Player[0].rs->use = FALSE;
+		g_Player[0].rs->rescue = TRUE;
+	}
+
+	if (g_Player[0].cntBullet <= 0.0f)
+		g_Player[0].rescueUse = FALSE;
+}
+
+//救出したかのチェック
+void CheckRescue(void)
+{
+	if (!g_Player[0].rescue || g_Player[0].rescueUse)return;
+
+	RescueLife* rs = RescueLife::GetRescueLife();
+	for(int i = 0; i < 2; i++)
+	{ 
+		for (int k = 0; k < GetRemain(); k++) {
+			if (!rs[k].use)continue;
+
+			if (!CollisionBC(rs[k].pos, g_Player[0].rescueBullet[i], 50.0f, 15.0f))
+				continue;
+
+			g_Player[0].rescueUse = TRUE;
+			g_Player[0].rs = &rs[k];
 		}
 	}
 }

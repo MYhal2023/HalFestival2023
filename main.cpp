@@ -23,6 +23,7 @@
 #include "title.h"
 #include "reserve.h"
 #include "player.h"
+#include "playerArms.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -53,7 +54,7 @@ char	g_DebugStr[2048] = WINDOW_NAME;		// デバッグ文字表示用
 
 #endif
 
-int	g_Mode = MODE_TITLE;					// 起動時の画面を設定
+int	g_Mode = MODE_GAME;					// 起動時の画面を設定
 
 
 //=============================================================================
@@ -282,6 +283,9 @@ void Uninit(void)
 
 	//3Dモデルの終了処理
 	UninitModel();
+
+	pArm::UninitArm();
+	Normal::UninitArm();
 }
 
 //=============================================================================

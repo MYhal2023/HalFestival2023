@@ -8,14 +8,13 @@
 using namespace std;
 #define MAX_ARM (2)
 #define MOVE_VALUE	(0.05f)
-static pArm g_PlayerArm[2];
-static pArm g_ArmParts[MAX_ARM_PARTS * 2];
-static pArm g_ArmWeapon[ARM_VAR + 1];
-static ofstream fout;
+static Normal g_PlayerArm[2];
+static Normal g_ArmParts[MAX_ARM_PARTS * 2];
+static Normal g_ArmWeapon[1];
 static float etc = 1.0f;
 static BOOL flag = TRUE;
 static BOOL change = FALSE;
-void pArm::InitArm(void)
+void Normal::InitArm(void)
 {
 	for (int i = 0; i < MAX_ARM; i++)
 	{
@@ -59,18 +58,14 @@ void pArm::InitArm(void)
 		}
 
 		g_ArmParts[i].tbl_adrXgun = NULL;
-		g_ArmParts[i].tbl_adr = wait_armLeft;
+		g_ArmParts[i].tbl_adr = nullptr;
 		g_ArmParts[i].move_time = 0.0f;
 	}
 
-	Xgun::InitArm();
-	Braster::InitArm();
-	Saw::InitArm();
-	ofstream fout;
 
 }
 
-void pArm::UninitArm(void)
+void Normal::UninitArm(void)
 {
 	for (int i = 0; i < MAX_ARM_PARTS * 2; i++)
 	{
@@ -78,14 +73,13 @@ void pArm::UninitArm(void)
 		UnloadModel(&g_ArmParts[i].model);
 	}
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		UnloadModel(&g_ArmWeapon[i].model);
 	}
-	fout.close();
 }
 
-void pArm::InitArmBoot(void)
+void Normal::InitArmBoot(void)
 {
 	for (int i = 0; i < MAX_ARM_PARTS; i++)
 	{
@@ -104,180 +98,47 @@ void pArm::InitArmBoot(void)
 			LoadModel(MODEL_ARM_PARTS, &g_ArmParts[i].model);
 	}
 	LoadModel(MODEL_XGUN, &g_ArmWeapon[0].model);
-	LoadModel(MODEL_BRASTER, &g_ArmWeapon[1].model);
-	LoadModel(MODEL_SAW, &g_ArmWeapon[2].model);
-	LoadModel(MODEL_ARM_SAW_BLADE, &g_ArmWeapon[3].model);
-	fout.open("m_data.txt");
 }
 
 //player.cppのUpdateArm()関数に入れる
-void pArm::UpdateArm(void)
+void Normal::UpdateArm(void)
 {
-	XMFLOAT3 pos{ 0.0f, 0.0f, 0.0f };
-	XMFLOAT3 rot{0.0f, 0.0f, 0.0f};
-	//片腕ずつ処理(根本部分は除外)
-	//左腕
-	if (GetKeyboardPress(DIK_1))
-	{
-		pos.x += 0.05f * etc;
-	}
-	else if (GetKeyboardPress(DIK_2))
-	{
-		pos.y += 0.05f * etc;
-	}
-	else if (GetKeyboardPress(DIK_3))
-	{
-		pos.z += XM_PI * 0.001f * etc;
-	}
-	if (GetKeyboardPress(DIK_4))
-	{
-		rot.x += XM_PI * 0.001f * etc;
-	}
-	else if (GetKeyboardPress(DIK_5))
-	{
-		rot.y += XM_PI * 0.001f * etc;
-	}
-	else if (GetKeyboardPress(DIK_6))
-	{
-		rot.z += XM_PI * 0.001f * etc;
-	}
-	else if (GetKeyboardTrigger(DIK_J))
-	{
-		etc *= -1;
-	}
-	else if (GetKeyboardTrigger(DIK_K))
-	{
-		if (flag)flag = FALSE;
-		else flag = TRUE;
-	}
-	else if (GetKeyboardTrigger(DIK_M))
-	{
-		if (change)change = FALSE;
-		else change = TRUE;
-	}
-	else if (GetKeyboardTrigger(DIK_RETURN))
-	{
-		fout << g_ArmParts[1].pos.x << ", " << g_ArmParts[1].pos.y << ", " << g_ArmParts[1].pos.z << endl;
-		fout << g_ArmParts[1].rot.x << ", " << g_ArmParts[1].rot.y << ", " << g_ArmParts[1].rot.z << endl << endl;
-		fout << g_ArmParts[6].pos.x << ", " << g_ArmParts[6].pos.y << ", " << g_ArmParts[6].pos.z << endl;
-		fout << g_ArmParts[6].rot.x << ", " << g_ArmParts[6].rot.y << ", " << g_ArmParts[6].rot.z << endl << endl;
-		fout << g_ArmParts[11].pos.x << ", " << g_ArmParts[11].pos.y << ", " << g_ArmParts[11].pos.z << endl;
-		fout << g_ArmParts[11].rot.x << ", " << g_ArmParts[11].rot.y << ", " << g_ArmParts[11].rot.z << endl << endl;
-		fout << g_ArmParts[16].pos.x << ", " << g_ArmParts[16].pos.y << ", " << g_ArmParts[16].pos.z << endl;
-		fout << g_ArmParts[16].rot.x << ", " << g_ArmParts[16].rot.y << ", " << g_ArmParts[16].rot.z << endl << endl<<endl;
-	}
 
-
-	if (!change) {
-		for (int i = 1; i < MAX_ARM_PARTS; i++)
+	for (int i = 1; i < MAX_ARM_PARTS; i++)
+	{
+		if (i < MAX_ARM_PARTS / 2) {	//下半分のモーション
+			g_ArmParts[i].tbl_sizeA = tblsize[M_NormalArmL001];
+			IPArm(&g_ArmParts[i], NormalArmLeft001);
+		}
+		else if (i >= MAX_ARM_PARTS / 2)	//上半分のモーション
 		{
-			if (i < MAX_ARM_PARTS / 2) {	//下半分のモーション
-				//g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL001];
-				//IPArm(&g_ArmParts[i], AttackArmSawLeft001);
-				if (flag)
-				{
-					g_ArmParts[i].pos.x += pos.x;
-					g_ArmParts[i].pos.y += pos.y;
-					g_ArmParts[i].pos.z += pos.z;
-					g_ArmParts[i].rot.x += rot.x;
-					g_ArmParts[i].rot.y += rot.y;
-					g_ArmParts[i].rot.z += rot.z;
-				}
-			}
-			else if (i >= MAX_ARM_PARTS / 2)	//上半分のモーション
-			{
-				//g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL002];
-				//IPArm(&g_ArmParts[i], AttackArmSawLeft002);
-				if (!flag)
-				{
-					g_ArmParts[i].pos.x += pos.x;
-					g_ArmParts[i].pos.y += pos.y;
-					g_ArmParts[i].pos.z += pos.z;
-					g_ArmParts[i].rot.x += rot.x;
-					g_ArmParts[i].rot.y += rot.y;
-					g_ArmParts[i].rot.z += rot.z;
-				}
-
-			}
+			g_ArmParts[i].tbl_sizeA = tblsize[M_NormalArmL001];
+			IPArm(&g_ArmParts[i], NormalArmLeft001);
 		}
 	}
-	else if (change) 
+	//右腕
+	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
 	{
-		//右腕
-		for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
+		if (i < (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2) {
+			g_ArmParts[i].tbl_sizeA = tblsize[M_NormalArmR001];
+			IPArm(&g_ArmParts[i], NormalArmRight001);
+		}
+		else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
 		{
-			if (i < (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2) {
-				//g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL001];
-				//IPArm(&g_ArmParts[i], AttackArmSawLeft001);
-				if (flag)
-				{
-					g_ArmParts[i].pos.x += pos.x;
-					g_ArmParts[i].pos.y += pos.y;
-					g_ArmParts[i].pos.z += pos.z;
-					g_ArmParts[i].rot.x += rot.x;
-					g_ArmParts[i].rot.y += rot.y;
-					g_ArmParts[i].rot.z += rot.z;
-				}
-			}
-			else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
-			{
-				//g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL002];
-				//IPArm(&g_ArmParts[i], AttackArmSawLeft002);
-				if (!flag)
-				{
-					g_ArmParts[i].pos.x += pos.x;
-					g_ArmParts[i].pos.y += pos.y;
-					g_ArmParts[i].pos.z += pos.z;
-					g_ArmParts[i].rot.x += rot.x;
-					g_ArmParts[i].rot.y += rot.y;
-					g_ArmParts[i].rot.z += rot.z;
-				}
-			}
+			g_ArmParts[i].tbl_sizeA = tblsize[M_NormalArmR001];
+			IPArm(&g_ArmParts[i], NormalArmRight001);
 		}
 	}
 	PrintDebugProc("アーム座標:%f\n", g_ArmParts[MAX_ARM_PARTS - 1]);
 }
 
-void pArm::UpdateReleaseArm(void)
-{
-	for (int i = 1; i < MAX_ARM_PARTS; i++)
-	{
-		if (i < MAX_ARM_PARTS / 2) 
-		{	//下半分のモーション
-			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL001];
-			IPArm(&g_ArmParts[i], AttackArmSawLeft001);
-		}
-		else if (i >= MAX_ARM_PARTS / 2)	//上半分のモーション
-		{
-			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL002];
-			IPArm(&g_ArmParts[i], AttackArmSawLeft002);
-		}
-	}
-
-	//右腕
-	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
-	{
-		if (i < (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2) {
-			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL001];
-			IPArm(&g_ArmParts[i], AttackArmSawLeft001);
-		}
-		else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
-		{
-			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL002];
-			IPArm(&g_ArmParts[i], AttackArmSawLeft002);
-			
-		}
-	}
-
-}
-
-INTERPOLATION_DATA * pArm::CheckMotionData(PLAYER *p)
+INTERPOLATION_DATA * Normal::CheckMotionData(PLAYER *p)
 {
 	return nullptr;
 }
 
 
-void pArm::IPArm(pArm* p, INTERPOLATION_DATA* i)
+void Normal::IPArm(Normal* p, INTERPOLATION_DATA* i)
 {
 //
 // 線形補間の処理
@@ -314,7 +175,7 @@ void pArm::IPArm(pArm* p, INTERPOLATION_DATA* i)
 
 }
 
-void pArm::Draw(void)
+void Normal::Draw(void)
 {
 	// カリング無効
 	SetCullingMode(CULL_MODE_NONE);
@@ -358,22 +219,9 @@ void pArm::Draw(void)
 		SetWorldMatrix(&mtxWorld);
 
 		//モデル描画
-		//先端部分に来た時のみ、武器別にモデルを描画
+		//先端部分に来た時のみ、モデルを描画
 		if (k == MAX_ARM_PARTS - 1 || k == MAX_ARM_PARTS * 2 - 1) {
-			PLAYER *player = GetPlayer();
-			switch (player[0].armType)
-			{
-			case 0:
-				DrawModel(&g_ArmWeapon[0].model);
-				break;
-			case 1:
-				DrawModel(&g_ArmWeapon[1].model);
-				break;
-			case 2:
-				DrawModel(&g_ArmWeapon[2].model);
-				DrawModel(&g_ArmWeapon[3].model);
-				break;
-			}
+			DrawModel(&g_ArmParts[k].model);
 		}
 		else
 		{
@@ -387,7 +235,7 @@ void pArm::Draw(void)
 }
 
 //使うアームの親子情報を一括でセット
-void pArm::SetArmParent(PLAYER *p)
+void Normal::SetArmParent(PLAYER *p)
 {
 	//左腕
 	for (int k = 0; k < MAX_ARM_PARTS; k++)
@@ -415,12 +263,12 @@ void pArm::SetArmParent(PLAYER *p)
 	}
 }
 
-pArm* pArm::GetArm(void)
+pArm* Normal::GetArm(void)
 {
 	return &g_PlayerArm[0];
 }
 
-pArm* pArm::GetArmParts(void)
+pArm* Normal::GetArmParts(void)
 {
 	return &g_ArmParts[0];	//先端部の情報が欲しいのでこうなっている
 }

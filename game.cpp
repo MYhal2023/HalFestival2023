@@ -79,13 +79,13 @@ void InitSystem(void)
 
 
 	pArm::InitArm();
+	Normal::InitArm();
 
 	InitBullet();	
 
 	// フィールドの初期化
 	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD_X, FIELD_Z, BLOCK_SIZE, BLOCK_SIZE, GROUND);
 
-	Map::InitMap();
 
 	InitTime();
 	//InitOver();
@@ -98,7 +98,8 @@ void InitSystem(void)
 	InitParticle();
 	InitUI();
 	RescueLife::InitRescue();
-	RescueLife::SetRemain(XMFLOAT3(100.0f, 0.0f, 100.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), MODEL_RESCUE001);
+	Map::InitMap();
+
 	//InitReward();
 	mode = 1;
 	g_bPause = TRUE;
@@ -109,8 +110,10 @@ void InitSystem(void)
 void InitBoot(void)
 {
 	pArm::InitArmBoot();
+	Normal::InitArmBoot();
 	MapWallModel::InitBoot();
 	FallObject::InitBoot();
+	RescueLife::InitBootRescue();
 	InitBulletBoot();
 	InitBootPlayer();
 }

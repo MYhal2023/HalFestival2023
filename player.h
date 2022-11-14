@@ -7,6 +7,7 @@
 #pragma once
 #define PLAYER_H_
 #include "unitdata.h"
+#include "rescueLife.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -69,15 +70,21 @@ class PLAYER:public Unit
 {
 public:
 	XMFLOAT3		moveVec;
+	XMFLOAT3		rescueBullet[2];	//両腕分ある
 	// 階層アニメーション用のメンバー変数
 	PLAYER				*parent;	// 自分が親ならNULL、自分が子供なら親のenemyアドレス
 
 	float				spd;
 	int					armType;	//装備中のアームタイプ
 	float				motionTime;
+	float				n_motionTime;
 	float				inv_time;
+	float				cntBullet;
+	RescueLife*			rs;
 	BOOL				attack;
 	BOOL				invincible;
+	BOOL				rescue;
+	BOOL				rescueUse;
 };
 
 //プレイヤー及びパーツの線形補間データを保存
@@ -147,4 +154,6 @@ PLAYER *GetPlayer(void);
 void PlayerStandLiner(int i);
 void PlayerPartsIP(Playerliner* p);
 void InvincibleFunc(PLAYER *p);
+void UpdateRescueMode(void);
+void CheckRescue(void);
 HRESULT MakeVertexPlayerVar(void);
