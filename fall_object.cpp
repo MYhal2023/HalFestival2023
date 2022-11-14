@@ -37,6 +37,7 @@ void FallObject::Uninit(void)
 //çXêV
 void FallObject::Update(void)
 {
+	return;
 	fall_cool_time -= 1.0f;
 	if (fall_cool_time <= 0.0f) {
 		PLAYER *player = GetPlayer();

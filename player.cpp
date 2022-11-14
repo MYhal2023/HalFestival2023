@@ -617,7 +617,7 @@ void UpdateArm(void)
 {
 	pArm::UpdateArm();
 	//UŒ‚ŠJn
-	if (GetKeyboardTrigger(DIK_1) && g_Player[0].motionTime <= 0.0f)
+	if (GetKeyboardTrigger(DIK_Z) && g_Player[0].motionTime <= 0.0f)
 	{
 		g_Player[0].attack = TRUE;
 	}

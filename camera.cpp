@@ -118,7 +118,6 @@ void UpdateCamera(void)
 	}
 	else if (GetKeyboardPress(DIK_F))
 	{
-		g_Cam.rot.x -= 0.1f;
 
 	}
 
