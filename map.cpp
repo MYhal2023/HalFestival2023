@@ -180,9 +180,11 @@ void Map::InitMap(void)
 
 	////設置救助者
 	////RescueLife()
-	//p = { 50.0f, 0.0f, 0.0f };
-	//r = { 0.0f, 0.0f, 0.0f };
-	//RescueLife::SetRemain(p, r, MODEL_RESCUE001);
+	p = { 400.0f, 0.0f, 0.0f };
+	r = { 0.0f, 0.0f, 0.0f };
+	RescueLife::SetRemain(p, r, 0);
+	p = { 600.0f, 0.0f, 0.0f };
+	RescueLife::SetRemain(p, r, 0);
 	//設置オブジェクト
 
 }

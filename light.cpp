@@ -12,6 +12,7 @@
 #include "debugproc.h"
 #include "input.h"
 #include "game.h"
+#include "player.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -99,22 +100,25 @@ void SetFogData(FOG *fog)
 void UpdateLight(void)
 {
 #ifdef _DEBUG
-	if (GetKeyboardPress(DIK_Z))
-	{
-		g_Light[0].Position.x += 1.0f;
-	}
-	else if (GetKeyboardPress(DIK_X))
-	{
-		g_Light[0].Position.x -= 1.0f;
-	}
-	else if (GetKeyboardPress(DIK_C))
-	{
-		g_Light[0].Position.z += 1.0f;
-	}
-	else if (GetKeyboardPress(DIK_V))
-	{
-		g_Light[0].Position.z -= 1.0f;
-	}
+	//if (GetKeyboardPress(DIK_Z))
+	//{
+	//	g_Light[0].Position.x += 1.0f;
+	//}
+	//else if (GetKeyboardPress(DIK_X))
+	//{
+	//	g_Light[0].Position.x -= 1.0f;
+	//}
+	//else if (GetKeyboardPress(DIK_C))
+	//{
+	//	g_Light[0].Position.z += 1.0f;
+	//}
+	//else if (GetKeyboardPress(DIK_V))
+	//{
+	//	g_Light[0].Position.z -= 1.0f;
+	//}
+	PLAYER *player = GetPlayer();
+	g_Light[0].Position.x = player[0].pos.x + 150.0f;
+	g_Light[0].Position.z = player[0].pos.z + 100.0f;
 	SetLight(0, &g_Light[0]);									// これで設定している
 	PrintDebugProc("ライトX:%f、Z:%f", g_Light[0].Position.x, g_Light[0].Position.z);
 #endif

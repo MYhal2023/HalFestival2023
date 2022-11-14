@@ -285,6 +285,7 @@ void Uninit(void)
 	UninitModel();
 
 	pArm::UninitArm();
+	Normal::UninitArm();
 }
 
 //=============================================================================

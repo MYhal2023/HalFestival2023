@@ -50,12 +50,28 @@ public:
 	static void UninitArm(void);
 	static void InitArmBoot(void);
 	static void UpdateArm(void);
+	static void UpdateReleaseArm(void);	//ÉäÉäÅ[ÉXÇ≈égÇ§Ç‚Ç¬
 	static INTERPOLATION_DATA* CheckMotionData(PLAYER *p);
 	static void IPArm(pArm* p, INTERPOLATION_DATA* i);
 	static pArm* GetArm(void);
 	static pArm* GetArmParts(void);
 	static pArm* GetLeftArmParts(void);
 	void Draw(void);
+};
+
+class Normal :public pArm
+{
+public:
+	static void SetArmParent(PLAYER *p);
+	static void InitArm(void);
+	static void UninitArm(void);
+	static void InitArmBoot(void);
+	static void UpdateArm(void);
+	static INTERPOLATION_DATA* CheckMotionData(PLAYER *p);
+	static void IPArm(Normal* p, INTERPOLATION_DATA* i);
+	static pArm* GetArm(void);
+	static pArm* GetArmParts(void);
+	static void Draw(void);
 };
 
 class Xgun :public pArm

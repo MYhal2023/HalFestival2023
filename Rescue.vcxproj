@@ -74,6 +74,7 @@
     <ClCompile Include="meshfield.cpp" />
     <ClCompile Include="meshwall.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="normalArm.cpp" />
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="player.cpp" />
