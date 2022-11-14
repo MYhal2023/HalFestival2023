@@ -47,6 +47,7 @@ public:
 	pArm* parent;
 	static void SetArmParent(PLAYER *p);
 	static void InitArm(void);
+	static void UninitArm(void);
 	static void InitArmBoot(void);
 	static void UpdateArm(void);
 	static INTERPOLATION_DATA* CheckMotionData(PLAYER *p);

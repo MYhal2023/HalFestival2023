@@ -11,6 +11,7 @@ using namespace std;
 static pArm g_PlayerArm[2];
 static pArm g_ArmParts[MAX_ARM_PARTS * 2];
 static pArm g_ArmWeapon[ARM_VAR + 1];
+static ofstream fout;
 static float etc = 1.0f;
 static BOOL flag = TRUE;
 static BOOL change = FALSE;
@@ -69,6 +70,21 @@ void pArm::InitArm(void)
 
 }
 
+void pArm::UninitArm(void)
+{
+	for (int i = 0; i < MAX_ARM_PARTS * 2; i++)
+	{
+		// ƒ‚ƒfƒ‹‚Ì‰ð•úˆ—
+		UnloadModel(&g_ArmParts[i].model);
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		UnloadModel(&g_ArmWeapon[i].model);
+	}
+	fout.close();
+}
+
 void pArm::InitArmBoot(void)
 {
 	for (int i = 0; i < MAX_ARM_PARTS; i++)
@@ -91,6 +107,7 @@ void pArm::InitArmBoot(void)
 	LoadModel(MODEL_BRASTER, &g_ArmWeapon[1].model);
 	LoadModel(MODEL_SAW, &g_ArmWeapon[2].model);
 	LoadModel(MODEL_ARM_SAW_BLADE, &g_ArmWeapon[3].model);
+	fout.open("m_data.txt");
 }
 
 //player.cpp‚ÌUpdateArm()ŠÖ”‚É“ü‚ê‚é
@@ -140,8 +157,6 @@ void pArm::UpdateArm(void)
 	}
 	else if (GetKeyboardTrigger(DIK_RETURN))
 	{
-		ofstream fout;
-		fout.open("m_data.txt");
 		fout << g_ArmParts[1].pos.x << ", " << g_ArmParts[1].pos.y << ", " << g_ArmParts[1].pos.z << endl;
 		fout << g_ArmParts[1].rot.x << ", " << g_ArmParts[1].rot.y << ", " << g_ArmParts[1].rot.z << endl << endl;
 		fout << g_ArmParts[6].pos.x << ", " << g_ArmParts[6].pos.y << ", " << g_ArmParts[6].pos.z << endl;
@@ -149,8 +164,7 @@ void pArm::UpdateArm(void)
 		fout << g_ArmParts[11].pos.x << ", " << g_ArmParts[11].pos.y << ", " << g_ArmParts[11].pos.z << endl;
 		fout << g_ArmParts[11].rot.x << ", " << g_ArmParts[11].rot.y << ", " << g_ArmParts[11].rot.z << endl << endl;
 		fout << g_ArmParts[16].pos.x << ", " << g_ArmParts[16].pos.y << ", " << g_ArmParts[16].pos.z << endl;
-		fout << g_ArmParts[16].rot.x << ", " << g_ArmParts[16].rot.y << ", " << g_ArmParts[16].rot.z << endl << endl;
-		fout.close();
+		fout << g_ArmParts[16].rot.x << ", " << g_ArmParts[16].rot.y << ", " << g_ArmParts[16].rot.z << endl << endl<<endl;
 	}
 
 
