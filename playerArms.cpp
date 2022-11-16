@@ -157,14 +157,14 @@ void pArm::UpdateArm(void)
 	}
 	else if (GetKeyboardTrigger(DIK_RETURN))
 	{
-		fout << g_ArmParts[1].pos.x << ", " << g_ArmParts[1].pos.y << ", " << g_ArmParts[1].pos.z << endl;
-		fout << g_ArmParts[1].rot.x << ", " << g_ArmParts[1].rot.y << ", " << g_ArmParts[1].rot.z << endl << endl;
-		fout << g_ArmParts[6].pos.x << ", " << g_ArmParts[6].pos.y << ", " << g_ArmParts[6].pos.z << endl;
-		fout << g_ArmParts[6].rot.x << ", " << g_ArmParts[6].rot.y << ", " << g_ArmParts[6].rot.z << endl << endl;
-		fout << g_ArmParts[11].pos.x << ", " << g_ArmParts[11].pos.y << ", " << g_ArmParts[11].pos.z << endl;
-		fout << g_ArmParts[11].rot.x << ", " << g_ArmParts[11].rot.y << ", " << g_ArmParts[11].rot.z << endl << endl;
-		fout << g_ArmParts[16].pos.x << ", " << g_ArmParts[16].pos.y << ", " << g_ArmParts[16].pos.z << endl;
-		fout << g_ArmParts[16].rot.x << ", " << g_ArmParts[16].rot.y << ", " << g_ArmParts[16].rot.z << endl << endl<<endl;
+		fout << "{ XMFLOAT3(" <<g_ArmParts[1].pos.x << ", " << g_ArmParts[1].pos.y << ", " << g_ArmParts[1].pos.z << "),";
+		fout << "XMFLOAT3(" << g_ArmParts[1].rot.x << ", " << g_ArmParts[1].rot.y << ", " << g_ArmParts[1].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
+		fout << "{ XMFLOAT3(" << g_ArmParts[6].pos.x << ", " << g_ArmParts[6].pos.y << ", " << g_ArmParts[6].pos.z << "),";
+		fout << "XMFLOAT3(" << g_ArmParts[6].rot.x << ", " << g_ArmParts[6].rot.y << ", " << g_ArmParts[6].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
+		fout << "{ XMFLOAT3(" << g_ArmParts[11].pos.x << ", " << g_ArmParts[11].pos.y << ", " << g_ArmParts[11].pos.z <<"),";
+		fout << "XMFLOAT3(" << g_ArmParts[11].rot.x << ", " << g_ArmParts[11].rot.y << ", " << g_ArmParts[11].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
+		fout << "{ XMFLOAT3(" << g_ArmParts[16].pos.x << ", " << g_ArmParts[16].pos.y << ", " << g_ArmParts[16].pos.z << "),";
+		fout << "XMFLOAT3(" << g_ArmParts[16].rot.x << ", " << g_ArmParts[16].rot.y << ", " << g_ArmParts[16].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl<<endl;
 	}
 
 
@@ -182,6 +182,11 @@ void pArm::UpdateArm(void)
 					g_ArmParts[i].rot.x += rot.x;
 					g_ArmParts[i].rot.y += rot.y;
 					g_ArmParts[i].rot.z += rot.z;
+					if (GetKeyboardTrigger(DIK_B))
+					{
+						g_ArmParts[i].pos = { 0.0f, 0.0f, 0.0f };
+						g_ArmParts[i].rot = { 0.0f, 0.0f, 0.0f };
+					}
 				}
 			}
 			else if (i >= MAX_ARM_PARTS / 2)	//ã”¼•ª‚Ìƒ‚[ƒVƒ‡ƒ“
@@ -196,6 +201,11 @@ void pArm::UpdateArm(void)
 					g_ArmParts[i].rot.x += rot.x;
 					g_ArmParts[i].rot.y += rot.y;
 					g_ArmParts[i].rot.z += rot.z;
+					if (GetKeyboardTrigger(DIK_B))
+					{
+						g_ArmParts[i].pos = { 0.0f, 0.0f, 0.0f };
+						g_ArmParts[i].rot = { 0.0f, 0.0f, 0.0f };
+					}
 				}
 
 			}
@@ -217,6 +227,12 @@ void pArm::UpdateArm(void)
 					g_ArmParts[i].rot.x += rot.x;
 					g_ArmParts[i].rot.y += rot.y;
 					g_ArmParts[i].rot.z += rot.z;
+					if (GetKeyboardTrigger(DIK_B))
+					{
+						g_ArmParts[i].pos = { 0.0f, 0.0f, 0.0f };
+						g_ArmParts[i].rot = { 0.0f, 0.0f, 0.0f };
+					}
+
 				}
 			}
 			else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
@@ -231,6 +247,11 @@ void pArm::UpdateArm(void)
 					g_ArmParts[i].rot.x += rot.x;
 					g_ArmParts[i].rot.y += rot.y;
 					g_ArmParts[i].rot.z += rot.z;
+					if (GetKeyboardTrigger(DIK_B))
+					{
+						g_ArmParts[i].pos = { 0.0f, 0.0f, 0.0f };
+						g_ArmParts[i].rot = { 0.0f, 0.0f, 0.0f };
+					}
 				}
 			}
 		}
@@ -258,13 +279,13 @@ void pArm::UpdateReleaseArm(void)
 	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
 	{
 		if (i < (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2) {
-			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL001];
-			IPArm(&g_ArmParts[i], AttackArmSawLeft001);
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawR001];
+			IPArm(&g_ArmParts[i], AttackArmSawRight001);
 		}
 		else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
 		{
-			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL002];
-			IPArm(&g_ArmParts[i], AttackArmSawLeft002);
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawR002];
+			IPArm(&g_ArmParts[i], AttackArmSawRight002);
 			
 		}
 	}

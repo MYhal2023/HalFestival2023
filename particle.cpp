@@ -13,6 +13,8 @@
 #include "particle.h"
 #include "player.h"
 #include "math.h"
+#include <iostream>
+#include <fstream>
 
 //*****************************************************************************
 // É}ÉNÉçíËã`
