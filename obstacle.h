@@ -6,6 +6,11 @@
 #define	MODEL_TANK			"data/MODEL/tank.obj"			// 読み込むモデル名
 #define	MODEL_TANKGLASS		"data/MODEL/tankglass.obj"			// 読み込むモデル名
 #define	MODEL_TROLLEY		"data/MODEL/trolley.obj"			// 読み込むモデル名
+#define	MODEL_BOX		"data/MODEL/rubble.obj"			// 読み込むモデル名
+#define	MODEL_DCUT		"data/MODEL/duct_line.obj"			// 読み込むモデル名
+#define	MODEL_GASTANK		"data/MODEL/gastank.obj"			// 読み込むモデル名
+#define	MODEL_MONITOR		"data/MODEL/monitor.obj"			// 読み込むモデル名
+#define	MODEL_STEEL		"data/MODEL/steelframe.obj"			// 読み込むモデル名
 #define	MODEL_TEST			"data/MODEL/neutrophils.obj"			// 読み込むモデル名
 #define MAX_OBSTACLE (30)
 #define MAX_FALL_OBSTACLE (5)

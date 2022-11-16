@@ -182,7 +182,7 @@ void PixelShaderPolygon( in  float4 inPosition		: SV_POSITION,
 	}
 	else if(SMZValue < ZValue) // ライトPOSから計算　SM＝ライトからの情報　Z＝視点からの情報
 	{
-		color = float4(clamp(color.rgb - 0.85f, 0.0f, 1.0f), 1.0f);   // 影の色
+		color = float4(clamp(color.rgb - 0.75f, 0.0f, 1.0f), 1.0f);   // 影の色
 	}
 	else
 	{

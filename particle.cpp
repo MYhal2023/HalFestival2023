@@ -71,7 +71,17 @@ static float					g_fWidthBase = 5.0f;			// 基準の幅
 static float					g_fHeightBase = 10.0f;			// 基準の高さ
 static float					g_roty = 0.0f;					// 移動方向
 static float					g_spd = 0.0f;					// 移動スピード
-
+using namespace std;
+static ofstream fout;
+static int rand_angle = 1;
+static int rand_length = 1;
+static int rand_high = 1;
+static int tex_num = 0;
+static float scale = 0.0f;
+static int for_p_num = 1;
+static int p_decay = 40;
+static int p_Life = 120;
+static BOOL blend_mode = FALSE;
 static char *g_TextureName[TEXTURE_MAX] =
 {
 	"data/TEXTURE/effect000.jpg",
@@ -129,6 +139,8 @@ HRESULT InitParticle(void)
 	g_spd = 0.0f;
 
 	g_Load = TRUE;
+	fout.open("particle_data.txt");
+
 	return S_OK;
 }
 
@@ -157,6 +169,8 @@ void UninitParticle(void)
 	}
 
 	g_Load = FALSE;
+	fout.close();
+
 }
 
 //=============================================================================
@@ -234,33 +248,122 @@ void UpdateParticle(void)
 		//	// ビルボードの設定
 		//	SetParticle(pos, move, XMFLOAT4(0.8f, 0.7f, 0.2f, 0.85f), fSize, fSize, nLife);
 		//}
-		XMFLOAT3 move = { 2.0f, 2.0f, 2.0f, };			//移動基礎量。小さいほど動きがゆっくりになる
-		float fAngle = (float)(rand() % 90) / 100.0f;	//加算する方向(数字が大きいほど、左右にばらつきが出る)
-		float fLength = (float)(rand() % 10) - 3;	//xとz方向の加算速度
-		move.x += sinf(fAngle) * fLength;
-		move.y += (float)(rand() % 5);			//高さの移動加算量
-		move.z += cosf(fAngle) * fLength;
-
 		if (GetKeyboardPress(DIK_SPACE))
 		{
-			int num = 1;		//繰り返し数。一度に複数の角度で出したいなどがあれば数字を大きくする
-			for (int i = 0; i < num; i++) {
+			for (int i = 0; i < for_p_num; i++) {
 				CAMERA *cam = GetCamera();
-				XMFLOAT3 move = { 2.0f, 2.0f, 2.0f, };			//移動基礎量。小さいほど動きがゆっくりに、かつまとまりができる
-				float fAngle = (float)(rand() % 90) / 100.0f;	//加算する方向(数式結果の数字が大きいほど、左右にばらつきが出る)
-				float fLength = (float)(rand() % 10) - 3;	//xとz方向の加算速度この結果が大きいと素早く動く
-				move.x += sinf(fAngle) * fLength;
-				move.y += (float)(rand() % 5);			//高さの移動加算量
-				move.z += cosf(fAngle) * fLength;
-
+				XMFLOAT3 move = { 0.0f, 0.0f, 0.0f, };			
+				float fAngle = (float)(rand() % rand_angle);	//加算する方向(数式結果の数字が大きいほど、左右にばらつきが出る)
+				fAngle = XMConvertToRadians(fAngle);
+				float fLength = (float)(rand() % rand_length + 1) * 0.1f;	//xとz方向の加算速度この結果が大きいと素早く動く
+				float fHigh = (float)(rand() % rand_high + 1) * 0.1f;	//xとz方向の加算速度この結果が大きいと素早く動く
+				move.x += cosf(fAngle) * fLength;
+				move.y += sinf(fAngle) * fHigh;			//高さの移動加算量
+				//move.z += cosf(fAngle) * fLength;
+				
 				float angle = atan2f(move.y, move.x);
-				XMFLOAT3 scl = { 0.025f, 0.4f, 0.025f };	//拡大率
+				XMFLOAT3 scl = { 0.025f + scale, 0.4f, 0.025f +scale};	//拡大率
 				XMFLOAT3 rot = { 0.0f, cam->rot.y, 0.0f };	//回転率。いじる必要なし
-				int nLife = rand() % 100 + 50;
+				int nLife = rand() % p_Life + p_decay;
 				rot.z = angle - XM_PI * 0.5f;
-				SetParticle(XMFLOAT3(0.0f, 2.0f, 100.0f), move, rot, scl, XMFLOAT4(1.0f, 0.3f, 0.3f, 1.0f), nLife, 40, P_T_box);
+				rot.y = cam->rot.y;
+				SetParticle(XMFLOAT3(0.0f, 30.0f, 100.0f), move, rot, scl, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nLife, p_decay, tex_num);
 			}
 		}
+		if (GetKeyboardPress(DIK_1))
+		{
+			if(rand_angle < 360)
+			rand_angle += 1;
+		}
+		if (GetKeyboardPress(DIK_2))
+		{
+			if(rand_angle > 2)
+			rand_angle -= 1;
+		}
+		if (GetKeyboardTrigger(DIK_3))
+		{
+			rand_length += 1;
+		}
+		if (GetKeyboardTrigger(DIK_4))
+		{
+			if (rand_length > 2)
+			rand_length -= 1;
+		}
+		if (GetKeyboardPress(DIK_5))
+		{
+			rand_high += 1;
+		}
+		if (GetKeyboardPress(DIK_6))
+		{
+			if (rand_high > 2)
+				rand_high -= 1;
+		}
+		if (GetKeyboardTrigger(DIK_7))
+		{
+			scale += 0.05f;
+		}
+		if (GetKeyboardTrigger(DIK_8))
+		{
+			if (scale > 0.0f)
+				scale -= 0.05f;
+		}
+		if (GetKeyboardTrigger(DIK_J))
+		{
+			if (tex_num == 0)
+				tex_num = 1;
+			else if (tex_num == 1)
+				tex_num = 0;
+		}
+		if (GetKeyboardTrigger(DIK_K))
+		{
+			if(blend_mode)
+			blend_mode = FALSE;
+			else blend_mode = TRUE;
+		}
+		if (GetKeyboardTrigger(DIK_9))
+		{
+			if (for_p_num < 10)
+			for_p_num++;
+		}
+		if (GetKeyboardTrigger(DIK_0))
+		{
+			if (for_p_num > 2)
+				for_p_num--;
+		}
+		if (GetKeyboardTrigger(DIK_M))
+		{
+			if (p_decay > 10)
+				p_decay--;
+		}
+		if (GetKeyboardTrigger(DIK_N))
+		{
+			if (p_decay < 120)
+				p_decay++;
+		}
+		if (GetKeyboardTrigger(DIK_B))
+		{
+			if (p_Life > 1)
+				p_Life--;
+		}
+		if (GetKeyboardTrigger(DIK_V))
+		{
+			if (p_Life < 180)
+				p_Life++;
+		}
+		if (GetKeyboardTrigger(DIK_RETURN))
+		{
+			fout << "パーティクルステータス" << endl;
+			fout << "角度のランダム数値;" << rand_angle << endl;
+			fout << "飛距離のランダム数値;" << rand_length << endl;
+			fout << "飛ぶ高さのランダム数値:" << rand_high << endl;
+			fout << "パーティクルテクスチャ:" << tex_num << endl;
+			fout << "ブレンドモード:" << blend_mode << endl;
+			fout << "スケール:" << scale << endl;
+			fout << "繰り返し数:" << for_p_num << endl;
+			fout << "フェードをしないフレーム数:" << p_Life << endl;
+			fout << "フェード開始フレーム:" << p_decay << endl;
+			fout << endl << endl;
+		} 
 	}
 }
 
@@ -276,7 +379,10 @@ void DrawParticle(void)
 	SetLightEnable(FALSE);
 
 	// 加算合成に設定
-	SetBlendState(BLEND_MODE_ADD);
+	if (blend_mode)
+		SetBlendState(BLEND_MODE_ADD);
+	else if (!blend_mode)
+		SetBlendState(BLEND_MODE_ALPHABLEND);
 
 	// Z比較無し
 	SetDepthEnable(FALSE);

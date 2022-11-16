@@ -117,55 +117,55 @@ void pArm::UpdateArm(void)
 	XMFLOAT3 rot{0.0f, 0.0f, 0.0f};
 	//片腕ずつ処理(根本部分は除外)
 	//左腕
-	if (GetKeyboardPress(DIK_1))
-	{
-		pos.x += 0.05f * etc;
-	}
-	else if (GetKeyboardPress(DIK_2))
-	{
-		pos.y += 0.05f * etc;
-	}
-	else if (GetKeyboardPress(DIK_3))
-	{
-		pos.z += XM_PI * 0.001f * etc;
-	}
-	if (GetKeyboardPress(DIK_4))
-	{
-		rot.x += XM_PI * 0.001f * etc;
-	}
-	else if (GetKeyboardPress(DIK_5))
-	{
-		rot.y += XM_PI * 0.001f * etc;
-	}
-	else if (GetKeyboardPress(DIK_6))
-	{
-		rot.z += XM_PI * 0.001f * etc;
-	}
-	else if (GetKeyboardTrigger(DIK_J))
-	{
-		etc *= -1;
-	}
-	else if (GetKeyboardTrigger(DIK_K))
-	{
-		if (flag)flag = FALSE;
-		else flag = TRUE;
-	}
-	else if (GetKeyboardTrigger(DIK_M))
-	{
-		if (change)change = FALSE;
-		else change = TRUE;
-	}
-	else if (GetKeyboardTrigger(DIK_RETURN))
-	{
-		fout << "{ XMFLOAT3(" <<g_ArmParts[1].pos.x << ", " << g_ArmParts[1].pos.y << ", " << g_ArmParts[1].pos.z << "),";
-		fout << "XMFLOAT3(" << g_ArmParts[1].rot.x << ", " << g_ArmParts[1].rot.y << ", " << g_ArmParts[1].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
-		fout << "{ XMFLOAT3(" << g_ArmParts[6].pos.x << ", " << g_ArmParts[6].pos.y << ", " << g_ArmParts[6].pos.z << "),";
-		fout << "XMFLOAT3(" << g_ArmParts[6].rot.x << ", " << g_ArmParts[6].rot.y << ", " << g_ArmParts[6].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
-		fout << "{ XMFLOAT3(" << g_ArmParts[11].pos.x << ", " << g_ArmParts[11].pos.y << ", " << g_ArmParts[11].pos.z <<"),";
-		fout << "XMFLOAT3(" << g_ArmParts[11].rot.x << ", " << g_ArmParts[11].rot.y << ", " << g_ArmParts[11].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
-		fout << "{ XMFLOAT3(" << g_ArmParts[16].pos.x << ", " << g_ArmParts[16].pos.y << ", " << g_ArmParts[16].pos.z << "),";
-		fout << "XMFLOAT3(" << g_ArmParts[16].rot.x << ", " << g_ArmParts[16].rot.y << ", " << g_ArmParts[16].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl<<endl;
-	}
+	//if (GetKeyboardPress(DIK_1))
+	//{
+	//	pos.x += 0.05f * etc;
+	//}
+	//else if (GetKeyboardPress(DIK_2))
+	//{
+	//	pos.y += 0.05f * etc;
+	//}
+	//else if (GetKeyboardPress(DIK_3))
+	//{
+	//	pos.z += XM_PI * 0.001f * etc;
+	//}
+	//if (GetKeyboardPress(DIK_4))
+	//{
+	//	rot.x += XM_PI * 0.001f * etc;
+	//}
+	//else if (GetKeyboardPress(DIK_5))
+	//{
+	//	rot.y += XM_PI * 0.001f * etc;
+	//}
+	//else if (GetKeyboardPress(DIK_6))
+	//{
+	//	rot.z += XM_PI * 0.001f * etc;
+	//}
+	//else if (GetKeyboardTrigger(DIK_J))
+	//{
+	//	etc *= -1;
+	//}
+	//else if (GetKeyboardTrigger(DIK_K))
+	//{
+	//	if (flag)flag = FALSE;
+	//	else flag = TRUE;
+	//}
+	//else if (GetKeyboardTrigger(DIK_M))
+	//{
+	//	if (change)change = FALSE;
+	//	else change = TRUE;
+	//}
+	//else if (GetKeyboardTrigger(DIK_RETURN))
+	//{
+	//	fout << "{ XMFLOAT3(" <<g_ArmParts[1].pos.x << ", " << g_ArmParts[1].pos.y << ", " << g_ArmParts[1].pos.z << "),";
+	//	fout << "XMFLOAT3(" << g_ArmParts[1].rot.x << ", " << g_ArmParts[1].rot.y << ", " << g_ArmParts[1].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
+	//	fout << "{ XMFLOAT3(" << g_ArmParts[6].pos.x << ", " << g_ArmParts[6].pos.y << ", " << g_ArmParts[6].pos.z << "),";
+	//	fout << "XMFLOAT3(" << g_ArmParts[6].rot.x << ", " << g_ArmParts[6].rot.y << ", " << g_ArmParts[6].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
+	//	fout << "{ XMFLOAT3(" << g_ArmParts[11].pos.x << ", " << g_ArmParts[11].pos.y << ", " << g_ArmParts[11].pos.z <<"),";
+	//	fout << "XMFLOAT3(" << g_ArmParts[11].rot.x << ", " << g_ArmParts[11].rot.y << ", " << g_ArmParts[11].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
+	//	fout << "{ XMFLOAT3(" << g_ArmParts[16].pos.x << ", " << g_ArmParts[16].pos.y << ", " << g_ArmParts[16].pos.z << "),";
+	//	fout << "XMFLOAT3(" << g_ArmParts[16].rot.x << ", " << g_ArmParts[16].rot.y << ", " << g_ArmParts[16].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl<<endl;
+	//}
 
 
 	if (!change) {
@@ -261,9 +261,94 @@ void pArm::UpdateArm(void)
 
 void pArm::UpdateReleaseArm(void)
 {
+	PLAYER *player = GetPlayer();
+	//0:Xgun,1:Braster,3:Saw
+	switch (player[0].armType)
+	{
+	case 0:
+		UpdateXgunArm();
+		break;
+	case 1:
+		UpdateBrasterArm();
+		break;
+	case 2:
+		UpdateSawArm();
+		break;
+	}
+
+}
+
+void pArm::UpdateXgunArm(void)
+{
 	for (int i = 1; i < MAX_ARM_PARTS; i++)
 	{
-		if (i < MAX_ARM_PARTS / 2) 
+		if (i < MAX_ARM_PARTS / 2)
+		{	//下半分のモーション
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmXgunL001];
+			IPArm(&g_ArmParts[i], AttackArmXgunLeft001);
+		}
+		else if (i >= MAX_ARM_PARTS / 2)	//上半分のモーション
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmXgunL002];
+			IPArm(&g_ArmParts[i], AttackArmXgunLeft002);
+		}
+	}
+
+	//右腕
+	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
+	{
+		if (i < (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2) {
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmXgunR001];
+			IPArm(&g_ArmParts[i], AttackArmXgunRight001);
+		}
+		else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmXgunR002];
+			IPArm(&g_ArmParts[i], AttackArmXgunRight002);
+
+		}
+	}
+
+}
+
+void pArm::UpdateBrasterArm(void)
+{
+	for (int i = 1; i < MAX_ARM_PARTS; i++)
+	{
+		if (i < MAX_ARM_PARTS / 2)
+		{	//下半分のモーション
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmBrasterL001];
+			IPArm(&g_ArmParts[i], AttackArmBrasterLeft001);
+		}
+		else if (i >= MAX_ARM_PARTS / 2)	//上半分のモーション
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmBrasterL002];
+			IPArm(&g_ArmParts[i], AttackArmBrasterLeft002);
+		}
+	}
+
+	//右腕
+	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
+	{
+		if (i < (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2) {
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmBrasterR001];
+			IPArm(&g_ArmParts[i], AttackArmBrasterRight001);
+		}
+		else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmBrasterR002];
+			IPArm(&g_ArmParts[i], AttackArmBrasterRight002);
+
+		}
+	}
+
+}
+
+void pArm::UpdateSawArm(void)
+{
+	for (int i = 1; i < MAX_ARM_PARTS; i++)
+	{
+		if (i < MAX_ARM_PARTS / 2)
 		{	//下半分のモーション
 			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL001];
 			IPArm(&g_ArmParts[i], AttackArmSawLeft001);
@@ -286,10 +371,9 @@ void pArm::UpdateReleaseArm(void)
 		{
 			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawR002];
 			IPArm(&g_ArmParts[i], AttackArmSawRight002);
-			
+
 		}
 	}
-
 }
 
 INTERPOLATION_DATA * pArm::CheckMotionData(PLAYER *p)

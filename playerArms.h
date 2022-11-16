@@ -51,6 +51,9 @@ public:
 	static void InitArmBoot(void);
 	static void UpdateArm(void);
 	static void UpdateReleaseArm(void);	//ÉäÉäÅ[ÉXÇ≈égÇ§Ç‚Ç¬
+	static void UpdateXgunArm(void);
+	static void UpdateBrasterArm(void);
+	static void UpdateSawArm(void);
 	static INTERPOLATION_DATA* CheckMotionData(PLAYER *p);
 	static void IPArm(pArm* p, INTERPOLATION_DATA* i);
 	static pArm* GetArm(void);
