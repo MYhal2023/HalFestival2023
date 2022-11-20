@@ -210,15 +210,15 @@ void UpdateParticle(void)
 						g_aParticle[nCntParticle].material.Diffuse.z = g_aParticle[nCntParticle].col.z - (float)(80 - g_aParticle[nCntParticle].nLife) / 80 * g_aParticle[nCntParticle].col.z;
 					}
 
-					//if(g_aParticle[nCntParticle].nLife <= 20)
-					//{
-					//	// α値設定
-					//	g_aParticle[nCntParticle].material.Diffuse.w -= 0.05f;
-					//	if(g_aParticle[nCntParticle].material.Diffuse.w < 0.0f)
-					//	{
-					//		g_aParticle[nCntParticle].material.Diffuse.w = 0.0f;
-					//	}
-					//}
+					if(g_aParticle[nCntParticle].nLife <= 20)
+					{
+						// α値設定
+						g_aParticle[nCntParticle].material.Diffuse.w -= 0.05f;
+						if(g_aParticle[nCntParticle].material.Diffuse.w < 0.0f)
+						{
+							g_aParticle[nCntParticle].material.Diffuse.w = 0.0f;
+						}
+					}
 				}
 			}
 		}
@@ -270,100 +270,100 @@ void UpdateParticle(void)
 				SetParticle(XMFLOAT3(0.0f, 30.0f, 100.0f), move, rot, scl, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nLife, p_decay, tex_num);
 			}
 		}
-		if (GetKeyboardPress(DIK_1))
-		{
-			if(rand_angle < 360)
-			rand_angle += 1;
-		}
-		if (GetKeyboardPress(DIK_2))
-		{
-			if(rand_angle > 2)
-			rand_angle -= 1;
-		}
-		if (GetKeyboardTrigger(DIK_3))
-		{
-			rand_length += 1;
-		}
-		if (GetKeyboardTrigger(DIK_4))
-		{
-			if (rand_length > 2)
-			rand_length -= 1;
-		}
-		if (GetKeyboardPress(DIK_5))
-		{
-			rand_high += 1;
-		}
-		if (GetKeyboardPress(DIK_6))
-		{
-			if (rand_high > 2)
-				rand_high -= 1;
-		}
-		if (GetKeyboardTrigger(DIK_7))
-		{
-			scale += 0.05f;
-		}
-		if (GetKeyboardTrigger(DIK_8))
-		{
-			if (scale > 0.0f)
-				scale -= 0.05f;
-		}
-		if (GetKeyboardTrigger(DIK_J))
-		{
-			if (tex_num == 0)
-				tex_num = 1;
-			else if (tex_num == 1)
-				tex_num = 0;
-		}
-		if (GetKeyboardTrigger(DIK_K))
-		{
-			if(blend_mode)
-			blend_mode = FALSE;
-			else blend_mode = TRUE;
-		}
-		if (GetKeyboardTrigger(DIK_9))
-		{
-			if (for_p_num < 10)
-			for_p_num++;
-		}
-		if (GetKeyboardTrigger(DIK_0))
-		{
-			if (for_p_num > 2)
-				for_p_num--;
-		}
-		if (GetKeyboardTrigger(DIK_M))
-		{
-			if (p_decay > 10)
-				p_decay--;
-		}
-		if (GetKeyboardTrigger(DIK_N))
-		{
-			if (p_decay < 120)
-				p_decay++;
-		}
-		if (GetKeyboardTrigger(DIK_B))
-		{
-			if (p_Life > 1)
-				p_Life--;
-		}
-		if (GetKeyboardTrigger(DIK_V))
-		{
-			if (p_Life < 180)
-				p_Life++;
-		}
-		if (GetKeyboardTrigger(DIK_RETURN))
-		{
-			fout << "パーティクルステータス" << endl;
-			fout << "角度のランダム数値;" << rand_angle << endl;
-			fout << "飛距離のランダム数値;" << rand_length << endl;
-			fout << "飛ぶ高さのランダム数値:" << rand_high << endl;
-			fout << "パーティクルテクスチャ:" << tex_num << endl;
-			fout << "ブレンドモード:" << blend_mode << endl;
-			fout << "スケール:" << scale << endl;
-			fout << "繰り返し数:" << for_p_num << endl;
-			fout << "フェードをしないフレーム数:" << p_Life << endl;
-			fout << "フェード開始フレーム:" << p_decay << endl;
-			fout << endl << endl;
-		} 
+		//if (GetKeyboardPress(DIK_1))
+		//{
+		//	if(rand_angle < 360)
+		//	rand_angle += 1;
+		//}
+		//if (GetKeyboardPress(DIK_2))
+		//{
+		//	if(rand_angle > 2)
+		//	rand_angle -= 1;
+		//}
+		//if (GetKeyboardTrigger(DIK_3))
+		//{
+		//	rand_length += 1;
+		//}
+		//if (GetKeyboardTrigger(DIK_4))
+		//{
+		//	if (rand_length > 2)
+		//	rand_length -= 1;
+		//}
+		//if (GetKeyboardTrigger(DIK_5))
+		//{
+		//	rand_high += 1;
+		//}
+		//if (GetKeyboardTrigger(DIK_6))
+		//{
+		//	if (rand_high > 2)
+		//		rand_high -= 1;
+		//}
+		//if (GetKeyboardTrigger(DIK_7))
+		//{
+		//	scale += 0.05f;
+		//}
+		//if (GetKeyboardTrigger(DIK_8))
+		//{
+		//	if (scale > 0.05f)
+		//		scale -= 0.05f;
+		//}
+		//if (GetKeyboardTrigger(DIK_J))
+		//{
+		//	if (tex_num == 0)
+		//		tex_num = 1;
+		//	else if (tex_num == 1)
+		//		tex_num = 0;
+		//}
+		//if (GetKeyboardTrigger(DIK_K))
+		//{
+		//	if(blend_mode)
+		//	blend_mode = FALSE;
+		//	else blend_mode = TRUE;
+		//}
+		//if (GetKeyboardTrigger(DIK_9))
+		//{
+		//	if (for_p_num < 10)
+		//	for_p_num++;
+		//}
+		//if (GetKeyboardTrigger(DIK_0))
+		//{
+		//	if (for_p_num > 2)
+		//		for_p_num--;
+		//}
+		//if (GetKeyboardPress(DIK_M))
+		//{
+		//	if (p_decay > 10)
+		//		p_decay--;
+		//}
+		//if (GetKeyboardPress(DIK_N))
+		//{
+		//	if (p_decay < 120)
+		//		p_decay++;
+		//}
+		//if (GetKeyboardPress(DIK_B))
+		//{
+		//	if (p_Life > 1)
+		//		p_Life--;
+		//}
+		//if (GetKeyboardPress(DIK_V))
+		//{
+		//	if (p_Life < 180)
+		//		p_Life++;
+		//}
+		//if (GetKeyboardTrigger(DIK_RETURN))
+		//{
+		//	fout << "パーティクルステータス" << endl;
+		//	fout << "角度のランダム数値rand_angle:" << rand_angle << endl;
+		//	fout << "飛距離のランダム数値rand_length:" << rand_length << endl;
+		//	fout << "飛ぶ高さのランダム数値rand_high:" << rand_high << endl;
+		//	fout << "パーティクルテクスチャtex_num:" << tex_num << endl;
+		//	fout << "ブレンドモードblend_mode:" << blend_mode << endl;
+		//	fout << "スケールscale:" << scale << endl;
+		//	fout << "繰り返し数for_p_num:" << for_p_num << endl;
+		//	fout << "フェードをしないフレーム数p_Life:" << p_Life << endl;
+		//	fout << "フェード開始フレームp_decay:" << p_decay << endl;
+		//	fout << endl << endl;
+		//} 
 	}
 }
 

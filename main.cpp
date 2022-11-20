@@ -24,6 +24,7 @@
 #include "reserve.h"
 #include "player.h"
 #include "playerArms.h"
+#include "easing.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -243,8 +244,13 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// フェードの初期化
 	InitFade();
 
+	Easing::Init();
+
 	// 最初のモードをセット
 	SetMode(g_Mode);	// ここはSetModeのままで！
+
+	InitReward();	//リザルトデータ初期化
+	SetReward();
 
 	//3Dモデル読み込み
 	InitBoot();
@@ -302,6 +308,7 @@ void Update(void)
 	// カメラ更新
 	UpdateCamera();
 
+	Easing::Update();
 
 	// モードによって処理を分ける
 	switch (g_Mode)
@@ -390,20 +397,13 @@ void Draw(void)
 		break;
 
 	case MODE_RESULT:		// リザルト画面の描画
-		// 2Dの物を描画する処理
-		// Z比較なし
-		SetDepthEnable(FALSE);
+		SetViewPort(TYPE_FULL_SCREEN);
 
-		// ライティングを無効
-		SetLightEnable(FALSE);
+		SetSMRenderer();	//シャドウマップセット
+		DrawGame1();
+
 		SetRenderer();		//通常描画
-		DrawResult();
-
-		// ライティングを有効に
-		SetLightEnable(TRUE);
-
-		// Z比較あり
-		SetDepthEnable(TRUE);
+		DrawGameResult();
 		break;
 
 	}
@@ -453,6 +453,7 @@ void SetMode(int mode)
 	// ゲーム画面の終了処理
 	UninitResult();
 	UninitTitle();
+	Easing::Init();
 	g_Mode = mode;	// 次のモードをセットしている
 
 	switch (g_Mode)
@@ -469,11 +470,14 @@ void SetMode(int mode)
 
 	case MODE_GAME:
 		// ゲーム画面の初期化
+		InitReward();	//リザルトデータ初期化
 		InitGame();
 		break;
 
 	case MODE_RESULT:
 		// リザルト画面の初期化
+		SetReward();
+		InitGame();
 		InitResult();
 		break;
 

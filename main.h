@@ -68,6 +68,15 @@ struct INTERPOLATION_DATA
 	float		frame;		// 実行フレーム数 ( dt = 1.0f/frame )
 };
 
+struct INTERPOLATION_DATA_EASING
+{
+	XMFLOAT3	pos;		// 頂点座標
+	XMFLOAT3	rot;		// 回転
+	XMFLOAT3	scl;		// 拡大縮小(カメラの場合注視点の変更量)
+	float		frame;		// 実行フレーム数 ( dt = 1.0f/frame )
+	int			ease_mode;	//どういった線形補間にするか
+};
+
 enum
 {
 	MODE_TITLE = 0,			// タイトル画面
@@ -76,7 +85,13 @@ enum
 	MODE_RESULT,			// リザルト画面
 	MODE_MAX
 };
-
+enum
+{
+	EASE_IN,	//加速
+	EASE_OUT,	//減速
+	EASING,		//加減速
+	NON_EASE,	//等速直線運動
+};
 
 //*****************************************************************************
 // プロトタイプ宣言

@@ -1,5 +1,6 @@
 #include "playerArms.h"
 #include "bullet.h"
+#include "camera.h"
 static Xgun g_PlayerArm;
 
 void Xgun::InitArm(void)
@@ -15,8 +16,10 @@ void Xgun::Action(void)
 	if (!g_PlayerArm.attackUse) 
 	{
 		PLAYER *player = GetPlayer();
+		CAMERA *cam = GetCamera();
 		XMFLOAT3 pos = player[0].pos;
 		XMFLOAT3 pos2 = player[0].pos;
+		XMFLOAT3 rot = player[0].rot;
 		const float dist = 5.0f;
 		float high = 0.0f;
 		pos.x += sinf(player[0].rot.y + XM_PI * 0.20f) * dist;
@@ -26,8 +29,11 @@ void Xgun::Action(void)
 		pos2.x += sinf(player[0].rot.y - XM_PI * 0.20f) * dist;
 		pos2.y += high;
 		pos2.z += cosf(player[0].rot.y - XM_PI * 0.20f) * dist;
-		SetBullet(pos, player[0].rot, 10.0f, 50.0f, 60, Bullet_XGun);
-		SetBullet(pos2, player[0].rot, 10.0f, 50.0f, 60, Bullet_XGun);
+		player[0].rot.y = cam->rot.y;
+		rot.y = cam->rot.y;
+		rot.x = cam->rot.x;
+		SetBullet(pos, rot, 10.0f, 50.0f, 60, Bullet_XGun);
+		SetBullet(pos2, rot, 10.0f, 50.0f, 60, Bullet_XGun);
 
 		g_PlayerArm.atCount = g_PlayerArm.atInterval;
 

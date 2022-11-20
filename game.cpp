@@ -59,6 +59,8 @@ static BOOL g_Slow = FALSE;
 static int s_mode = FALSE;
 static int	g_PlayMode = MAIN_GAME;
 static int mode = 1;
+static 	XMFLOAT3 cam_pos = {0.0f, 0.0f, 0.0f};
+
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -98,8 +100,11 @@ void InitSystem(void)
 	InitParticle();
 	InitUI();
 	RescueLife::InitRescue();
-	Map::InitMap();
+	MapWallModel::Init();
+	Obstacle::Init();
+	FallObject::Init();
 
+	InitMap();
 	//InitReward();
 	mode = 1;
 	g_bPause = TRUE;
@@ -114,8 +119,26 @@ void InitBoot(void)
 	MapWallModel::InitBoot();
 	FallObject::InitBoot();
 	RescueLife::InitBootRescue();
+	Obstacle::InitBoot();
 	InitBulletBoot();
 	InitBootPlayer();
+}
+
+void InitMap(void)
+{
+	UninitMeshWall();	//メッシュウォールはここで逐一初期化
+
+	switch (GetMode())
+	{
+	case MODE_TITLE:
+		Map::InitMap();
+		break;
+	case MODE_GAME:
+		Map::InitMap();
+		break;
+	case MODE_RESULT:
+		break;
+	}
 }
 //=============================================================================
 // 終了処理
@@ -296,7 +319,6 @@ void DrawGame(void)
 	const float dist = 250.0f;
 	pos.x += sinf(cam->rot.y)*dist;
 	pos.z += cosf(cam->rot.y)*dist;
-
 	SetCameraAT(pos);
 	SetCamera();
 
@@ -332,16 +354,46 @@ void DrawGame(void)
 
 void DrawGameTitle(void)
 {
-	XMFLOAT3 pos;
-
-	// プレイヤー視点
 	CAMERA *cam = GetCamera();
-	pos = XMFLOAT3(0.0f, 5.0f, 0.0f);
+#ifdef _DEBUG
+	if (GetKeyboardPress(DIK_W))
+	{
+		cam_pos.x += sinf(cam->rot.y);
+		cam_pos.z += cosf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_S))
+	{
+		cam_pos.x -= sinf(cam->rot.y);
+		cam_pos.z -= cosf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_A))
+	{
+		cam_pos.x -= cosf(cam->rot.y);
+		cam_pos.z += sinf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_D))
+	{
+		cam_pos.x += cosf(cam->rot.y);
+		cam_pos.z -= sinf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_U))
+	{
+		cam_pos.y += 1.0f;
+	}
+	if (GetKeyboardPress(DIK_V))
+	{
+		cam_pos.y -= 1.0f;
+	}
+	PrintDebugProc("\nカメラ座標x:%f,y:%f,z:%f\n", cam_pos.x, cam_pos.y, cam_pos.z);
+#endif
+	XMFLOAT3 pos;
+	XMFLOAT3 rot;
+	// プレイヤー視点
+	pos = cam_pos;
 	pos.y += 0.0f;
 	const float dist = 0.0f;
 	pos.x += sinf(cam->rot.y)*dist;
 	pos.z += cosf(cam->rot.y)*dist;
-
 	SetCameraAT(pos);
 	SetCamera();
 
@@ -375,6 +427,92 @@ void DrawGameTitle(void)
 	SwapShader(ans);
 
 	DrawTitle();
+
+	// ライティングを有効に
+	SetLightEnable(TRUE);
+
+	// Z比較あり
+	SetDepthEnable(TRUE);
+
+}
+
+void DrawGameResult(void)
+{
+	CAMERA *cam = GetCamera();
+#ifdef _DEBUG
+	if (GetKeyboardPress(DIK_W))
+	{
+		cam_pos.x += sinf(cam->rot.y);
+		cam_pos.z += cosf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_S))
+	{
+		cam_pos.x -= sinf(cam->rot.y);
+		cam_pos.z -= cosf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_A))
+	{
+		cam_pos.x -= cosf(cam->rot.y);
+		cam_pos.z += sinf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_D))
+	{
+		cam_pos.x += cosf(cam->rot.y);
+		cam_pos.z -= sinf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_U))
+	{
+		cam_pos.y += 1.0f;
+	}
+	if (GetKeyboardPress(DIK_V))
+	{
+		cam_pos.y -= 1.0f;
+	}
+	PrintDebugProc("\nカメラ座標x:%f,y:%f,z:%f\n", cam_pos.x, cam_pos.y, cam_pos.z);
+#endif
+	XMFLOAT3 pos;
+	// プレイヤー視点
+	pos = XMFLOAT3{256.0f,-91.0f,-149.0f};
+	cam->rot.y = 2.03f;
+	cam->rot.x = 0.38f;
+	const float dist = 0.0f;
+	pos.x += sinf(cam->rot.y)*dist;
+	pos.z += cosf(cam->rot.y)*dist;
+	SetCameraAT(pos);
+	SetCamera();
+
+	//シェーダー管理
+//ポストエフェクトをかける場合はここから
+	int ans = MODE_PLANE;
+	SwapShader(ans);
+
+	DrawMeshField();
+
+	MapWallModel::Draw();
+
+	DrawMeshWall();
+
+	Obstacle::Draw();
+
+	RescueLife::DrawRescue();
+
+	DrawPlayer();
+
+	DrawParticle();
+
+	// 2D座標で物を描画する処理
+	// Z比較なし
+	SetDepthEnable(FALSE);
+
+	// ライティングを無効
+	SetLightEnable(FALSE);
+
+	//シェーダー管理
+	//シェーダーを元に戻す。ポストエフェクトはここまで
+	ans = MODE_PLANE;
+	SwapShader(ans);
+
+	DrawResult();
 
 	// ライティングを有効に
 	SetLightEnable(TRUE);

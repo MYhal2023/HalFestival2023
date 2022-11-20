@@ -11,9 +11,6 @@ void Map::InitMap(void)
 {
 	//サンプル
 		//壁モデル
-	MapWallModel::Init();
-	Obstacle::Init();
-	FallObject::Init();
 
 	//メッシュウォールの設置
 		//InitMeshWall();
@@ -155,26 +152,26 @@ void Map::InitMap(void)
 	XMFLOAT3 r = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT3 m = { 1.0f, 1.0f, 1.0f };
 
-	Obstacle::SetObstacle(XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 1.0f, 1.0f, 1.0f }, 100.0f, 50.0f, MODEL_DCUT);
-	Obstacle::SetObstacle(XMFLOAT3{ 100.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 1.0f, 1.0f, 1.0f }, 100.0f, 50.0f, MODEL_BOOKSHELF);
-	Obstacle::SetObstacle(XMFLOAT3{ 200.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 1.0f, 1.0f, 1.0f }, 100.0f, 50.0f, MODEL_LDESK);
-	Obstacle::SetObstacle(XMFLOAT3{ 350.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.0f, 3.0f, 3.0f }, 100.0f, 50.0f, MODEL_GASTANK);
-	Obstacle::SetObstacle(XMFLOAT3{ 500.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 4.0f, 4.0f, 4.0f }, 100.0f, 50.0f, MODEL_MONITOR);
-	Obstacle::SetObstacle(XMFLOAT3{ 700.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 4.0f, 4.0f, 4.0f }, 100.0f, 50.0f, MODEL_STEEL);
+	Obstacle::SetObstacle(XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 1.0f, 1.0f, 1.0f }, 100.0f, 50.0f, om_duct);
+	Obstacle::SetObstacle(XMFLOAT3{ 100.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 1.0f, 1.0f, 1.0f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 200.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 1.0f, 1.0f, 1.0f }, 100.0f, 50.0f, om_Ldesk);
+	Obstacle::SetObstacle(XMFLOAT3{ 350.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.0f, 3.0f, 3.0f }, 100.0f, 50.0f, om_gastank);
+	Obstacle::SetObstacle(XMFLOAT3{ 500.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 4.0f, 4.0f, 4.0f }, 100.0f, 50.0f, om_monitor);
+	Obstacle::SetObstacle(XMFLOAT3{ 700.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 4.0f, 4.0f, 4.0f }, 100.0f, 50.0f, om_steel);
 
 	// 会議室
 
 	// 第一研究所
-	Obstacle::SetObstacle(XMFLOAT3{ -144.0f, 0.0f, 765.0f }, XMFLOAT3{ 0.0f, 1.57f, 0.0f }, XMFLOAT3{ 5.0f, 1.0f, 5.0f }, 100.0f, 50.0f, MODEL_LDESK);
-	Obstacle::SetObstacle(XMFLOAT3{ -500.0f, 0.0f, 550.0f }, XMFLOAT3{ 0.0f, 1.57f, 0.0f }, XMFLOAT3{ 4.0f, 3.0f, 4.0f }, 100.0f, 50.0f, MODEL_TANK);
-	Obstacle::SetObstacle(XMFLOAT3{ -500.0f, 0.0f, 550.0f }, XMFLOAT3{ 0.0f, 1.57f, 0.0f }, XMFLOAT3{ 4.0f, 3.0f, 4.0f }, 100.0f, 50.0f, MODEL_TANKGLASS);
+	Obstacle::SetObstacle(XMFLOAT3{ -144.0f, 0.0f, 765.0f }, XMFLOAT3{ 0.0f, 1.57f, 0.0f }, XMFLOAT3{ 5.0f, 1.0f, 5.0f }, 100.0f, 50.0f, om_Ldesk);
+	Obstacle::SetObstacle(XMFLOAT3{ -500.0f, 0.0f, 550.0f }, XMFLOAT3{ 0.0f, 1.57f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
+	Obstacle::SetObstacle(XMFLOAT3{ -500.0f, 0.0f, 550.0f }, XMFLOAT3{ 0.0f, 1.57f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
 
 	// 書庫
-	Obstacle::SetObstacle(XMFLOAT3{ 550.0f, 0.0f, -765.0f }, XMFLOAT3{ 0.0f, 4.7f, 0.0f }, XMFLOAT3{ 5.0f, 2.0f, 3.0f }, 100.0f, 50.0f, MODEL_BOOKSHELF);
-	Obstacle::SetObstacle(XMFLOAT3{ 750.0f, 0.0f, -900.0f }, XMFLOAT3{ 0.0f, 3.1f, 0.0f }, XMFLOAT3{ 5.0f, 2.0f, 3.0f }, 100.0f, 50.0f, MODEL_BOOKSHELF);
+	Obstacle::SetObstacle(XMFLOAT3{ 550.0f, 0.0f, -765.0f }, XMFLOAT3{ 0.0f, 4.7f, 0.0f }, XMFLOAT3{ 5.0f, 2.0f, 3.0f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 750.0f, 0.0f, -900.0f }, XMFLOAT3{ 0.0f, 3.1f, 0.0f }, XMFLOAT3{ 5.0f, 2.0f, 3.0f }, 100.0f, 50.0f, om_bookshelf);
 
 	// 部品置き室
-	Obstacle::SetObstacle(XMFLOAT3{ 900.0f, 0.0f, 850.0f }, XMFLOAT3{ 0.0f, 0.7f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, MODEL_BOOKSHELF);
+	Obstacle::SetObstacle(XMFLOAT3{ 900.0f, 0.0f, 850.0f }, XMFLOAT3{ 0.0f, 0.7f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_bookshelf);
 
 	//テスト
 

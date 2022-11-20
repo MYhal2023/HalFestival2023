@@ -15,6 +15,8 @@
 #include "fade.h"
 #include "reserve.h"
 #include "sound.h"
+#include "time.h"
+#include "easing.h"
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -26,54 +28,33 @@
 // グローバル変数
 //*****************************************************************************
 static ID3D11Buffer					*g_VertexBuffer = NULL;	// 頂点情報
-static ID3D11ShaderResourceView		*g_Texture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
-static ID3D11ShaderResourceView		*g_CharTexture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
-static char* g_TextureName[TEXTURE_MAX] = {
-	"data/TEXTURE/win_texture.png",
-	"data/TEXTURE/lose_texture.png",
+static char* g_TextureName[MAX_RESULT_TEX] = {
 	"data/TEXTURE/number.png",
+	"data/TEXTURE/timer_cent.png",
 	"data/TEXTURE/var.png",
-	"data/TEXTURE/icon_energy.png",
-	"data/TEXTURE/icon_oxygen.png",
-	"data/TEXTURE/icon_iron.png",
-	"data/TEXTURE/Result.png",
-
-};
-static char* g_CharTextureName[CH_TEXTURE_MAX] = {
-	"data/TEXTURE/neutro.png",
-	"data/TEXTURE/neutro.png",
-	"data/TEXTURE/macro.png",
 };
 
-static Result g_Result;
+static Result g_Result[MAX_RESULT_TEX];
 static Reward g_Reward;
 static BOOL g_Load = FALSE;
-static BOOL once = FALSE;
-static BOOL bgm = FALSE;
+static BOOL once = FALSE;	//一回だけ行う処理で使用
+static BOOL ef_once = FALSE;	//一回だけ行う処理で使用
+static int sequence = 0;	//リザルトのシーケンス状態
+static int skip = 0;
 static float alpha[10];
 HRESULT InitResult(void)
 {
 	ID3D11Device *pDevice = GetDevice();
 
 	//テクスチャ生成
-	for (int i = 0; i < TEXTURE_MAX; i++)
+	for (int i = 0; i < MAX_RESULT_TEX; i++)
 	{
-		g_Texture[i] = NULL;
+		g_Result[i].g_Texture = NULL;
 		D3DX11CreateShaderResourceViewFromFile(GetDevice(),
 			g_TextureName[i],
 			NULL,
 			NULL,
-			&g_Texture[i],
-			NULL);
-	}
-	for (int i = 0; i < CH_TEXTURE_MAX; i++)
-	{
-		g_CharTexture[i] = NULL;
-		D3DX11CreateShaderResourceViewFromFile(GetDevice(),
-			g_CharTextureName[i],
-			NULL,
-			NULL,
-			&g_CharTexture[i],
+			&g_Result[i].g_Texture,
 			NULL);
 	}
 
@@ -86,22 +67,17 @@ HRESULT InitResult(void)
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	GetDevice()->CreateBuffer(&bd, NULL, &g_VertexBuffer);
-
-	g_Result.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	g_Result.pos = { SCREEN_CENTER_X, SCREEN_CENTER_Y };
-	g_Result.size = { SCREEN_WIDTH, SCREEN_HEIGHT };
-	g_Result.textNo = 0;
-	g_Result.type = GetOverType();
-	g_Result.enemyNum = 0;
-	g_Result.beatNum = 0;
-	for (int i = 0; i < MAX_PLAYER_NUM; i++) {
-		g_Result.charId[i] = 0;
-		g_Result.damage[i] = 0;
+	for (int i = 0; i < MAX_RESULT_TEX; i++)
+	{
+		g_Result[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		g_Result[i].pos = { SCREEN_CENTER_X, SCREEN_CENTER_Y };
+		g_Result[i].size = { SCREEN_WIDTH, SCREEN_HEIGHT };
 	}
 	for (int i = 0; i < 10; i++) { alpha[i] = 0.0f; }
+	sequence = 0;
 	g_Load = TRUE;
 	once = FALSE;
-	bgm = FALSE;
+	ef_once = FALSE;
 	return S_OK;
 }
 
@@ -120,21 +96,12 @@ void UninitResult(void)
 	}
 
 	// テクスチャの解放
-	for (int i = 0; i < TEXTURE_MAX; i++)
+	for (int i = 0; i < MAX_RESULT_TEX; i++)
 	{
-		if (g_Texture[i])
+		if (g_Result[i].g_Texture)
 		{
-			g_Texture[i]->Release();
-			g_Texture[i] = NULL;
-		}
-	}
-	// テクスチャの解放
-	for (int i = 0; i < CH_TEXTURE_MAX; i++)
-	{
-		if (g_CharTexture[i])
-		{
-			g_CharTexture[i]->Release();
-			g_CharTexture[i] = NULL;
+			g_Result[i].g_Texture->Release();
+			g_Result[i].g_Texture = NULL;
 		}
 	}
 
@@ -146,21 +113,111 @@ void UninitResult(void)
 //=============================================================================
 void UpdateResult(void)
 {
-	switch (g_Result.type)
+	skip++;
+	if (skip < 10)return;
+
+	switch (sequence)
 	{
-	case OVER_WIN:
-		g_Result.textNo = 0;
-		WinResult();
+	case 0:
+		FirstSeq();
 		break;
-	case OVER_LOSE:
-		g_Result.textNo = 1;
-		LoseResult();
+	case 1:
+		SecondSeq();
+		break;
+	case 2:
+		ThirdSeq();
+		break;
+	case 3:
+		ForthSeq();
+		break;
+	case 4:
+		FifthSeq();
 		break;
 	}
+	WinResult();
 
 //#ifdef _DEBUG
 //	PrintDebugProc("")
 //#endif
+}
+
+void FirstSeq(void)
+{
+	if (g_Reward.time < g_Reward.max_time)
+		g_Reward.time += g_Reward.ef_time;
+	else
+		g_Reward.time = g_Reward.max_time;
+	if (g_Reward.time == g_Reward.max_time) {
+		sequence++;
+		skip = 0;
+	}
+}
+
+void SecondSeq(void)
+{
+	if (g_Reward.beatNum < g_Reward.max_beatNum)
+		g_Reward.beatNum += g_Reward.ef_beatNum;
+	else
+		g_Reward.beatNum = g_Reward.max_beatNum;
+
+	if (g_Reward.beatNum == g_Reward.max_beatNum) {
+		sequence++;
+		skip = 0;
+	}
+}
+
+void ThirdSeq(void)
+{
+	if (g_Reward.rescue_num < g_Reward.max_rescue_num)
+		g_Reward.rescue_num += g_Reward.ef_rescue_num;
+	else
+		g_Reward.rescue_num = g_Reward.max_rescue_num;
+	if (g_Reward.rescue_num == g_Reward.max_rescue_num) {
+		sequence++;
+		skip = 0;
+	}
+}
+void ForthSeq(void)
+{
+	if (g_Reward.score < g_Reward.max_score)
+		g_Reward.score += g_Reward.ef_score;
+	else
+		g_Reward.score = g_Reward.max_score;
+	if (g_Reward.score == g_Reward.max_score && GetKeyboardTrigger(DIK_RETURN)) { 
+		sequence++; 
+		g_Reward.nEaseIndex = Easing::SetEase(-100.0f, SCREEN_CENTER_Y, 30.0f);
+		skip = 0;
+	}
+
+}
+
+void FifthSeq(void)
+{
+	if (g_Reward.rank_up > 0) {
+		g_Reward.ef_rank_up *= 1.01f;
+		//増加量が規定をオーバーしていたら調整
+		if ((int)(g_Reward.ef_rank_up) > g_Reward.rank_up)
+		{
+			g_Reward.ef_rank_up = (float)(g_Reward.rank_up);
+		}
+
+		g_Reward.rank_gauge += (int)(g_Reward.ef_rank_up);
+		g_Reward.rank_up -= (int)(g_Reward.ef_rank_up);
+
+		if (g_Reward.rank_gauge >= g_Reward.rank_gauge_max) {
+			g_Reward.rank++;
+			g_Reward.rank_gauge -= g_Reward.rank_gauge_max;
+		}
+	}
+	if (g_Reward.rank_up <= 0 && !ef_once) {
+		skip = -40;
+		ef_once = TRUE;
+		return;
+	}
+	if (g_Reward.rank_up <= 0) { 
+		sequence++; 
+		g_Reward.nEaseIndex = Easing::SetEase(SCREEN_CENTER_Y, SCREEN_HEIGHT + 100.0f, 60.0f);
+	}
 }
 
 //=============================================================================
@@ -185,111 +242,157 @@ void DrawResult(void)
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
 
-	// リザルトの背景を描画
+	float pos_y = SCREEN_HEIGHT * 0.10f;
+	// リザルトの経過時間を描画
+	g_Result[result_var].pos = { SCREEN_WIDTH *0.6f , pos_y };
+	g_Result[result_var].size = { 240.0f, 80.0f };
+	g_Result[result_var].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawResultTexture(&g_Result[result_var]);
+	pos_y += 80.0f + 8.0f;
+	DrawResultTime(SCREEN_WIDTH *0.65f, pos_y, 40.0f, 80.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	// リザルトの救助者数を描画
+	pos_y += 80.0f + 32.0f;
+	g_Result[result_var].pos = { SCREEN_WIDTH *0.6f , pos_y };
+	g_Result[result_var].size = { 240.0f, 80.0f };
+	g_Result[result_var].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawResultTexture(&g_Result[result_var]);
+	pos_y += 80.0f + 8.0f;
+	DrawResultNumber(g_Reward.beatNum, SCREEN_WIDTH *0.55f, pos_y, 40.0f, 80.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	// リザルトの破壊数を描画
+	pos_y += 80.0f + 32.0f;
+	g_Result[result_var].pos = { SCREEN_WIDTH *0.6f , pos_y };
+	g_Result[result_var].size = { 240.0f, 80.0f };
+	g_Result[result_var].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawResultTexture(&g_Result[result_var]);
+	pos_y += 80.0f + 8.0f;
+	DrawResultNumber(g_Reward.rescue_num, SCREEN_WIDTH *0.55f, pos_y, 40.0f, 80.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	// リザルトのスコアを描画
+	pos_y += 160.0f + 40.0f;
+	g_Result[result_var].pos = { SCREEN_WIDTH *0.6f , pos_y };
+	g_Result[result_var].size = { 240.0f, 80.0f };
+	g_Result[result_var].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawResultTexture(&g_Result[result_var]);
+	pos_y += 160.0f + 8.0f;
+	DrawResultNumber(g_Reward.score, SCREEN_WIDTH *0.60f, pos_y, 80.0f, 160.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	if (sequence >= 4)
 	{
-		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_Result.textNo]);
+		if (sequence >= 5)
+		{
+			//g_Reward.set_y += 100.0f * g_Reward.dt;
+			g_Reward.set_y = Easing::GetEase(g_Reward.nEaseIndex);
+		}
+		else if (sequence == 4)
+		{
+			g_Reward.set_y = Easing::GetEase(g_Reward.nEaseIndex);
+		}
 
-		// １枚のポリゴンの頂点とテクスチャ座標を設定
-		SetSpriteLeftTop(g_VertexBuffer, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f, 1.0f);
+		if (sequence < 5) {
+			g_Result[result_var].pos = { SCREEN_CENTER_X  , SCREEN_CENTER_Y };
+			g_Result[result_var].size = { SCREEN_WIDTH, SCREEN_HEIGHT };
+			g_Result[result_var].color = { 0.0f, 0.0f, 0.0f, 0.5f };
+			DrawResultTexture(&g_Result[result_var]);
+		}
 
-		// ポリゴン描画
-		GetDeviceContext()->Draw(4, 0);
+		g_Result[result_var].pos = { SCREEN_CENTER_X , g_Reward.set_y };
+		g_Result[result_var].size = { 800.0f, 80.0f };
+		g_Result[result_var].color = { 0.5f, 0.5f, 0.5f, 1.0f };
+		DrawResultGauge(&g_Result[result_var], 1.0f);
+
+
+		float par = (float)(g_Reward.rank_gauge) / (float)(g_Reward.rank_gauge_max);
+		g_Result[result_var].size = { 800.0f * par , 80.0f };
+		g_Result[result_var].pos = { SCREEN_CENTER_X + (800.0f * (par - 1.0f)) * 0.5f, g_Reward.set_y };
+		g_Result[result_var].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		DrawResultGauge(&g_Result[result_var], par);
+
 	}
-
-	//// 報告書を描画
-	//{
-	//	// テクスチャ設定
-	//	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[Report]);
-	//	const float x = 1754 * 0.4f;
-	//	const float y = 2480 * 0.4f;
-	//	// １枚のポリゴンの頂点とテクスチャ座標を設定
-	//	SetSpriteColor(g_VertexBuffer, SCREEN_CENTER_X, SCREEN_CENTER_Y, x, y, 0.0f, 0.0f, 1.0f, 1.0f,
-	//		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-
-	//	// ポリゴン描画
-	//	GetDeviceContext()->Draw(4, 0);
-	//}
-
-
 }
 
 void WinResult(void)
 {
-	if (!bgm) { 
-		PlaySound(SOUND_LABEL_BGM_Win);
-		bgm = TRUE;
-	}
-	if (GetKeyboardTrigger(DIK_RETURN) && !once)
-	{
+	if (!once) {
+		//PlaySound(SOUND_LABEL_BGM_Win);
+		
 		once = TRUE;
-		SetFade(FADE_OUT, MODE_RESERVE, WhiteBox);	//現状ループするように
 	}
+	//if (GetKeyboardTrigger(DIK_RETURN))
+	//{
+	//	sequence++;
+	//}
+
+	if(sequence >= MAX_RESULT_SEQUENCE && GetKeyboardTrigger(DIK_RETURN))
+	SetFade(FADE_OUT, MODE_TITLE, WhiteBox);	//現状ループするように
+
 }
 
-void LoseResult(void)
-{
-	if (!bgm) {
-		PlaySound(SOUND_LABEL_BGM_Lose);
-		bgm = TRUE;
-	}
-	if (GetKeyboardTrigger(DIK_RETURN) && !once)
-	{
-		once = TRUE;
-		SetFade(FADE_OUT, MODE_RESERVE, WhiteBox);	//現状ループするように
-	}
-}
 
 void InitReward(void)
 {
-	g_Reward.num = 0;
-	for (int i = 0; i < MAX_REWARD; i++) {
-		g_Reward.ID[i] = 99;
-		g_Reward.value[i] = 0;
-	}
+	g_Reward.beatNum = 20;
+	g_Reward.rescue_num = 10;
+	g_Reward.time = 60;
+	g_Reward.score = 6000;
+	g_Reward.rank_up = 0;
+
+	g_Reward.ef_beatNum = 0;
+	g_Reward.ef_rescue_num = 0;
+	g_Reward.ef_time = 0;
+	g_Reward.ef_score = 0;
+	g_Reward.ef_rank_up = 1.0f;
+
+	g_Reward.rank = 0;
+	g_Reward.rank_gauge = 0;
+	g_Reward.rank_gauge_max = 100;
+
+	g_Reward.set_y -= SCREEN_CENTER_Y;
+	g_Reward.dt = 0.9f;
 }
 
-void DrawReward(XMFLOAT2 pos, float size)
+
+//モード変更時に引き継ぐデータがある場合、ここで行う
+void SetReward(void)
 {
-	for (int i = 0; i < g_Reward.num; i++) {
-		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_Reward.ID[i] + result_energy]);
+	//g_Reward.time = GAME_TIME - GetTime();
+	g_Reward.time = 60;
+	g_Reward.ef_beatNum = g_Reward.beatNum / 30;
+	if (g_Reward.ef_beatNum < 1)
+		g_Reward.ef_beatNum = 1;
 
-		// １枚のポリゴンの頂点とテクスチャ座標を設定
-		SetSpriteColor(g_VertexBuffer, pos.x, pos.y, size, size, 0.0f, 0.0f, 1.0f, 1.0f,
-			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	g_Reward.ef_rescue_num = g_Reward.rescue_num / 30;
+	if (g_Reward.ef_rescue_num < 1)
+		g_Reward.ef_rescue_num = 1;
 
-		// ポリゴン描画
-		GetDeviceContext()->Draw(4, 0);
+	g_Reward.ef_time = g_Reward.time / 30;
+	if (g_Reward.ef_time < 1)
+		g_Reward.ef_time = 1;
 
-		DrawResultNumber(g_Reward.value[i], pos.x, pos.y + size, size * 0.25f, size * 0.5f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-	}
-}
-//一種類ずつ設定。最大設定数は5
-void SetReward(int id, int value)
-{
-	g_Reward.ID[g_Reward.num] = id;
-	g_Reward.value[g_Reward.num] = value;
-	g_Reward.num++;
+	g_Reward.ef_score = g_Reward.score / 100;
+	if (g_Reward.ef_score < 1)
+		g_Reward.ef_score = 1;
+
+	//データの移し替え
+	g_Reward.max_beatNum = g_Reward.beatNum;
+	g_Reward.max_rescue_num = g_Reward.rescue_num;
+	g_Reward.max_time = g_Reward.time;
+	g_Reward.max_score = g_Reward.score;
+
+	//表示用数値をリセット
+	g_Reward.beatNum = 0;
+	g_Reward.rescue_num = 0;
+	g_Reward.time = 0;
+	g_Reward.score = 0;
+	//ランクアップ経験値の計算をここでする
+	int num = 150;
+	g_Reward.rank_up = num;
 }
 
 
 Reward *GetReward(void) { return &g_Reward; };
 
-//こっからUI描画に関するやつ
-void DrawResultButton(XMFLOAT4 color, float px, float py, float sx, float sy)
-{
-	// テクスチャ設定
-	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[result_var]);
-
-	// １枚のポリゴンの頂点とテクスチャ座標を設定
-	SetSpriteColor(g_VertexBuffer, px, py, sx, sy, 0.0f, 0.0f, 1.0f, 1.0f,
-		color);
-
-	// ポリゴン描画
-	GetDeviceContext()->Draw(4, 0);
-
-}
 //引数:表示したい数字、表示座標(x,y)、表示サイズ(x方向,y方向)
 void DrawResultNumber(int numb, float px, float py, float sx, float sy, XMFLOAT4 color)
 {
@@ -314,7 +417,7 @@ void DrawResultNumber(int numb, float px, float py, float sx, float sy, XMFLOAT4
 		float tx = x * 0.1f;			// テクスチャの左上X座標
 
 		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[result_numb]);
+		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Result[result_numb].g_Texture);
 
 		// １枚のポリゴンの頂点とテクスチャ座標を設定
 		SetSpriteColor(g_VertexBuffer, psx, py, sx, sy, tx, 0.0f, 0.1f, 1.0f,
@@ -323,5 +426,124 @@ void DrawResultNumber(int numb, float px, float py, float sx, float sy, XMFLOAT4
 		// ポリゴン描画
 		GetDeviceContext()->Draw(4, 0);
 		numb /= 10;
+	}
+}
+
+//テクスチャ描画
+void DrawResultTexture(Result* result)
+{
+	// テクスチャ設定
+	GetDeviceContext()->PSSetShaderResources(0, 1, &result->g_Texture);
+
+	// １枚のポリゴンの頂点とテクスチャ座標を設定
+	SetSpriteColor(g_VertexBuffer, result->pos.x, result->pos.y, result->size.x, result->size.y, 0.0f, 0.0f, 1.0f, 1.0f,
+		result->color);
+
+	// ポリゴン描画
+	GetDeviceContext()->Draw(4, 0);
+}
+
+//テクスチャ描画
+void DrawResultGauge(Result* result, float tx)
+{
+	// テクスチャ設定
+	GetDeviceContext()->PSSetShaderResources(0, 1, &result->g_Texture);
+
+	// １枚のポリゴンの頂点とテクスチャ座標を設定
+	SetSpriteColor(g_VertexBuffer, result->pos.x, result->pos.y, result->size.x, result->size.y, 0.0f, 0.0f, 0.0f, 1.0f,
+		result->color);
+
+	// ポリゴン描画
+	GetDeviceContext()->Draw(4, 0);
+}
+
+void DrawResultTime(float px, float py, float sx, float sy, XMFLOAT4 color)
+{
+	int number = g_Reward.time;
+	for (int i = 0; i < TIME_DIGIT; i++)
+	{
+		if (i != 1 && i != 2)	//十進数の処理
+		{
+			// テクスチャ設定
+			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Result[result_numb].g_Texture);
+			// 今回表示する桁の数字
+			float x = (float)(number % 10);
+
+			// 制限時間の位置やテクスチャー座標を反映
+			float p_x = px - sx * i;	// 制限時間の表示位置X
+			float p_y = py;			// 制限時間の表示位置Y
+			float p_w = sx;				// 制限時間の表示幅
+			float p_h = sy;				// 制限時間の表示高さ
+
+			float tw = 1.0f / 10;		// テクスチャの幅
+			float th = 1.0f / 1;		// テクスチャの高さ
+			float tx = x * tw;			// テクスチャの左上X座標
+			float ty = 0.0f;			// テクスチャの左上Y座標
+
+			// １枚のポリゴンの頂点とテクスチャ座標を設定
+			SetSpriteColor(g_VertexBuffer, p_x, p_y, p_w, p_h, tx, ty, tw, th,
+				color);
+
+			// ポリゴン描画
+			GetDeviceContext()->Draw(4, 0);
+
+			// 次の桁へ
+			number /= 10;
+
+		}
+		else if (i == 1)	//時間の二桁目のみ6進数なため、処理を分ける
+		{
+			// テクスチャ設定
+			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Result[result_numb].g_Texture);
+			// 今回表示する桁の数字
+			float x = (float)(number % 6);
+
+			// 制限時間の位置やテクスチャー座標を反映
+			float p_x = px - sx * i;	// 制限時間の表示位置X
+			float p_y = py;			// 制限時間の表示位置Y
+			float p_w = sx;				// 制限時間の表示幅
+			float p_h = sy;				// 制限時間の表示高さ
+
+			float tw = 1.0f / 10;		// テクスチャの幅
+			float th = 1.0f / 1;		// テクスチャの高さ
+			float tx = x * tw;			// テクスチャの左上X座標
+			float ty = 0.0f;			// テクスチャの左上Y座標
+
+			// １枚のポリゴンの頂点とテクスチャ座標を設定
+			SetSpriteColor(g_VertexBuffer, p_x, p_y, p_w, p_h, tx, ty, tw, th,
+				color);
+
+			// ポリゴン描画
+			GetDeviceContext()->Draw(4, 0);
+
+			// 次の桁へ
+			number /= 6;
+
+
+		}
+		else if (i == 2)
+		{
+			// テクスチャ設定
+			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Result[result_numb_cent].g_Texture);
+
+			// 制限時間の位置やテクスチャー座標を反映
+			float p_x = px - sx * i;	// 制限時間の表示位置X
+			float p_y = py;			// 制限時間の表示位置Y
+			float p_w = sx;				// 制限時間の表示幅
+			float p_h = sy;				// 制限時間の表示高さ
+
+			float tw = 1.0f;		// テクスチャの幅
+			float th = 1.0f;		// テクスチャの高さ
+			float tx = 0.0f;			// テクスチャの左上X座標
+			float ty = 0.0f;			// テクスチャの左上Y座標
+
+			// １枚のポリゴンの頂点とテクスチャ座標を設定
+			SetSpriteColor(g_VertexBuffer, p_x, p_y, p_w, p_h, tx, ty, tw, th,
+				XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+
+			// ポリゴン描画
+			GetDeviceContext()->Draw(4, 0);
+
+		}
 	}
 }

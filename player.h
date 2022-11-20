@@ -146,6 +146,7 @@ void UpdatePlayer(void);
 void DrawPlayer(void);
 void MovePlayer(void);
 void ControlPlayer(void);
+void ControlCamera(void);
 void ControlChangeArm(void);
 void SetPlayerArm(void);
 void ChangePlayerArm(BOOL flag);

@@ -23,6 +23,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="debugproc.h" />
+    <ClInclude Include="easing.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="game.h" />
@@ -61,6 +62,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="debugproc.cpp" />
+    <ClCompile Include="easing.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="fall_object.cpp" />
     <ClCompile Include="file.cpp" />

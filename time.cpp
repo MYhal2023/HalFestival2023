@@ -87,7 +87,7 @@ HRESULT InitTime(void)
 	g_Pos   = { SCREEN_CENTER_X + g_w*2.0f, g_h*0.5f, 0.0f };
 	g_TexNo = 0;
 
-	g_Time = 60;	// §ŒÀŽžŠÔ‚Ì‰Šú‰»
+	g_Time = GAME_TIME;	// §ŒÀŽžŠÔ‚Ì‰Šú‰»
 #ifdef DEBUG
 	g_Time = 1000
 #endif 

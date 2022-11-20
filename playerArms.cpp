@@ -61,6 +61,8 @@ void pArm::InitArm(void)
 		g_ArmParts[i].tbl_adrXgun = NULL;
 		g_ArmParts[i].tbl_adr = wait_armLeft;
 		g_ArmParts[i].move_time = 0.0f;
+		g_ArmParts[i].spead = 0.0f;
+		g_ArmParts[i].ct_frame = 0.0f;
 	}
 
 	Xgun::InitArm();
@@ -117,55 +119,55 @@ void pArm::UpdateArm(void)
 	XMFLOAT3 rot{0.0f, 0.0f, 0.0f};
 	//片腕ずつ処理(根本部分は除外)
 	//左腕
-	//if (GetKeyboardPress(DIK_1))
-	//{
-	//	pos.x += 0.05f * etc;
-	//}
-	//else if (GetKeyboardPress(DIK_2))
-	//{
-	//	pos.y += 0.05f * etc;
-	//}
-	//else if (GetKeyboardPress(DIK_3))
-	//{
-	//	pos.z += XM_PI * 0.001f * etc;
-	//}
-	//if (GetKeyboardPress(DIK_4))
-	//{
-	//	rot.x += XM_PI * 0.001f * etc;
-	//}
-	//else if (GetKeyboardPress(DIK_5))
-	//{
-	//	rot.y += XM_PI * 0.001f * etc;
-	//}
-	//else if (GetKeyboardPress(DIK_6))
-	//{
-	//	rot.z += XM_PI * 0.001f * etc;
-	//}
-	//else if (GetKeyboardTrigger(DIK_J))
-	//{
-	//	etc *= -1;
-	//}
-	//else if (GetKeyboardTrigger(DIK_K))
-	//{
-	//	if (flag)flag = FALSE;
-	//	else flag = TRUE;
-	//}
-	//else if (GetKeyboardTrigger(DIK_M))
-	//{
-	//	if (change)change = FALSE;
-	//	else change = TRUE;
-	//}
-	//else if (GetKeyboardTrigger(DIK_RETURN))
-	//{
-	//	fout << "{ XMFLOAT3(" <<g_ArmParts[1].pos.x << ", " << g_ArmParts[1].pos.y << ", " << g_ArmParts[1].pos.z << "),";
-	//	fout << "XMFLOAT3(" << g_ArmParts[1].rot.x << ", " << g_ArmParts[1].rot.y << ", " << g_ArmParts[1].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
-	//	fout << "{ XMFLOAT3(" << g_ArmParts[6].pos.x << ", " << g_ArmParts[6].pos.y << ", " << g_ArmParts[6].pos.z << "),";
-	//	fout << "XMFLOAT3(" << g_ArmParts[6].rot.x << ", " << g_ArmParts[6].rot.y << ", " << g_ArmParts[6].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
-	//	fout << "{ XMFLOAT3(" << g_ArmParts[11].pos.x << ", " << g_ArmParts[11].pos.y << ", " << g_ArmParts[11].pos.z <<"),";
-	//	fout << "XMFLOAT3(" << g_ArmParts[11].rot.x << ", " << g_ArmParts[11].rot.y << ", " << g_ArmParts[11].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
-	//	fout << "{ XMFLOAT3(" << g_ArmParts[16].pos.x << ", " << g_ArmParts[16].pos.y << ", " << g_ArmParts[16].pos.z << "),";
-	//	fout << "XMFLOAT3(" << g_ArmParts[16].rot.x << ", " << g_ArmParts[16].rot.y << ", " << g_ArmParts[16].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl<<endl;
-	//}
+	if (GetKeyboardPress(DIK_1))
+	{
+		pos.x += 0.05f * etc;
+	}
+	else if (GetKeyboardPress(DIK_2))
+	{
+		pos.y += 0.05f * etc;
+	}
+	else if (GetKeyboardPress(DIK_3))
+	{
+		pos.z += XM_PI * 0.001f * etc;
+	}
+	if (GetKeyboardPress(DIK_4))
+	{
+		rot.x += XM_PI * 0.001f * etc;
+	}
+	else if (GetKeyboardPress(DIK_5))
+	{
+		rot.y += XM_PI * 0.001f * etc;
+	}
+	else if (GetKeyboardPress(DIK_6))
+	{
+		rot.z += XM_PI * 0.001f * etc;
+	}
+	else if (IsMouseLeftTriggered() || GetKeyboardTrigger(DIK_J))
+	{
+		etc *= -1;
+	}
+	else if (GetKeyboardTrigger(DIK_K) || IsMouseRightTriggered())
+	{
+		if (flag)flag = FALSE;
+		else flag = TRUE;
+	}
+	else if (GetKeyboardTrigger(DIK_M))
+	{
+		if (change)change = FALSE;
+		else change = TRUE;
+	}
+	else if (GetKeyboardTrigger(DIK_RETURN))
+	{
+		fout << "{ XMFLOAT3(" <<g_ArmParts[1].pos.x << ", " << g_ArmParts[1].pos.y << ", " << g_ArmParts[1].pos.z << "),";
+		fout << "XMFLOAT3(" << g_ArmParts[1].rot.x << ", " << g_ArmParts[1].rot.y << ", " << g_ArmParts[1].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60, EASING }," << endl << endl;
+		fout << "{ XMFLOAT3(" << g_ArmParts[6].pos.x << ", " << g_ArmParts[6].pos.y << ", " << g_ArmParts[6].pos.z << "),";
+		fout << "XMFLOAT3(" << g_ArmParts[6].rot.x << ", " << g_ArmParts[6].rot.y << ", " << g_ArmParts[6].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60, EASING }," << endl << endl;
+		fout << "{ XMFLOAT3(" << g_ArmParts[11].pos.x << ", " << g_ArmParts[11].pos.y << ", " << g_ArmParts[11].pos.z <<"),";
+		fout << "XMFLOAT3(" << g_ArmParts[11].rot.x << ", " << g_ArmParts[11].rot.y << ", " << g_ArmParts[11].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60, EASING }," << endl << endl;
+		fout << "{ XMFLOAT3(" << g_ArmParts[16].pos.x << ", " << g_ArmParts[16].pos.y << ", " << g_ArmParts[16].pos.z << "),";
+		fout << "XMFLOAT3(" << g_ArmParts[16].rot.x << ", " << g_ArmParts[16].rot.y << ", " << g_ArmParts[16].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60, EASING }," << endl << endl<<endl;
+	}
 
 
 	if (!change) {
@@ -382,7 +384,7 @@ INTERPOLATION_DATA * pArm::CheckMotionData(PLAYER *p)
 }
 
 
-void pArm::IPArm(pArm* p, INTERPOLATION_DATA* i)
+void pArm::IPArm(pArm* p, INTERPOLATION_DATA_EASING* i)
 {
 //
 // 線形補間の処理
@@ -390,13 +392,69 @@ void pArm::IPArm(pArm* p, INTERPOLATION_DATA* i)
 	int		index = (int)p->move_time;
 	float	time = p->move_time - index;
 	int		size = p->tbl_sizeA;
+	p->ct_frame += 1.0f;
 
-	float dt = 1.0f / i->frame;	// 1フレームで進める時間
-	p->move_time += dt;							// アニメーションの合計時間に足す
+	if(p->move_time == 0.0f && i[index].ease_mode == EASE_OUT)
+		p->spead = (1.0f + 0.5f * 1.0f * 4) / i[index].frame;
 
-	if (index > (size - 2))	// ゴールをオーバーしていたら、データを最初に戻して攻撃を終了
+	float dt = 0.0f;
+	//運動方法によって速度に加速力を与える
+	switch (i[index].ease_mode) {
+	case EASE_IN:
+		dt = 1.0f * 4.0f /(i[index].frame * i[index].frame);
+		p->spead += dt;
+
+		break;
+	case EASE_OUT:
+		dt = (1.0f * 4) / (i[index].frame*i[index].frame);
+		p->spead -= dt;
+
+
+		break;
+	case EASING:
+		dt = (1.0f * 4) / (i[index].frame * i[index].frame);
+		if (i[index].frame * 0.5f >= p->ct_frame)
+			p->spead += dt;
+		else
+			p->spead -= dt;
+
+		break;
+	case NON_EASE:
+		dt = 1.0f / i[index].frame;
+		p->spead = dt;
+
+		break;
+
+		//Ease-out
+	}
+
+	p->move_time += p->spead;							// アニメーションの合計時間に足す
+
+	if(i[index].frame <= p->ct_frame)p->move_time = 1.0f * (float)(index + 1);
+
+	//テーブル遷移時に各変数を初期化、初速は次のイージングによって決める
+	if (index < (int)(p->move_time))
+	{
+		p->move_time = 1.0f * (float)(index+1);
+		p->ct_frame = 0.0f;
+		//減速のみ初速を与えなければいけない
+		switch (i[index + 1].ease_mode) {
+		case EASE_OUT:
+			p->spead = (1.0f + 0.5f * 1.0f * 4) / i[index + 1].frame;
+			break;
+		case EASE_IN:
+		case EASING:
+		case NON_EASE:
+			p->spead = 0.0f;
+			break;
+		}
+	}
+
+	if (index > (size - 2))	// ゴールをオーバーしていたら、データを最初に戻して終了
 	{
 		p->move_time = 0.0f;
+		p->spead = 0.0f;
+		p->ct_frame = 0.0f;
 		index = 0;
 	}
 	// 座標を求める	X = StartX + (EndX - StartX) * 今の時間

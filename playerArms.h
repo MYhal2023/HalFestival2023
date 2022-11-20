@@ -28,6 +28,8 @@ protected:
 	int					tbl_sizeA;	// 登録したテーブルのレコード総数
 	int					tbl_sizeM;	// 登録したテーブルのレコード総数
 	float				move_time;	// 実行時間
+	float				spead;
+	float				ct_frame;
 	INTERPOLATION_DATA*					old_tbl;	//現在の使用テーブル
 
 	int					partsNum;	//アームのパーツ数
@@ -37,7 +39,7 @@ protected:
 	BOOL			attack;			//攻撃中か否か
 
 	INTERPOLATION_DATA	*tbl_adrXgun;	// 攻撃アニメデータのテーブル先頭アドレス
-	INTERPOLATION_DATA	*tbl_adr;	// 移動アニメデータのテーブル先頭アドレス
+	INTERPOLATION_DATA_EASING	*tbl_adr;	// 移動アニメデータのテーブル先頭アドレス
 	PLAYER* player;
 	int					slot;
 
@@ -55,7 +57,7 @@ public:
 	static void UpdateBrasterArm(void);
 	static void UpdateSawArm(void);
 	static INTERPOLATION_DATA* CheckMotionData(PLAYER *p);
-	static void IPArm(pArm* p, INTERPOLATION_DATA* i);
+	static void IPArm(pArm* p, INTERPOLATION_DATA_EASING* i);
 	static pArm* GetArm(void);
 	static pArm* GetArmParts(void);
 	static pArm* GetLeftArmParts(void);
@@ -71,7 +73,7 @@ public:
 	static void InitArmBoot(void);
 	static void UpdateArm(void);
 	static INTERPOLATION_DATA* CheckMotionData(PLAYER *p);
-	static void IPArm(Normal* p, INTERPOLATION_DATA* i);
+	static void IPArm(Normal* p, INTERPOLATION_DATA_EASING* i);
 	static pArm* GetArm(void);
 	static pArm* GetArmParts(void);
 	static void Draw(void);
