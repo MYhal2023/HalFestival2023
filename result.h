@@ -49,6 +49,10 @@ enum ResultTexture
 {
 	result_numb,
 	result_numb_cent,
+	result_distract,
+	result_rescue,
+	result_time,
+	result_score,
 	result_var,
 	MAX_RESULT_TEX
 };

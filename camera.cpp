@@ -289,3 +289,24 @@ void SetCameraAT(XMFLOAT3 pos)
 	g_Cam.pos.z = g_Cam.at.z - cosf(g_Cam.rot.y) * g_Cam.len;
 	g_Cam.pos.y -= sinf(g_Cam.rot.x)* g_Cam.len * (sinf(g_Cam.rot.x) * 0.75f);
 }
+
+// カメラの視点と注視点セット
+void SetReserveCameraAT(XMFLOAT3 pos, XMFLOAT3 rot)
+{
+	XMVECTOR v1 = XMLoadFloat3(&pos) - XMLoadFloat3(&g_Cam.at);
+	XMVECTOR nor = XMVector3Normalize(v1);
+	XMStoreFloat3(&g_Cam.at, XMLoadFloat3(&g_Cam.at) + nor * 1.0f);
+
+	//引数の座標に変更量を加算。
+	pos.x += g_Cam.atPos.x;
+	pos.y += g_Cam.atPos.y;
+	pos.z += g_Cam.atPos.z;
+	// カメラの注視点をセット
+	pos.y += sinf(g_Cam.rot.x) * g_Cam.len;
+	g_Cam.at = { pos.x,pos.y,pos.z };
+	float dist = FloatClamp(1.0f - sinf(rot.x), 0.98f, 1.0f);
+	// カメラの視点をカメラのY軸回転に対応させている
+	g_Cam.pos.x = g_Cam.at.x - sinf(rot.y) * g_Cam.len;
+	g_Cam.pos.z = g_Cam.at.z - cosf(rot.y) * g_Cam.len;
+	g_Cam.pos.y -= sinf(rot.x)* g_Cam.len * (sinf(rot.x) * 0.75f);
+}

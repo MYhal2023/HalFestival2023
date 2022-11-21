@@ -46,6 +46,7 @@ void DrawGame1(void);
 void SetPlayMode(int playMode);
 void DrawGameTitle(void);
 void DrawGameResult(void);
+void DrawGameReserve(void);
 int GetPlayMode(void);
 void SetSlowMode(BOOL flag);
 //void SetPlayStage(int stageNum);

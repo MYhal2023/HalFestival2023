@@ -181,10 +181,10 @@ HRESULT InitPlayer(void)
 	g_Parts[P_R_THIGH].pos = { -1.0f, -13.0f, 3.5f };
 
 	g_Parts[P_L_FOOT].parent = &g_Parts[P_L_THIGH];
-	g_Parts[P_L_FOOT].pos = { 1.5f, -12.0f, 0.0f };
+	g_Parts[P_L_FOOT].pos = { 1.5f, 0.0f, 0.0f };
 
 	g_Parts[P_R_FOOT].parent = &g_Parts[P_R_THIGH];
-	g_Parts[P_R_FOOT].pos = { 1.5f, -12.0f, 0.0f };
+	g_Parts[P_R_FOOT].pos = { 1.5f, 0.0f, 0.0f };
 
 	g_Load = TRUE;
 	playerNum = 0;
@@ -226,21 +226,21 @@ void InitBootPlayer(void)
 
 	LoadModel(MODEL_L_THIGH, &g_Parts[P_L_THIGH].model);
 	GetModelDiffuse(&g_Parts[P_L_THIGH].model, &g_Parts[P_L_THIGH].diffuse[0]);
-	g_Parts[P_L_THIGH].pos = { -1.0f, -13.0f, -3.5f };
+	g_Parts[P_L_THIGH].pos = { 0.5f, -17.0f, -3.5f };
 
 	LoadModel(MODEL_R_THIGH, &g_Parts[P_R_THIGH].model);
 	GetModelDiffuse(&g_Parts[P_R_THIGH].model, &g_Parts[P_R_THIGH].diffuse[0]);
-	g_Parts[P_R_THIGH].pos = { -1.0f, -13.0f, 3.5f };
+	g_Parts[P_R_THIGH].pos = { 0.5f, -17.0f, 3.5f };
 
 	LoadModel(MODEL_L_FOOT, &g_Parts[P_L_FOOT].model);
 	GetModelDiffuse(&g_Parts[P_L_FOOT].model, &g_Parts[P_L_FOOT].diffuse[0]);
 	g_Parts[P_L_FOOT].parent = &g_Parts[P_L_THIGH];
-	g_Parts[P_L_FOOT].pos = { 1.5f, -12.0f, 0.0f };
+	g_Parts[P_L_FOOT].pos = { 0.0f, -5.0f, 0.0f };
 
 	LoadModel(MODEL_R_FOOT, &g_Parts[P_R_FOOT].model);
 	GetModelDiffuse(&g_Parts[P_R_FOOT].model, &g_Parts[P_R_FOOT].diffuse[0]);
 	g_Parts[P_R_FOOT].parent = &g_Parts[P_R_THIGH];
-	g_Parts[P_R_FOOT].pos = { 1.5f, -12.0f, 0.0f };
+	g_Parts[P_R_FOOT].pos = { 0.0f, -5.0f, 0.0f };
 
 }
 

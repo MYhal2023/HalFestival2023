@@ -21,9 +21,9 @@
 #define	MODEL_L_SHOULDER	"data/MODEL/leftshoulder.obj"			// 読み込むモデル名
 #define	MODEL_L_ARM			"data/MODEL/leftarm.obj"			// 読み込むモデル名
 #define	MODEL_R_THIGH		"data/MODEL/rightthigh.obj"			// 読み込むモデル名
-#define	MODEL_R_FOOT		"data/MODEL/rightleg.obj"			// 読み込むモデル名
+#define	MODEL_R_FOOT		"data/MODEL/rightfoot.obj"			// 読み込むモデル名
 #define	MODEL_L_THIGH		"data/MODEL/leftthigh.obj"			// 読み込むモデル名
-#define	MODEL_L_FOOT		"data/MODEL/leftleg.obj"			// 読み込むモデル名
+#define	MODEL_L_FOOT		"data/MODEL/leftfoot.obj"			// 読み込むモデル名
 
 #define MAX_PLAYER		(1)					// プレイヤーの数
 #define MAX_PLAYER_PARTS (9)

@@ -59,7 +59,8 @@ static BOOL g_Slow = FALSE;
 static int s_mode = FALSE;
 static int	g_PlayMode = MAIN_GAME;
 static int mode = 1;
-static 	XMFLOAT3 cam_pos = {0.0f, 0.0f, 0.0f};
+static 	XMFLOAT3 cam_pos = { 0.0f, 0.0f, 0.0f };
+static 	XMFLOAT3 cam_rot = { 0.0f, 0.0f, 0.0f };
 
 //=============================================================================
 // 初期化処理
@@ -74,6 +75,8 @@ HRESULT InitGame(void)
 
 void InitSystem(void)
 {
+	CAMERA* cam = GetCamera();
+	cam->rot = { 0.0f, 0.0f, 0.0f };
 	// ライトを有効化	// 影の初期化処理
 	InitShadow();
 
@@ -302,6 +305,7 @@ void DrawGame1(void)
 
 	Obstacle::Draw();
 
+	if(GetMode() == MODE_GAME || MODE_RESULT)
 	DrawPlayer();
 
 }
@@ -514,6 +518,109 @@ void DrawGameResult(void)
 
 	DrawResult();
 
+	// ライティングを有効に
+	SetLightEnable(TRUE);
+
+	// Z比較あり
+	SetDepthEnable(TRUE);
+
+}
+
+void DrawGameReserve(void)
+{
+	CAMERA *cam = GetCamera();
+	int ans = MODE_PLANE;
+	SwapShader(ans);
+#ifdef _DEBUG
+	if (GetKeyboardPress(DIK_W))
+	{
+		cam_pos.x += sinf(cam->rot.y);
+		cam_pos.z += cosf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_S))
+	{
+		cam_pos.x -= sinf(cam->rot.y);
+		cam_pos.z -= cosf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_A))
+	{
+		cam_pos.x -= cosf(cam->rot.y);
+		cam_pos.z += sinf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_D))
+	{
+		cam_pos.x += cosf(cam->rot.y);
+		cam_pos.z -= sinf(cam->rot.y);
+	}
+	if (GetKeyboardPress(DIK_U))
+	{
+		cam_pos.y += 1.0f;
+	}
+	if (GetKeyboardPress(DIK_V))
+	{
+		cam_pos.y -= 1.0f;
+	}
+	PrintDebugProc("\nカメラ座標x:%f,y:%f,z:%f\n", cam_pos.x, cam_pos.y, cam_pos.z);
+#endif
+
+	XMFLOAT3 pos = cam_pos;
+	cam_rot.y += XM_PI * 0.001f;
+	if (cam_rot.y >= XM_PI * 2.0f)
+		cam_rot.y = 0.0f;
+
+	// プレイヤー視点
+	//pos = XMFLOAT3{ 243.0f,-124.0f,-143.0f };
+	//cam->rot.y = 2.03f;
+	//cam->rot.x = 0.3f;
+	float dist = 0.0f;
+	pos.x += sinf(cam_rot.y)*dist;
+	pos.z += cosf(cam_rot.y)*dist;
+	SetReserveCameraAT(pos, cam_rot);
+	SetCamera();
+
+	DrawMeshField();
+
+	MapWallModel::Draw();
+
+	DrawMeshWall();
+
+	Obstacle::Draw();
+
+	// プレイヤー視点
+	pos = XMFLOAT3{ 243.0f,-124.0f,-143.0f };
+	cam->rot.y = 2.03f;
+	cam->rot.x = 0.3f;
+	dist = 0.0f;
+	pos.x += sinf(cam->rot.y)*dist;
+	pos.z += cosf(cam->rot.y)*dist;
+	SetCameraAT(pos);
+	SetCamera();
+
+	//シェーダー管理
+//ポストエフェクトをかける場合はここから
+	ans = MODE_PLANE;
+	SwapShader(ans);
+
+	//シェーダー管理
+	//シェーダーを元に戻す。ポストエフェクトはここまで
+	ans = MODE_PLANE;
+	SwapShader(ans);
+
+	DrawPlayer();
+
+	// 2D座標で物を描画する処理
+	// Z比較なし
+	SetDepthEnable(FALSE);
+
+	// ライティングを無効
+	SetLightEnable(FALSE);
+
+	//シェーダー管理
+	//シェーダーを元に戻す。ポストエフェクトはここまで
+	ans = MODE_PLANE;
+	SwapShader(ans);
+
+	DrawReserve();
 	// ライティングを有効に
 	SetLightEnable(TRUE);
 

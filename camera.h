@@ -51,3 +51,4 @@ int GetViewPortType(void);
 
 void SetCameraAT(XMFLOAT3 pos);
 void SetCharaCamera(XMFLOAT3 pos);
+void SetReserveCameraAT(XMFLOAT3 pos, XMFLOAT3 rot);

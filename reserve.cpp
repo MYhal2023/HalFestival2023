@@ -15,18 +15,15 @@
 #include "debugproc.h"
 #include "sound.h"
 #include "input.h"
+#include "easing.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
 #define TEXTURE_MAX			(RESERVE_TEXTURE_MAX)				// テクスチャの数
-#define CH_TEXTURE_MAX		(7)				// キャラテクスチャの数
-#define IC_TEXTURE_MAX		(9)				// アイコンテクスチャの数
-#define CHAR_TEXTURE_MAX	(7)				// キャラテクスチャの数
 #define NUMBER_SIZE			(30.0f)			// x方向のサイズ
 #define COST_NUMBER_SIZE	(45.0f)			// x方向のサイズ
 #define BUTTON_SIZE			(106.0f)		// ボタンの縦幅サイズ。多分これくらい
-#define BUTTON_MAX			(4)				// ユーサーが選択できるボタン数
 #define ROW_NUM				(5)				// 一列に並べるユニット数
 #define HELP_TEX_NUM		(1)				// 一列に並べるユニット数
 
@@ -34,47 +31,25 @@
 // グローバル変数
 //*****************************************************************************
 static ID3D11Buffer					*g_VertexBuffer = NULL;	// 頂点情報
-static ID3D11ShaderResourceView		*g_CharTexture[CHAR_TEXTURE_MAX] = { NULL };	// テクスチャ情報
-static ID3D11ShaderResourceView		*g_IconTexture[IC_TEXTURE_MAX] = { NULL };	// テクスチャ情報
 
 static char* g_TextureName[TEXTURE_MAX] = {
 	"data/TEXTURE/var.png",
 	"data/TEXTURE/var.png",
+	"data/TEXTURE/t_startbutton.png",
 	"data/TEXTURE/var.png",
-	"data/TEXTURE/var.png",
-};
-static char* g_CharTextureName[CH_TEXTURE_MAX] = {
-	"data/TEXTURE/neutro.png",
-	"data/TEXTURE/neutro.png",
-	"data/TEXTURE/macro.png",
-	"data/TEXTURE/thelper.png",
-	"data/TEXTURE/tkiller.png",
-	"data/TEXTURE/NK.png",
-	"data/TEXTURE/kouen.png",
-
-};
-static char* g_IconTextureName[IC_TEXTURE_MAX] = {
-	"data/TEXTURE/icon_cost.png",
-	"data/TEXTURE/icon_life.png",
-	"data/TEXTURE/icon_attack.png",
-	"data/TEXTURE/icon_diffend.png",
-	"data/TEXTURE/icon_block.png",
-	"data/TEXTURE/icon_sp.png",
-	"data/TEXTURE/icon_energy.png",
-	"data/TEXTURE/icon_oxygen.png",
-	"data/TEXTURE/icon_iron.png",
+	"data/TEXTURE/number.png",
 };
 
 static Reserve g_Reserve;
 static TEXT_TEXTURE g_text[TEXTURE_MAX];
-static Button g_Button[BUTTON_MAX];
+static Button g_Button[TEXTURE_MAX];
 static int cursol;
-static int cursolPw;	//パワーアップ画面に使われるカーソル
 static int HelpTexNum = 0;	//ヘルプの画像枚数
 static float cursolAlpha;	//カーソル透明度
 static float alphaSpeed;	//カーソル透明度加算量
 static BOOL g_Load = FALSE;
 static BOOL restart = FALSE;
+static BOOL once = FALSE;
 HRESULT InitReserve(void)
 {
 	//起動時、一度だけ初期化
@@ -99,25 +74,6 @@ HRESULT InitReserve(void)
 			&g_Button[i].g_Texture,
 			NULL);
 	}
-	// テクスチャ生成
-	for (int i = 0; i < CHAR_TEXTURE_MAX; i++)
-	{
-		D3DX11CreateShaderResourceViewFromFile(GetDevice(),
-			g_CharTextureName[i],
-			NULL,
-			NULL,
-			&g_CharTexture[i],
-			NULL);
-	}
-	for (int i = 0; i < IC_TEXTURE_MAX; i++)
-	{
-		D3DX11CreateShaderResourceViewFromFile(GetDevice(),
-			g_IconTextureName[i],
-			NULL,
-			NULL,
-			&g_IconTexture[i],
-			NULL);
-	}
 
 	// 頂点バッファ生成
 	D3D11_BUFFER_DESC bd;
@@ -128,7 +84,7 @@ HRESULT InitReserve(void)
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	GetDevice()->CreateBuffer(&bd, NULL, &g_VertexBuffer);
 
-	for (int i = 0; i < BUTTON_MAX; i++)
+	for (int i = 0; i < TEXTURE_MAX; i++)
 	{
 		g_Button[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		g_Button[i].pos = { 0.0f, 0.0f };
@@ -147,10 +103,10 @@ HRESULT InitReserve(void)
 
 
 	cursol = 0;
-	cursolPw = 0;
 	cursolAlpha = 0.5f;
 	alphaSpeed = 0.02f;
 	g_Load = TRUE;
+	once = FALSE;
 	return S_OK;
 }
 
@@ -177,24 +133,6 @@ void UninitReserve(void)
 			g_Button[i].g_Texture = NULL;
 		}
 	}
-	// テクスチャの解放
-	for (int i = 0; i < CH_TEXTURE_MAX; i++)
-	{
-		if (g_CharTexture[i])
-		{
-			g_CharTexture[i]->Release();
-			g_CharTexture[i] = NULL;
-		}
-	}
-	// テクスチャの解放
-	for (int i = 0; i < IC_TEXTURE_MAX; i++)
-	{
-		if (g_IconTexture[i])
-		{
-			g_IconTexture[i]->Release();
-			g_IconTexture[i] = NULL;
-		}
-	}
 
 	g_Load = FALSE;
 }
@@ -206,13 +144,19 @@ void UpdateReserve(void)
 {
 	if (GetKeyboardTrigger(DIK_RETURN))
 	{
-		switch (cursol) {
-		case 0://はじめから
-			//PlaySound(SOUND_LABEL_SE_Decision);
-			SetFade(FADE_BOX_OUT, MODE_GAME, WhiteBox);
-			break;
-		}
+		//PlaySound(SOUND_LABEL_SE_Decision);
+		SetFade(FADE_BOX_OUT, MODE_GAME, WhiteBox);
 	}
+	if (!once)
+	{
+		g_Button[rs_start].nIndex = Easing::SetEase(SCREEN_HEIGHT * 0.0f, SCREEN_HEIGHT * 0.4f, 100.0f);
+		g_Button[rs_rank].nIndex = Easing::SetEase(SCREEN_HEIGHT * 0.0f, SCREEN_HEIGHT * 0.9f, 80.0f);
+		g_Button[rs_vigilance].nIndex = Easing::SetEase(SCREEN_HEIGHT * 0.0f, SCREEN_HEIGHT * 0.9f, 60.0f);
+		once = TRUE;
+	}
+	g_Button[rs_start].set_pos.y = Easing::GetEase(g_Button[rs_start].nIndex);
+	g_Button[rs_rank].set_pos.x = Easing::GetEase(g_Button[rs_rank].nIndex);
+	g_Button[rs_vigilance].set_pos.x = Easing::GetEase(g_Button[rs_vigilance].nIndex);
 }
 
 //=============================================================================
@@ -241,9 +185,21 @@ void DrawReserve(void)
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
 	
-	DrawTexture(&g_Button[rs_vigilance]);
-	DrawTexture(&g_Button[rs_rank]);
+	g_Button[rs_start].pos = { SCREEN_WIDTH * 0.8f, SCREEN_HEIGHT * 1.2f - g_Button[rs_start].set_pos.y };
+	g_Button[rs_start].size = { 530 * 0.9f, 100 * 1.0f };
+	g_Button[rs_start].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	DrawTexture(&g_Button[rs_start]);
+
+
+	g_Button[rs_vigilance].pos = { SCREEN_WIDTH * 1.2f - g_Button[rs_vigilance].set_pos.x, SCREEN_HEIGHT * 0.25f };
+	g_Button[rs_vigilance].size = { 530 * 0.9f, 100 * 1.0f };
+	g_Button[rs_vigilance].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawTexture(&g_Button[rs_vigilance]);
+
+	g_Button[rs_rank].pos = { SCREEN_WIDTH * 1.2f - g_Button[rs_rank].set_pos.x , SCREEN_HEIGHT * 0.55f};
+	g_Button[rs_rank].size = { 530 * 0.9f, 100 * 1.0f };
+	g_Button[rs_rank].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawTexture(&g_Button[rs_rank]);
 
 	SetDepthEnable(TRUE);
 

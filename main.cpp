@@ -55,7 +55,7 @@ char	g_DebugStr[2048] = WINDOW_NAME;		// デバッグ文字表示用
 
 #endif
 
-int	g_Mode = MODE_GAME;					// 起動時の画面を設定
+int	g_Mode = MODE_RESERVE;					// 起動時の画面を設定
 
 
 //=============================================================================
@@ -370,20 +370,12 @@ void Draw(void)
 		break;
 
 	case MODE_RESERVE:
-		SetDepthEnable(FALSE);
+		SetViewPort(TYPE_FULL_SCREEN);
 
-		// ライティングを無効
-		SetLightEnable(FALSE);
+		SetSMRenderer();	//シャドウマップセット
+		DrawGame1();
 		SetRenderer();		//通常描画
-
-		DrawReserve();
-
-		// ライティングを有効に
-		SetLightEnable(TRUE);
-
-		// Z比較あり
-		SetDepthEnable(TRUE);
-
+		DrawGameReserve();
 		break;
 	case MODE_GAME:			// ゲーム画面の描画
 		SetViewPortType(TYPE_LIGHT_SCREEN);
@@ -452,6 +444,7 @@ void SetMode(int mode)
 
 	// ゲーム画面の終了処理
 	UninitResult();
+	UninitReserve();
 	UninitTitle();
 	Easing::Init();
 	g_Mode = mode;	// 次のモードをセットしている
@@ -466,6 +459,7 @@ void SetMode(int mode)
 	case MODE_RESERVE:
 		// 育成画面の初期化
 		InitReserve();
+		InitGame();
 		break;
 
 	case MODE_GAME:

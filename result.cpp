@@ -31,6 +31,10 @@ static ID3D11Buffer					*g_VertexBuffer = NULL;	// 頂点情報
 static char* g_TextureName[MAX_RESULT_TEX] = {
 	"data/TEXTURE/number.png",
 	"data/TEXTURE/timer_cent.png",
+	"data/TEXTURE/distract_num.png",
+	"data/TEXTURE/rescue_num.png",
+	"data/TEXTURE/time_num.png",
+	"data/TEXTURE/final_score.png",
 	"data/TEXTURE/var.png",
 };
 
@@ -244,37 +248,37 @@ void DrawResult(void)
 
 	float pos_y = SCREEN_HEIGHT * 0.10f;
 	// リザルトの経過時間を描画
-	g_Result[result_var].pos = { SCREEN_WIDTH *0.6f , pos_y };
-	g_Result[result_var].size = { 240.0f, 80.0f };
-	g_Result[result_var].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	DrawResultTexture(&g_Result[result_var]);
+	g_Result[result_time].pos = { SCREEN_WIDTH *0.65f , pos_y };
+	g_Result[result_time].size = { 530.0f * 0.80f, 100.0f *0.75f };
+	g_Result[result_time].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawResultTexture(&g_Result[result_time]);
 	pos_y += 80.0f + 8.0f;
 	DrawResultTime(SCREEN_WIDTH *0.65f, pos_y, 40.0f, 80.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	// リザルトの救助者数を描画
 	pos_y += 80.0f + 32.0f;
-	g_Result[result_var].pos = { SCREEN_WIDTH *0.6f , pos_y };
-	g_Result[result_var].size = { 240.0f, 80.0f };
-	g_Result[result_var].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	DrawResultTexture(&g_Result[result_var]);
+	g_Result[result_distract].pos = { SCREEN_WIDTH *0.65f , pos_y };
+	g_Result[result_distract].size = { 530.0f *0.80f, 100.0f *0.75f };
+	g_Result[result_distract].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawResultTexture(&g_Result[result_distract]);
 	pos_y += 80.0f + 8.0f;
-	DrawResultNumber(g_Reward.beatNum, SCREEN_WIDTH *0.55f, pos_y, 40.0f, 80.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	DrawResultNumber(g_Reward.beatNum, SCREEN_WIDTH *0.58f, pos_y, 40.0f, 80.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	// リザルトの破壊数を描画
 	pos_y += 80.0f + 32.0f;
-	g_Result[result_var].pos = { SCREEN_WIDTH *0.6f , pos_y };
-	g_Result[result_var].size = { 240.0f, 80.0f };
-	g_Result[result_var].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	DrawResultTexture(&g_Result[result_var]);
+	g_Result[result_rescue].pos = { SCREEN_WIDTH *0.65f , pos_y };
+	g_Result[result_rescue].size = { 530.0f * 0.80f, 100.0f *0.75f };
+	g_Result[result_rescue].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawResultTexture(&g_Result[result_rescue]);
 	pos_y += 80.0f + 8.0f;
-	DrawResultNumber(g_Reward.rescue_num, SCREEN_WIDTH *0.55f, pos_y, 40.0f, 80.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	DrawResultNumber(g_Reward.rescue_num, SCREEN_WIDTH *0.58f, pos_y, 40.0f, 80.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	// リザルトのスコアを描画
 	pos_y += 160.0f + 40.0f;
-	g_Result[result_var].pos = { SCREEN_WIDTH *0.6f , pos_y };
-	g_Result[result_var].size = { 240.0f, 80.0f };
-	g_Result[result_var].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	DrawResultTexture(&g_Result[result_var]);
+	g_Result[result_score].pos = { SCREEN_WIDTH *0.65f , pos_y };
+	g_Result[result_score].size = { 530.0f * 1.0f, 100.0f *1.0f};
+	g_Result[result_score].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawResultTexture(&g_Result[result_score]);
 	pos_y += 160.0f + 8.0f;
 	DrawResultNumber(g_Reward.score, SCREEN_WIDTH *0.60f, pos_y, 80.0f, 160.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 

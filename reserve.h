@@ -18,6 +18,8 @@ public:
 	XMFLOAT4 color;
 	XMFLOAT2 pos;
 	XMFLOAT2 size;
+	XMFLOAT2 set_pos;
+	int	nIndex;
 	int texNo;
 	BOOL use;
 	BOOL cursol;	//選択されているか
@@ -41,18 +43,6 @@ enum Reserve_TEXTURE
 	rs_number,		//数字テクスチャ
 	RESERVE_TEXTURE_MAX
 
-};
-enum Icon_TEXTURE
-{
-	icCost,
-	icLife,
-	icAttack,
-	icDiffend,
-	icBlock,
-	icSp,
-	icEnergy,
-	icOxygen,
-	icIron,
 };
 
 
