@@ -138,7 +138,7 @@ INTERPOLATION_DATA * Normal::CheckMotionData(PLAYER *p)
 }
 
 
-void Normal::IPArm(Normal* p, INTERPOLATION_DATA* i)
+void Normal::IPArm(Normal* p, INTERPOLATION_DATA_EASING* i)
 {
 //
 // 線形補間の処理
@@ -147,8 +147,63 @@ void Normal::IPArm(Normal* p, INTERPOLATION_DATA* i)
 	float	time = p->move_time - index;
 	int		size = p->tbl_sizeA;
 
-	float dt = 1.0f / i->frame;	// 1フレームで進める時間
-	p->move_time += dt;							// アニメーションの合計時間に足す
+	p->ct_frame += 1.0f;
+
+	if (p->move_time == 0.0f && i[index].ease_mode == EASE_OUT)
+		p->spead = (1.0f + 0.5f * 1.0f * 2) / i[index].frame;
+
+	float dt = 0.0f;
+	//運動方法によって速度に加速力を与える
+	switch (i[index].ease_mode) {
+	case EASE_IN:
+		dt = (1.0f * 4) / (i[index].frame*i[index].frame);
+		p->spead += dt;
+
+		break;
+	case EASE_OUT:
+		dt = (1.0f * 2) / (i[index].frame*i[index].frame);
+		p->spead -= dt;
+
+
+		break;
+	case EASING:
+		dt = (1.0f * 4) / (i[index].frame * i[index].frame);
+		if (i[index].frame * 0.5f >= p->ct_frame)
+			p->spead += dt;
+		else
+			p->spead -= dt;
+
+		break;
+	case NON_EASE:
+		dt = 1.0f / i[index].frame;
+		p->spead = dt;
+
+		break;
+
+		//Ease-out
+	}
+
+	p->move_time += p->spead;							// アニメーションの合計時間に足す
+
+	if (i[index].frame <= p->ct_frame)p->move_time = 1.0f * (float)(index + 1);
+
+	//テーブル遷移時に各変数を初期化、初速は次のイージングによって決める
+	if (index < (int)(p->move_time))
+	{
+		p->move_time = 1.0f * (float)(index + 1);
+		p->ct_frame = 0.0f;
+		//減速のみ初速を与えなければいけない
+		switch (i[index + 1].ease_mode) {
+		case EASE_OUT:
+			p->spead = (1.0f + 0.5f * 1.0f * 2) / i[index + 1].frame;
+			break;
+		case EASE_IN:
+		case EASING:
+		case NON_EASE:
+			p->spead = 0.0f;
+			break;
+		}
+	}
 
 	if (index > (size - 2))	// ゴールをオーバーしていたら、データを最初に戻して攻撃を終了
 	{

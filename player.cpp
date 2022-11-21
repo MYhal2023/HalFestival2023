@@ -24,6 +24,7 @@
 #include "meshwall.h"
 #include "playerIPData.h"
 #include "obstacle.h"
+#include "result.h"
 #include <algorithm>
 
 //*****************************************************************************
@@ -291,6 +292,7 @@ void UpdatePlayer(void)
 		if (g_Player[i].use != TRUE)continue;
 
 			ControlPlayer();
+			ControlCamera();
 			MovePlayer();
 			ControlChangeArm();
 
@@ -589,6 +591,39 @@ void ControlPlayer(void)
 	}
 }
 
+void ControlCamera(void)
+{
+	CAMERA *g_Cam = GetCamera();
+	if (GetKeyboardPress(DIK_Q) || IsButtonPressed(0, BUTTON_R_LEFT))
+	{// 注視点旋回「左」
+		g_Cam->rot.y -= VALUE_ROTATE_CAMERA;
+		if (g_Cam->rot.y < -XM_PI)
+		{
+			g_Cam->rot.y += XM_PI * 2.0f;
+		}
+
+	}
+	else if (GetKeyboardPress(DIK_E) || IsButtonPressed(0, BUTTON_R_RIGHT))
+	{// 注視点旋回「右」
+		g_Cam->rot.y += VALUE_ROTATE_CAMERA;
+		if (g_Cam->rot.y > XM_PI)
+		{
+			g_Cam->rot.y -= XM_PI * 2.0f;
+		}
+
+	}
+	if (GetKeyboardPress(DIK_UP))
+	{
+		if (g_Cam->rot.x < XM_PI * 0.1f)
+		g_Cam->rot.x += XM_PI * 0.004f;
+	}
+	else if (GetKeyboardPress(DIK_DOWN))
+	{
+		if (g_Cam->rot.x > 0.0f)
+		g_Cam->rot.x -= XM_PI * 0.004f;
+	}
+}
+
 void ControlChangeArm(void)
 {
 	if (GetKeyboardTrigger(DIK_F))
@@ -630,7 +665,7 @@ void ChangePlayerArm(BOOL flag)
 void UpdateArm(void)
 {
 	pArm::UpdateArm();
-	//pArm::UpdateReleaseArm();
+	//pArm::UpdateReleaseArm();	//リリース時はこっちを使う
 	//攻撃開始
 	if (GetKeyboardTrigger(DIK_Z) && g_Player[0].motionTime <= 0.0f)
 	{
@@ -763,6 +798,8 @@ void CheckRescue(void)
 
 			g_Player[0].rescueUse = TRUE;
 			g_Player[0].rs = &rs[k];
+			Reward* re = GetReward();
+			re->rescue_num++;
 		}
 	}
 }

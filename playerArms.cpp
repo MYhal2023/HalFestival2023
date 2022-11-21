@@ -61,6 +61,8 @@ void pArm::InitArm(void)
 		g_ArmParts[i].tbl_adrXgun = NULL;
 		g_ArmParts[i].tbl_adr = wait_armLeft;
 		g_ArmParts[i].move_time = 0.0f;
+		g_ArmParts[i].spead = 0.0f;
+		g_ArmParts[i].ct_frame = 0.0f;
 	}
 
 	Xgun::InitArm();
@@ -141,11 +143,11 @@ void pArm::UpdateArm(void)
 	{
 		rot.z += XM_PI * 0.001f * etc;
 	}
-	else if (GetKeyboardTrigger(DIK_J))
+	else if (IsMouseLeftTriggered() || GetKeyboardTrigger(DIK_J))
 	{
 		etc *= -1;
 	}
-	else if (GetKeyboardTrigger(DIK_K))
+	else if (GetKeyboardTrigger(DIK_K) || IsMouseRightTriggered())
 	{
 		if (flag)flag = FALSE;
 		else flag = TRUE;
@@ -158,13 +160,13 @@ void pArm::UpdateArm(void)
 	else if (GetKeyboardTrigger(DIK_RETURN))
 	{
 		fout << "{ XMFLOAT3(" <<g_ArmParts[1].pos.x << ", " << g_ArmParts[1].pos.y << ", " << g_ArmParts[1].pos.z << "),";
-		fout << "XMFLOAT3(" << g_ArmParts[1].rot.x << ", " << g_ArmParts[1].rot.y << ", " << g_ArmParts[1].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
+		fout << "XMFLOAT3(" << g_ArmParts[1].rot.x << ", " << g_ArmParts[1].rot.y << ", " << g_ArmParts[1].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60, EASING }," << endl << endl;
 		fout << "{ XMFLOAT3(" << g_ArmParts[6].pos.x << ", " << g_ArmParts[6].pos.y << ", " << g_ArmParts[6].pos.z << "),";
-		fout << "XMFLOAT3(" << g_ArmParts[6].rot.x << ", " << g_ArmParts[6].rot.y << ", " << g_ArmParts[6].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
+		fout << "XMFLOAT3(" << g_ArmParts[6].rot.x << ", " << g_ArmParts[6].rot.y << ", " << g_ArmParts[6].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60, EASING }," << endl << endl;
 		fout << "{ XMFLOAT3(" << g_ArmParts[11].pos.x << ", " << g_ArmParts[11].pos.y << ", " << g_ArmParts[11].pos.z <<"),";
-		fout << "XMFLOAT3(" << g_ArmParts[11].rot.x << ", " << g_ArmParts[11].rot.y << ", " << g_ArmParts[11].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl;
+		fout << "XMFLOAT3(" << g_ArmParts[11].rot.x << ", " << g_ArmParts[11].rot.y << ", " << g_ArmParts[11].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60, EASING }," << endl << endl;
 		fout << "{ XMFLOAT3(" << g_ArmParts[16].pos.x << ", " << g_ArmParts[16].pos.y << ", " << g_ArmParts[16].pos.z << "),";
-		fout << "XMFLOAT3(" << g_ArmParts[16].rot.x << ", " << g_ArmParts[16].rot.y << ", " << g_ArmParts[16].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60 }," << endl << endl<<endl;
+		fout << "XMFLOAT3(" << g_ArmParts[16].rot.x << ", " << g_ArmParts[16].rot.y << ", " << g_ArmParts[16].rot.z << ") , XMFLOAT3(1.0f, 1.0f, 1.0f), 60, EASING }," << endl << endl<<endl;
 	}
 
 
@@ -261,9 +263,94 @@ void pArm::UpdateArm(void)
 
 void pArm::UpdateReleaseArm(void)
 {
+	PLAYER *player = GetPlayer();
+	//0:Xgun,1:Braster,3:Saw
+	switch (player[0].armType)
+	{
+	case 0:
+		UpdateXgunArm();
+		break;
+	case 1:
+		UpdateBrasterArm();
+		break;
+	case 2:
+		UpdateSawArm();
+		break;
+	}
+
+}
+
+void pArm::UpdateXgunArm(void)
+{
 	for (int i = 1; i < MAX_ARM_PARTS; i++)
 	{
-		if (i < MAX_ARM_PARTS / 2) 
+		if (i < MAX_ARM_PARTS / 2)
+		{	//下半分のモーション
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmXgunL001];
+			IPArm(&g_ArmParts[i], AttackArmXgunLeft001);
+		}
+		else if (i >= MAX_ARM_PARTS / 2)	//上半分のモーション
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmXgunL002];
+			IPArm(&g_ArmParts[i], AttackArmXgunLeft002);
+		}
+	}
+
+	//右腕
+	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
+	{
+		if (i < (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2) {
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmXgunR001];
+			IPArm(&g_ArmParts[i], AttackArmXgunRight001);
+		}
+		else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmXgunR002];
+			IPArm(&g_ArmParts[i], AttackArmXgunRight002);
+
+		}
+	}
+
+}
+
+void pArm::UpdateBrasterArm(void)
+{
+	for (int i = 1; i < MAX_ARM_PARTS; i++)
+	{
+		if (i < MAX_ARM_PARTS / 2)
+		{	//下半分のモーション
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmBrasterL001];
+			IPArm(&g_ArmParts[i], AttackArmBrasterLeft001);
+		}
+		else if (i >= MAX_ARM_PARTS / 2)	//上半分のモーション
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmBrasterL002];
+			IPArm(&g_ArmParts[i], AttackArmBrasterLeft002);
+		}
+	}
+
+	//右腕
+	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
+	{
+		if (i < (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2) {
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmBrasterR001];
+			IPArm(&g_ArmParts[i], AttackArmBrasterRight001);
+		}
+		else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmBrasterR002];
+			IPArm(&g_ArmParts[i], AttackArmBrasterRight002);
+
+		}
+	}
+
+}
+
+void pArm::UpdateSawArm(void)
+{
+	for (int i = 1; i < MAX_ARM_PARTS; i++)
+	{
+		if (i < MAX_ARM_PARTS / 2)
 		{	//下半分のモーション
 			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL001];
 			IPArm(&g_ArmParts[i], AttackArmSawLeft001);
@@ -286,10 +373,9 @@ void pArm::UpdateReleaseArm(void)
 		{
 			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawR002];
 			IPArm(&g_ArmParts[i], AttackArmSawRight002);
-			
+
 		}
 	}
-
 }
 
 INTERPOLATION_DATA * pArm::CheckMotionData(PLAYER *p)
@@ -298,7 +384,7 @@ INTERPOLATION_DATA * pArm::CheckMotionData(PLAYER *p)
 }
 
 
-void pArm::IPArm(pArm* p, INTERPOLATION_DATA* i)
+void pArm::IPArm(pArm* p, INTERPOLATION_DATA_EASING* i)
 {
 //
 // 線形補間の処理
@@ -306,13 +392,69 @@ void pArm::IPArm(pArm* p, INTERPOLATION_DATA* i)
 	int		index = (int)p->move_time;
 	float	time = p->move_time - index;
 	int		size = p->tbl_sizeA;
+	p->ct_frame += 1.0f;
 
-	float dt = 1.0f / i->frame;	// 1フレームで進める時間
-	p->move_time += dt;							// アニメーションの合計時間に足す
+	if(p->move_time == 0.0f && i[index].ease_mode == EASE_OUT)
+		p->spead = (1.0f + 0.5f * 1.0f * 4) / i[index].frame;
 
-	if (index > (size - 2))	// ゴールをオーバーしていたら、データを最初に戻して攻撃を終了
+	float dt = 0.0f;
+	//運動方法によって速度に加速力を与える
+	switch (i[index].ease_mode) {
+	case EASE_IN:
+		dt = 1.0f * 4.0f /(i[index].frame * i[index].frame);
+		p->spead += dt;
+
+		break;
+	case EASE_OUT:
+		dt = (1.0f * 4) / (i[index].frame*i[index].frame);
+		p->spead -= dt;
+
+
+		break;
+	case EASING:
+		dt = (1.0f * 4) / (i[index].frame * i[index].frame);
+		if (i[index].frame * 0.5f >= p->ct_frame)
+			p->spead += dt;
+		else
+			p->spead -= dt;
+
+		break;
+	case NON_EASE:
+		dt = 1.0f / i[index].frame;
+		p->spead = dt;
+
+		break;
+
+		//Ease-out
+	}
+
+	p->move_time += p->spead;							// アニメーションの合計時間に足す
+
+	if(i[index].frame <= p->ct_frame)p->move_time = 1.0f * (float)(index + 1);
+
+	//テーブル遷移時に各変数を初期化、初速は次のイージングによって決める
+	if (index < (int)(p->move_time))
+	{
+		p->move_time = 1.0f * (float)(index+1);
+		p->ct_frame = 0.0f;
+		//減速のみ初速を与えなければいけない
+		switch (i[index + 1].ease_mode) {
+		case EASE_OUT:
+			p->spead = (1.0f + 0.5f * 1.0f * 4) / i[index + 1].frame;
+			break;
+		case EASE_IN:
+		case EASING:
+		case NON_EASE:
+			p->spead = 0.0f;
+			break;
+		}
+	}
+
+	if (index > (size - 2))	// ゴールをオーバーしていたら、データを最初に戻して終了
 	{
 		p->move_time = 0.0f;
+		p->spead = 0.0f;
+		p->ct_frame = 0.0f;
 		index = 0;
 	}
 	// 座標を求める	X = StartX + (EndX - StartX) * 今の時間

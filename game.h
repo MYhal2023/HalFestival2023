@@ -31,20 +31,13 @@ enum
 	RESULT
 };
 
-enum STAGE
-{
-	DEBUG_STAGE,
-	PRISON_STAGE,
-	FIRST_STAGE,
-	CLEAR_STAGE,
-	MAX_STAGE
-};
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
 HRESULT InitGame(void);
 void InitSystem(void);
 void InitBoot(void);
+void InitMap(void);
 void UninitGame(void);
 void UpdateGame(void);
 void DrawGame(void);
@@ -52,6 +45,7 @@ void DrawGame0(void);
 void DrawGame1(void);
 void SetPlayMode(int playMode);
 void DrawGameTitle(void);
+void DrawGameResult(void);
 int GetPlayMode(void);
 void SetSlowMode(BOOL flag);
 //void SetPlayStage(int stageNum);

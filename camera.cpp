@@ -25,8 +25,6 @@
 #define	VIEW_NEAR_Z		(10.0f)											// ビュー平面のNearZ値
 #define	VIEW_FAR_Z		(10000.0f)										// ビュー平面のFarZ値
 
-#define	VALUE_MOVE_CAMERA	(2.0f)										// カメラの移動量
-#define	VALUE_ROTATE_CAMERA	(XM_PI * 0.015f)								// カメラの回転量
 
 typedef enum
 {
@@ -88,38 +86,37 @@ void UpdateCamera(void)
 	pos.y =pos2.y + 30.0f;
 	pos.z = pos2.z + cosf(g_Cam.rot.y)*dist;
 	g_Cam.pos = pos;
-	if (GetKeyboardPress(DIK_Q) || IsButtonPressed(0, BUTTON_R_LEFT))
-	{// 注視点旋回「左」
+#ifdef _DEBUG	//デバッグ用のカメラ操作。モード関係なく動かせる
+	if (GetKeyboardPress(DIK_Q))
+	{
 		g_Cam.rot.y -= VALUE_ROTATE_CAMERA;
 		if (g_Cam.rot.y < -XM_PI)
 		{
 			g_Cam.rot.y += XM_PI * 2.0f;
 		}
-
-		g_Cam.at.x = g_Cam.pos.x + sinf(g_Cam.rot.y) * g_Cam.len;
-		g_Cam.at.z = g_Cam.pos.z + cosf(g_Cam.rot.y) * g_Cam.len;
 	}
-
-	if (GetKeyboardPress(DIK_E) || IsButtonPressed(0, BUTTON_R_RIGHT))
-	{// 注視点旋回「右」
+	else if (GetKeyboardPress(DIK_E))
+	{
 		g_Cam.rot.y += VALUE_ROTATE_CAMERA;
 		if (g_Cam.rot.y > XM_PI)
 		{
 			g_Cam.rot.y -= XM_PI * 2.0f;
 		}
 
-		g_Cam.at.x = g_Cam.pos.x + sinf(g_Cam.rot.y) * g_Cam.len;
-		g_Cam.at.z = g_Cam.pos.z + cosf(g_Cam.rot.y) * g_Cam.len;
 	}
-
-	if (GetKeyboardPress(DIK_R))
+	if (GetKeyboardPress(DIK_UP))
 	{
-
+		if (g_Cam.rot.x < XM_PI * 0.2f)
+			g_Cam.rot.x += XM_PI * 0.004f;
 	}
-	else if (GetKeyboardPress(DIK_F))
+	else if (GetKeyboardPress(DIK_DOWN))
 	{
-
+		if (g_Cam.rot.x > 0.0f)
+			g_Cam.rot.x -= XM_PI * 0.004f;
 	}
+
+
+#endif
 
 	if (g_Cam.tbl_adr != NULL)
 	{
@@ -158,7 +155,11 @@ void UpdateCamera(void)
 		XMStoreFloat3(&g_Cam.atPos, s0 + scl * time);
 
 	}
-	PrintDebugProc("\nカメラ回転y:%f\n", g_Cam.rot.y);
+#ifdef _DEBUG
+
+	PrintDebugProc("\nカメラ回転y:%f,x:%f\n", g_Cam.rot.y, g_Cam.rot.x);
+#endif
+
 }
 
 
@@ -280,9 +281,11 @@ void SetCameraAT(XMFLOAT3 pos)
 	pos.y += g_Cam.atPos.y;
 	pos.z += g_Cam.atPos.z;
 	// カメラの注視点をセット
+	pos.y += sinf(g_Cam.rot.x) * g_Cam.len;
 	g_Cam.at = { pos.x,pos.y,pos.z };
-
+	float dist = FloatClamp(1.0f - sinf(g_Cam.rot.x), 0.98f, 1.0f);
 	// カメラの視点をカメラのY軸回転に対応させている
 	g_Cam.pos.x = g_Cam.at.x - sinf(g_Cam.rot.y) * g_Cam.len;
 	g_Cam.pos.z = g_Cam.at.z - cosf(g_Cam.rot.y) * g_Cam.len;
+	g_Cam.pos.y -= sinf(g_Cam.rot.x)* g_Cam.len * (sinf(g_Cam.rot.x) * 0.75f);
 }

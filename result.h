@@ -7,54 +7,66 @@
 #pragma once
 #define MAX_REWARD	(5)
 #define MAX_PLAYER_NUM	(10)
+#define MAX_RESULT_SEQUENCE (5)
 struct Result
 {
+	ID3D11ShaderResourceView		*g_Texture;
 	XMFLOAT4 color;
 	XMFLOAT2 pos;
 	XMFLOAT2 size;
-	int textNo;
-	int type;
-	int enemyNum;	//敵総数
-	int beatNum;	//撃退数
-	int charId[MAX_PLAYER_NUM];		//キャラID
-	int damage[MAX_PLAYER_NUM];		//ダメージを与えた数
 };
 
 struct Reward
 {
-	int num;				//何種類の報酬があるのか
-	int ID[MAX_REWARD];		//報酬の素材ID
-	int value[MAX_REWARD];	//報酬の素材量
-};
-enum ResultType
-{
-	Lose,
-	Win
+	int beatNum;	//障害物の破壊数
+	int rescue_num;	//救助した数
+	int time;		//経過した時間
+	int score;		//合計スコア
+	int rank_up;	//上昇するランク経験量
+
+	int ef_beatNum;	//障害物の破壊数上昇数
+	int ef_rescue_num;	//救助した数上昇数
+	int ef_time;		//経過した時間上昇数
+	int ef_score;		//合計スコア上昇数
+	float ef_rank_up;	//上昇するランク経験量上昇数
+
+	int max_beatNum;	//障害物の破壊数最大値
+	int max_rescue_num;	//救助した数最大値
+	int max_time;		//経過した時間最大値
+	int max_score;		//合計スコア最大値
+	int max_rank_up;	//上昇するランク経験量最大値
+
+	int rank;			//現在のランク
+	int rank_gauge;			//現在のゲージ量
+	int rank_gauge_max;		//ランクアップに必要なゲージ量
+
+	float dt;
+	float set_y;
+	int nEaseIndex;
 };
 
 enum ResultTexture
 {
-	win,
-	lose,
 	result_numb,
+	result_numb_cent,
 	result_var,
-	result_energy,
-	result_oxy,
-	result_iron,
-	Report,
+	MAX_RESULT_TEX
 };
 
 HRESULT InitResult(void);
 void UninitResult(void);
 void UpdateResult(void);
+void FirstSeq(void);
+void SecondSeq(void);
+void ThirdSeq(void);
+void ForthSeq(void);
+void FifthSeq(void);
 void DrawResult(void);
 void WinResult(void);
-void LoseResult(void);
 void InitReward(void);
-void DrawReward(XMFLOAT2 pos, float size);
-void SetReward(int id, int value);
-void IncreaseReward(Reward *reward);
+void SetReward(void);
 Reward *GetReward(void);
-void DrawResultButton(XMFLOAT4 color, float px, float py, float sx, float sy);
 void DrawResultNumber(int numb, float px, float py, float sx, float sy, XMFLOAT4 color);
-void DrawResultChar(void);
+void DrawResultTexture(Result* result);
+void DrawResultGauge(Result* result, float tx);
+void DrawResultTime(float px, float py, float sx, float sy, XMFLOAT4 color);

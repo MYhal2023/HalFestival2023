@@ -120,6 +120,9 @@
     <ClInclude Include="time.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="easing.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="text_texture.cpp">
@@ -234,6 +237,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="normalArm.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="easing.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

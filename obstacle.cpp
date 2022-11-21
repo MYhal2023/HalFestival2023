@@ -3,8 +3,10 @@
 #include "bullet.h"
 #include "collision.h"
 #include "debugproc.h"
+#include "result.h"
 static Obstacle g_Obstacle[MAX_OBSTACLE];
-
+static 	DX11_MODEL		model[MAX_OBSTACLE_MODEL];		// モデル情報
+static XMFLOAT4			tankglass_diffuse[16];
 
 //初期化
 void Obstacle::Init(void)
@@ -16,39 +18,34 @@ void Obstacle::Init(void)
 		g_Obstacle[i].use = FALSE;
 		g_Obstacle[i].efSwitch = FALSE;
 	}
-	XMFLOAT3 p = { 0.0f, 50.0f, 0.0f };
-	XMFLOAT3 r = { 0.0f, 0.0f, 0.0f };
-	XMFLOAT3 m = { 1.0f, 1.0f, 1.0f };
 
-	//p = { 100.0f, 0.0f, 0.0f };
+}
+void Obstacle::InitBoot(void)
+{
+	LoadModel(MODEL_BOOK, &model[om_book]);
+	LoadModel(MODEL_BOOKSHELF, &model[om_bookshelf]);
+	LoadModel(MODEL_LDESK, &model[om_Ldesk]);
+	LoadModel(MODEL_TANK, &model[om_tank]);
+	LoadModel(MODEL_TANKGLASS, &model[om_tankglass]);
+	//タンクガラスだけ透明度を上げる
+	GetModelDiffuse(&model[om_tankglass], &tankglass_diffuse[0]);
+	for (int j = 0; j < model[om_tankglass].SubsetNum; j++)
+		SetModelDiffuse(&model[om_tankglass], j, XMFLOAT4(1.0f, 1.0f, 1.0f, 0.2f));
 
-	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_LDESK);
-	//p = { 200.0f, 0.0f, 0.0f };
-
-	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_LDESK);
-	//p = {300.0f, 0.0f, 0.0f };
-
-	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_TANK);
-	//p = { 400.0f, 0.0f, 0.0f };
-
-	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_TANKGLASS);
-	//p = { 400.0f, 0.0f, 0.0f };
-
-	//SetObstacle(p, r, m, 100.0f, 50.0f, MODEL_TROLLEY);
-	//p = { 500.0f, 0.0f, 0.0f };
-
+	LoadModel(MODEL_TROLLEY, &model[om_trolley]);
+	LoadModel(MODEL_BOX, &model[om_box]);
+	LoadModel(MODEL_DCUT, &model[om_duct]);
+	LoadModel(MODEL_GASTANK, &model[om_monitor]);
+	LoadModel(MODEL_MONITOR, &model[om_steel]);
+	LoadModel(MODEL_STEEL, &model[om_test]);
 }
 //終了処理
 void Obstacle::Uninit(void)
 {
-	for (int i = 0; i < MAX_OBSTACLE; i++)
+	for (int i = 0; i < MAX_OBSTACLE_MODEL; i++)
 	{
 		// モデルの解放処理
-		if (g_Obstacle[i].use)
-		{
-			UnloadModel(&g_Obstacle[i].model);
-			g_Obstacle[i].use = FALSE;
-		}
+		UnloadModel(&model[i]);
 	}
 }
 
@@ -59,8 +56,9 @@ void Obstacle::Update(void)
 	{
 		if (!g_Obstacle[i].use)continue;
 
+#ifdef _DEBUG
 		PrintDebugProc("\n耐久度:%f", g_Obstacle[i].durability);
-
+#endif
 		Obstacle::Distract(&g_Obstacle[i]);	//壊れてるのかをチェック
 	}
 }
@@ -82,17 +80,19 @@ void Obstacle::Distract(Obstacle* p)
 	//耐久度0以下で消滅
 	if (p->durability > 0)
 		return;		
-	
+
+	Reward* re = GetReward();
+	re->beatNum++;
 	p->use = FALSE;
 	p->efSwitch = TRUE;
 }
 
-void Obstacle::SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float durability, float size, char * model)
+void Obstacle::SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float durability, float size, int model)
 {
 	for (int i = 0; i < MAX_OBSTACLE; i++) {
 		if (g_Obstacle[i].use)continue;
 
-		LoadModel(model, &g_Obstacle[i].model);
+		g_Obstacle[i].model_num = model;
 		g_Obstacle[i].use = TRUE;
 		g_Obstacle[i].pos = pos;
 		g_Obstacle[i].rot = rot;
@@ -139,7 +139,7 @@ void Obstacle::Draw(void)
 		XMStoreFloat4x4(&g_Obstacle[i].mtxWorld, mtxWorld);
 
 		// モデル描画
-		DrawModel(&g_Obstacle[i].model);
+		DrawModel(&model[g_Obstacle[i].model_num]);
 
 	}
 
