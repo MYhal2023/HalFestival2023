@@ -19,7 +19,7 @@
 #define	GAME_Y_CAM			(50.0f)			// カメラの初期位置(Y座標)
 #define	GAME_Z_CAM			(0.0f)		// カメラの初期位置(Z座標)
 #define	VALUE_MOVE_CAMERA	(2.0f)										// カメラの移動量
-#define	VALUE_ROTATE_CAMERA	(XM_PI * 0.015f)								// カメラの回転量
+#define	VALUE_ROTATE_CAMERA	(XM_PI * 0.01f)								// カメラの回転量
 
 
 
@@ -52,3 +52,4 @@ int GetViewPortType(void);
 void SetCameraAT(XMFLOAT3 pos);
 void SetCharaCamera(XMFLOAT3 pos);
 void SetReserveCameraAT(XMFLOAT3 pos, XMFLOAT3 rot);
+void SetVibTime(int time);

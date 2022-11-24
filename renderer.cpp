@@ -128,7 +128,8 @@ static BLEND_MODE				g_BlendStateParam;
 static ID3D11RasterizerState*	g_RasterStateCullOff;
 static ID3D11RasterizerState*	g_RasterStateCullCW;
 static ID3D11RasterizerState*	g_RasterStateCullCCW;
-
+static ID3D11RasterizerState*  g_RasterFill;
+static ID3D11RasterizerState*  g_RasterWire;
 
 static MATERIAL_CBUFFER	g_Material;
 static LIGHT_CBUFFER	g_Light;
@@ -212,6 +213,20 @@ void SetCullingMode(CULL_MODE cm)
 		break;
 	case CULL_MODE_BACK:
 		g_ImmediateContext->RSSetState(g_RasterStateCullCCW);
+		break;
+	}
+}
+
+void SetFillMode(D3D11_FILL_MODE fm)
+{
+	//D3D11_FILL_WIREFRAME（ワイヤーフレーム） D3D11_FILL_SOLID（ソリッド）
+	switch (fm)
+	{
+	case D3D11_FILL_WIREFRAME:
+		g_ImmediateContext->RSSetState(g_RasterWire);
+		break;
+	case D3D11_FILL_SOLID:
+		g_ImmediateContext->RSSetState(g_RasterFill);
 		break;
 	}
 }
@@ -539,10 +554,12 @@ HRESULT InitRenderer(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// ラスタライザステート作成
 	D3D11_RASTERIZER_DESC rd; 
 	ZeroMemory( &rd, sizeof( rd ) );
+	//D3D11_FILL_WIREFRAME（ワイヤーフレーム） D3D11_FILL_SOLID（ソリッド）
 	rd.FillMode = D3D11_FILL_SOLID;
 	rd.CullMode = D3D11_CULL_NONE; 
 	rd.DepthClipEnable = TRUE; 
 	rd.MultisampleEnable = FALSE; 
+
 	g_D3DDevice->CreateRasterizerState( &rd, &g_RasterStateCullOff);
 
 	rd.CullMode = D3D11_CULL_FRONT;
@@ -551,9 +568,11 @@ HRESULT InitRenderer(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	rd.CullMode = D3D11_CULL_BACK;
 	g_D3DDevice->CreateRasterizerState(&rd, &g_RasterStateCullCCW);
 
+
+
 	// カリングモード設定（CCW）
 	SetCullingMode(CULL_MODE_BACK);
-
+	SetFillMode(D3D11_FILL_SOLID);
 
 
 	// ブレンドステートの作成

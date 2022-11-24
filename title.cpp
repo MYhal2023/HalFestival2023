@@ -183,7 +183,7 @@ void UpdateTitle(void)
 		switch (cursol) {
 		case 0://‚Í‚¶‚ß‚©‚ç
 			//PlaySound(SOUND_LABEL_SE_Decision);
-			SetFade(FADE_BOX_OUT, MODE_GAME, WhiteBox);
+			SetFade(FADE_BOX_OUT, MODE_RESERVE, WhiteBox);
 			break;
 		}
 	}

@@ -103,3 +103,15 @@ RescueLife * RescueLife::GetRescueLife(void)
 {
 	return &g_RscLife[0];
 }
+
+int RescueLife::GetRescueRemainLife(void)
+{
+	int ans = 0;
+	for (int i = 0; i < MAX_RESCUE; i++)
+	{
+		if (!g_RscLife[i].rescue && g_RscLife[i].load)
+			ans++;
+	}
+	return ans;
+}
+

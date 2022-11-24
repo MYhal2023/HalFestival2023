@@ -137,6 +137,7 @@ ID3D11Buffer **GetLightProjection(void);
 void SetDepthEnable( BOOL Enable );
 void SetBlendState(BLEND_MODE bm);
 void SetCullingMode(CULL_MODE cm);
+void SetFillMode(D3D11_FILL_MODE fm);
 void SetAlphaTestEnable(BOOL flag);
 
 void SetWorldViewProjection2D( void );

@@ -57,6 +57,7 @@ static int	g_ViewPortType_Game = TYPE_FULL_SCREEN;
 static BOOL	g_bPause = TRUE;	// ポーズON/OFF
 static BOOL g_Slow = FALSE;
 static int s_mode = FALSE;
+static BOOL gameover = FALSE;
 static int	g_PlayMode = MAIN_GAME;
 static int mode = 1;
 static 	XMFLOAT3 cam_pos = { 0.0f, 0.0f, 0.0f };
@@ -93,7 +94,7 @@ void InitSystem(void)
 
 
 	InitTime();
-	//InitOver();
+	InitOver();
 
 
 	InitCharFade();
@@ -111,7 +112,7 @@ void InitSystem(void)
 	//InitReward();
 	mode = 1;
 	g_bPause = TRUE;
-
+	gameover = FALSE;
 }
 
 //起動時に重い処理はすべて行っておく(モデルのロードなど)
@@ -179,6 +180,7 @@ void UninitGame(void)
 //=============================================================================
 void UpdateGame(void)
 {
+#ifdef _DEBUG
 	if (GetKeyboardTrigger(DIK_P) && !GetHelpButton())
 	{
 		if (g_bPause == TRUE)
@@ -186,7 +188,18 @@ void UpdateGame(void)
 		else
 			g_bPause = TRUE;
 	}
-
+	if (GetKeyboardTrigger(DIK_G))
+	{
+		gameover = TRUE;
+	}
+	if (GetKeyboardTrigger(DIK_H))
+	{
+		Reward* re = GetReward();
+		Reserve* res = GetReserve();
+		gameover = TRUE;
+		re->rescue_num = res->quota;
+	}
+#endif
 	//等速と倍速の切り替え
 	if (GetKeyboardTrigger(DIK_O))
 	{
@@ -275,7 +288,7 @@ void DrawGame0(void)
 
 	DrawUI();
 
-	//DrawOver();
+	DrawOver();
 
 	//// スコアの描画処理
 	//DrawScore();
@@ -305,7 +318,7 @@ void DrawGame1(void)
 
 	Obstacle::Draw();
 
-	if(GetMode() == MODE_GAME || MODE_RESULT)
+	if(GetMode() == MODE_GAME)
 	DrawPlayer();
 
 }
@@ -703,7 +716,19 @@ float FloatCompare(BOOL flag, float a, float b)
 BOOL CheckGameover(void)
 {
 	BOOL ans = FALSE;
-	
+	Reward* re = GetReward();
+	Reserve* res = GetReserve();
+
+	if (GetTime() <= 0 || RescueLife::GetRescueRemainLife() <= 0 || gameover)
+	{
+		if (res->quota <= re->rescue_num)
+			SetOverType(OVER_WIN);
+		else
+			SetOverType(OVER_LOSE);
+
+		ans = TRUE;
+	}
+
 	return ans;
 }
 

@@ -11,6 +11,7 @@
 #include "player.h"
 #include "time.h"
 #include "debugproc.h"
+#include "obstacle.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -24,7 +25,7 @@
 #define	VIEW_ASPECT		((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT)	// ビュー平面のアスペクト比	
 #define	VIEW_NEAR_Z		(10.0f)											// ビュー平面のNearZ値
 #define	VIEW_FAR_Z		(10000.0f)										// ビュー平面のFarZ値
-
+#define INTERVAL		(10)
 
 typedef enum
 {
@@ -37,6 +38,7 @@ typedef enum
 //*****************************************************************************
 static CAMERA			g_Cam;		// カメラデータ
 
+static int				vibration_inv = 0;
 static int				g_ViewPortType = TYPE_FULL_SCREEN;
 //=============================================================================
 // 初期化処理
@@ -61,6 +63,7 @@ void InitCamera(void)
 
 	// ビューポートタイプの初期化
 	g_ViewPortType = TYPE_FULL_SCREEN;
+	vibration_inv = 0;
 }
 
 
@@ -87,33 +90,33 @@ void UpdateCamera(void)
 	pos.z = pos2.z + cosf(g_Cam.rot.y)*dist;
 	g_Cam.pos = pos;
 #ifdef _DEBUG	//デバッグ用のカメラ操作。モード関係なく動かせる
-	if (GetKeyboardPress(DIK_Q))
-	{
-		g_Cam.rot.y -= VALUE_ROTATE_CAMERA;
-		if (g_Cam.rot.y < -XM_PI)
-		{
-			g_Cam.rot.y += XM_PI * 2.0f;
-		}
-	}
-	else if (GetKeyboardPress(DIK_E))
-	{
-		g_Cam.rot.y += VALUE_ROTATE_CAMERA;
-		if (g_Cam.rot.y > XM_PI)
-		{
-			g_Cam.rot.y -= XM_PI * 2.0f;
-		}
+	//if (GetKeyboardPress(DIK_Q))
+	//{
+	//	g_Cam.rot.y -= VALUE_ROTATE_CAMERA;
+	//	if (g_Cam.rot.y < -XM_PI)
+	//	{
+	//		g_Cam.rot.y += XM_PI * 2.0f;
+	//	}
+	//}
+	//else if (GetKeyboardPress(DIK_E))
+	//{
+	//	g_Cam.rot.y += VALUE_ROTATE_CAMERA;
+	//	if (g_Cam.rot.y > XM_PI)
+	//	{
+	//		g_Cam.rot.y -= XM_PI * 2.0f;
+	//	}
 
-	}
-	if (GetKeyboardPress(DIK_UP))
-	{
-		if (g_Cam.rot.x < XM_PI * 0.2f)
-			g_Cam.rot.x += XM_PI * 0.004f;
-	}
-	else if (GetKeyboardPress(DIK_DOWN))
-	{
-		if (g_Cam.rot.x > 0.0f)
-			g_Cam.rot.x -= XM_PI * 0.004f;
-	}
+	//}
+	//if (GetKeyboardPress(DIK_UP))
+	//{
+	//	if (g_Cam.rot.x < XM_PI * 0.2f)
+	//		g_Cam.rot.x += XM_PI * 0.004f;
+	//}
+	//else if (GetKeyboardPress(DIK_DOWN))
+	//{
+	//	if (g_Cam.rot.x > 0.0f)
+	//		g_Cam.rot.x -= XM_PI * 0.004f;
+	//}
 
 
 #endif
@@ -272,9 +275,24 @@ int GetViewPortType(void)
 // カメラの視点と注視点セット
 void SetCameraAT(XMFLOAT3 pos)
 {
+	float random = 0.0f;
+	float random_x = 0.0f;
+	float random_z = 0.0f;
+	if (FallObject::GetFallSwitch() && vibration_inv > 0)
+	{
+		vibration_inv--;
+		random = (float)(rand() % 10) - 5.0f;
+		random_x = (float)(rand() % 10) - 5.0f;
+		random_z = (float)(rand() % 10) - 5.0f;
+		pos.y += random;
+		pos.x += random_x;
+		pos.z += random_z;
+	}
+
 	XMVECTOR v1 = XMLoadFloat3(&pos) - XMLoadFloat3(&g_Cam.at);
 	XMVECTOR nor = XMVector3Normalize(v1);
 	XMStoreFloat3(&g_Cam.at, XMLoadFloat3(&g_Cam.at) + nor * 1.0f);
+
 
 	//引数の座標に変更量を加算。
 	pos.x += g_Cam.atPos.x;
@@ -285,9 +303,10 @@ void SetCameraAT(XMFLOAT3 pos)
 	g_Cam.at = { pos.x,pos.y,pos.z };
 	float dist = FloatClamp(1.0f - sinf(g_Cam.rot.x), 0.98f, 1.0f);
 	// カメラの視点をカメラのY軸回転に対応させている
-	g_Cam.pos.x = g_Cam.at.x - sinf(g_Cam.rot.y) * g_Cam.len;
-	g_Cam.pos.z = g_Cam.at.z - cosf(g_Cam.rot.y) * g_Cam.len;
-	g_Cam.pos.y -= sinf(g_Cam.rot.x)* g_Cam.len * (sinf(g_Cam.rot.x) * 0.75f);
+	g_Cam.pos.x = g_Cam.at.x - sinf(g_Cam.rot.y) * g_Cam.len + random_x;
+	g_Cam.pos.z = g_Cam.at.z - cosf(g_Cam.rot.y) * g_Cam.len + random_z;
+	g_Cam.pos.y -= sinf(g_Cam.rot.x)* g_Cam.len * (sinf(g_Cam.rot.x) * 0.75f) + random;
+
 }
 
 // カメラの視点と注視点セット
@@ -309,4 +328,9 @@ void SetReserveCameraAT(XMFLOAT3 pos, XMFLOAT3 rot)
 	g_Cam.pos.x = g_Cam.at.x - sinf(rot.y) * g_Cam.len;
 	g_Cam.pos.z = g_Cam.at.z - cosf(rot.y) * g_Cam.len;
 	g_Cam.pos.y -= sinf(rot.x)* g_Cam.len * (sinf(rot.x) * 0.75f);
+}
+
+void SetVibTime(int time)
+{
+	vibration_inv = time;
 }

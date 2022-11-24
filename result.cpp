@@ -17,10 +17,13 @@
 #include "sound.h"
 #include "time.h"
 #include "easing.h"
+#include "rescueLife.h"
+#include "player.h"
+#include "meshfield.h"
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define TEXTURE_MAX			(8)				// テクスチャの数
+#define TEXTURE_MAX			(MAX_RESULT_TEX)				// テクスチャの数
 #define CH_TEXTURE_MAX			(3)				// テクスチャの数
 #define ROW_NUM				(5)				// 一列に並べるユニット数
 
@@ -35,6 +38,9 @@ static char* g_TextureName[MAX_RESULT_TEX] = {
 	"data/TEXTURE/rescue_num.png",
 	"data/TEXTURE/time_num.png",
 	"data/TEXTURE/final_score.png",
+	"data/TEXTURE/xpbar_haikei.png",
+	"data/TEXTURE/xpbar_mae.png",
+	"data/TEXTURE/xpbar_iro.png",
 	"data/TEXTURE/var.png",
 };
 
@@ -117,6 +123,8 @@ void UninitResult(void)
 //=============================================================================
 void UpdateResult(void)
 {
+	ResultIPUpdate();
+	ResultFieldUpdate();
 	skip++;
 	if (skip < 10)return;
 
@@ -189,7 +197,7 @@ void ForthSeq(void)
 		g_Reward.score = g_Reward.max_score;
 	if (g_Reward.score == g_Reward.max_score && GetKeyboardTrigger(DIK_RETURN)) { 
 		sequence++; 
-		g_Reward.nEaseIndex = Easing::SetEase(-100.0f, SCREEN_CENTER_Y, 30.0f);
+		g_Reward.nEaseIndex = Easing::SetEase(-500.0f, SCREEN_CENTER_Y, 30.0f);
 		skip = 0;
 	}
 
@@ -220,7 +228,7 @@ void FifthSeq(void)
 	}
 	if (g_Reward.rank_up <= 0) { 
 		sequence++; 
-		g_Reward.nEaseIndex = Easing::SetEase(SCREEN_CENTER_Y, SCREEN_HEIGHT + 100.0f, 60.0f);
+		g_Reward.nEaseIndex = Easing::SetEase(SCREEN_CENTER_Y, SCREEN_HEIGHT + 500.0f, 60.0f);
 	}
 }
 
@@ -300,18 +308,23 @@ void DrawResult(void)
 			g_Result[result_var].color = { 0.0f, 0.0f, 0.0f, 0.5f };
 			DrawResultTexture(&g_Result[result_var]);
 		}
+		g_Result[result_var_bg].pos = { SCREEN_CENTER_X , g_Reward.set_y };
+		g_Result[result_var_bg].size = { 1800.0f * 0.5f, 1000.0f *0.5f};
+		g_Result[result_var_bg].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		DrawResultTexture(&g_Result[result_var_bg]);
 
-		g_Result[result_var].pos = { SCREEN_CENTER_X , g_Reward.set_y };
-		g_Result[result_var].size = { 800.0f, 80.0f };
-		g_Result[result_var].color = { 0.5f, 0.5f, 0.5f, 1.0f };
-		DrawResultGauge(&g_Result[result_var], 1.0f);
+
+		g_Result[result_xpvar_bg].pos = { SCREEN_CENTER_X , g_Reward.set_y };
+		g_Result[result_xpvar_bg].size = { 810.0f, 80.0f };
+		g_Result[result_xpvar_bg].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		DrawResultTexture(&g_Result[result_xpvar_bg]);
 
 
 		float par = (float)(g_Reward.rank_gauge) / (float)(g_Reward.rank_gauge_max);
-		g_Result[result_var].size = { 800.0f * par , 80.0f };
-		g_Result[result_var].pos = { SCREEN_CENTER_X + (800.0f * (par - 1.0f)) * 0.5f, g_Reward.set_y };
-		g_Result[result_var].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		DrawResultGauge(&g_Result[result_var], par);
+		g_Result[result_xpvar].size = { 800.0f * par , 72.0f };
+		g_Result[result_xpvar].pos = { SCREEN_CENTER_X + (800.0f * (par - 1.0f)) * 0.5f, g_Reward.set_y };
+		g_Result[result_xpvar].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		DrawResultGauge(&g_Result[result_xpvar], par);
 
 	}
 }
@@ -329,17 +342,17 @@ void WinResult(void)
 	//}
 
 	if(sequence >= MAX_RESULT_SEQUENCE && GetKeyboardTrigger(DIK_RETURN))
-	SetFade(FADE_OUT, MODE_TITLE, WhiteBox);	//現状ループするように
+	SetFade(FADE_OUT, MODE_RESERVE, WhiteBox);	//現状ループするように
 
 }
 
 
 void InitReward(void)
 {
-	g_Reward.beatNum = 20;
-	g_Reward.rescue_num = 10;
+	g_Reward.beatNum = 0;
+	g_Reward.rescue_num = 0;
 	g_Reward.time = 60;
-	g_Reward.score = 6000;
+	g_Reward.score = 0;
 	g_Reward.rank_up = 0;
 
 	g_Reward.ef_beatNum = 0;
@@ -360,8 +373,29 @@ void InitReward(void)
 //モード変更時に引き継ぐデータがある場合、ここで行う
 void SetReward(void)
 {
-	//g_Reward.time = GAME_TIME - GetTime();
-	g_Reward.time = 60;
+	Reserve* re = GetReserve();
+	//次回警戒度の算出を行う
+	re->old_vigi = re->vigilance;
+	int rand_base_num = 0;
+	if (RescueLife::GetRescueRemainLife() <= 0)
+		rand_base_num = 5;
+
+	if (GetOverType() == OVER_WIN)
+		re->vigilance += (float)(rand() % 5 + rand_base_num);
+	else
+		re->vigilance -= (float)(rand() % 5 + 5);
+
+	if (re->vigilance < 0)
+		re->vigilance = 0;
+
+	int base = (int)((re->vigilance) /30.0f);
+	re->quota = BASE_RESCUE_NUM + base;
+
+	//ここでデータ引継ぎを行う
+	g_Reward.time = GAME_TIME - GetTime();
+
+
+
 	g_Reward.ef_beatNum = g_Reward.beatNum / 30;
 	if (g_Reward.ef_beatNum < 1)
 		g_Reward.ef_beatNum = 1;
@@ -374,10 +408,28 @@ void SetReward(void)
 	if (g_Reward.ef_time < 1)
 		g_Reward.ef_time = 1;
 
+	g_Reward.score = (int)((float)(g_Reward.beatNum * 100 + g_Reward.rescue_num * 200) * (re->vigilance + 1.0f));
 	g_Reward.ef_score = g_Reward.score / 100;
 	if (g_Reward.ef_score < 1)
 		g_Reward.ef_score = 1;
 
+
+	//ランクボーナスの計算
+	if (re->quota <= g_Reward.rescue_num)
+	{
+		if (g_Reward.time > 10 && RescueLife::GetRescueRemainLife() <= 0)
+			g_Reward.rank_bonus_time = g_Reward.time / 2;
+
+		g_Reward.rank_bonus_beat = g_Reward.beatNum / 10 * 5;
+		g_Reward.rank_bonus_rescue = g_Reward.rescue_num * 2;
+		g_Reward.rank_bonus_score += g_Reward.score / 3000 * 2;
+	}
+	else {
+		g_Reward.rank_bonus_time = 0;
+		g_Reward.rank_bonus_beat = 0;
+		g_Reward.rank_bonus_rescue = -10;
+		g_Reward.rank_bonus_score = 0;
+	}
 	//データの移し替え
 	g_Reward.max_beatNum = g_Reward.beatNum;
 	g_Reward.max_rescue_num = g_Reward.rescue_num;
@@ -391,7 +443,8 @@ void SetReward(void)
 	g_Reward.score = 0;
 	//ランクアップ経験値の計算をここでする
 	int num = 150;
-	g_Reward.rank_up = num;
+	g_Reward.rank_up = g_Reward.rank_bonus_time + g_Reward.rank_bonus_beat + g_Reward.rank_bonus_rescue + g_Reward.rank_bonus_score + 20;
+	re->rank += g_Reward.rank_up;
 }
 
 
@@ -445,16 +498,16 @@ void DrawResultTexture(Result* result)
 
 	// ポリゴン描画
 	GetDeviceContext()->Draw(4, 0);
-}
 
 //テクスチャ描画
+}
 void DrawResultGauge(Result* result, float tx)
 {
 	// テクスチャ設定
 	GetDeviceContext()->PSSetShaderResources(0, 1, &result->g_Texture);
 
 	// １枚のポリゴンの頂点とテクスチャ座標を設定
-	SetSpriteColor(g_VertexBuffer, result->pos.x, result->pos.y, result->size.x, result->size.y, 0.0f, 0.0f, 0.0f, 1.0f,
+	SetSpriteColor(g_VertexBuffer, result->pos.x, result->pos.y, result->size.x, result->size.y, 0.0f, 0.0f, 1.0f, 1.0f,
 		result->color);
 
 	// ポリゴン描画

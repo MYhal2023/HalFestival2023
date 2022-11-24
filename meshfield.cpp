@@ -391,3 +391,11 @@ BOOL RayHitField(XMFLOAT3 pos, XMFLOAT3 *HitPosition, XMFLOAT3 *Normal)
 	*HitPosition = org;
 	return FALSE;
 }
+
+void ResultFieldUpdate(void)
+{
+	g_posField.x += 0.8f;
+
+	if (g_posField.x >= 0.8f * 1000.0f)
+		g_posField.x = 0.0f;
+}

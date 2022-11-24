@@ -33,8 +33,9 @@
 #define TEXTURE_MAX			(1)								// テクスチャの数
 #define VAR_WIDTH			(50.0f)
 #define VAR_HEIGHT			(5.0f)
-#define	VALUE_MOVE			(10.0f)							// 移動量
-#define	VALUE_AT_MOVE		(4.0f)							// 移動量
+#define	VALUE_MOVE			(2.0f)							// 移動量
+#define	VALUE_MOVE_DASH			(3.0f)							// ダッシュ時加速量
+#define	VALUE_AT_MOVE		(8.0f)							// 移動量
 #define	VALUE_ROTATE		(XM_PI * 0.02f)					// 回転量
 
 #define PLAYER_SHADOW_SIZE	(1.0f)							// 影の大きさ
@@ -156,12 +157,14 @@ HRESULT InitPlayer(void)
 		g_Parts[i].rot = { 0.0f, 0.0f, 0.0f };
 		g_Parts[i].scl = { 1.0f,1.0f, 1.0f };
 		g_Parts[i].tbl_adrM = NULL;
+		g_Parts[i].move_time = 0.0f;
 	}
 
 	//パーツごとのモーションデータ
 	for (int i = 0; i < MAX_PLAYER_PARTS + 1; i++) {
 		g_Playerline[i].tbl_adrM = walk_data[i];
 		g_Playerline[i].tbl_sizeM = data_size[i];
+		g_Playerline[i].move_time = 0.0f;
 	}
 
 
@@ -176,15 +179,15 @@ HRESULT InitPlayer(void)
 	g_Parts[P_R_ARM].parent = &g_Parts[P_R_SHOULDER];
 	g_Parts[P_R_ARM].pos = { 0.0f, -8.0f, 3.0f };
 
-	g_Parts[P_L_THIGH].pos = { -1.0f, -13.0f, -3.5f };
+	g_Parts[P_L_THIGH].pos = { 0.5f, -13.0f, -3.5f };
 
-	g_Parts[P_R_THIGH].pos = { -1.0f, -13.0f, 3.5f };
+	g_Parts[P_R_THIGH].pos = { 0.5f, -13.0f, 3.5f };
 
 	g_Parts[P_L_FOOT].parent = &g_Parts[P_L_THIGH];
-	g_Parts[P_L_FOOT].pos = { 1.5f, 0.0f, 0.0f };
+	g_Parts[P_L_FOOT].pos = { 1.5f, -5.0f, 0.0f };
 
 	g_Parts[P_R_FOOT].parent = &g_Parts[P_R_THIGH];
-	g_Parts[P_R_FOOT].pos = { 1.5f, 0.0f, 0.0f };
+	g_Parts[P_R_FOOT].pos = { 1.5f, -5.0f, 0.0f };
 
 	g_Load = TRUE;
 	playerNum = 0;
@@ -226,11 +229,11 @@ void InitBootPlayer(void)
 
 	LoadModel(MODEL_L_THIGH, &g_Parts[P_L_THIGH].model);
 	GetModelDiffuse(&g_Parts[P_L_THIGH].model, &g_Parts[P_L_THIGH].diffuse[0]);
-	g_Parts[P_L_THIGH].pos = { 0.5f, -17.0f, -3.5f };
+	g_Parts[P_L_THIGH].pos = { 0.5f, -13.0f, -3.5f };
 
 	LoadModel(MODEL_R_THIGH, &g_Parts[P_R_THIGH].model);
 	GetModelDiffuse(&g_Parts[P_R_THIGH].model, &g_Parts[P_R_THIGH].diffuse[0]);
-	g_Parts[P_R_THIGH].pos = { 0.5f, -17.0f, 3.5f };
+	g_Parts[P_R_THIGH].pos = { 0.5f, -13.0f, 3.5f };
 
 	LoadModel(MODEL_L_FOOT, &g_Parts[P_L_FOOT].model);
 	GetModelDiffuse(&g_Parts[P_L_FOOT].model, &g_Parts[P_L_FOOT].diffuse[0]);
@@ -291,32 +294,31 @@ void UpdatePlayer(void)
 	{
 		if (g_Player[i].use != TRUE)continue;
 
-			ControlPlayer();
-			ControlCamera();
-			MovePlayer();
-			ControlChangeArm();
+		ControlPlayer();
+		ControlCamera();
+		MovePlayer();
+		ControlChangeArm();
 
-			XMFLOAT3 pos;
-			const float dist = 20.0f;
-			pos.x = sinf(g_Player[0].rot.y - XM_PI * 0.25f)*dist;
-			pos.z = cosf(g_Player[0].rot.y + XM_PI * 0.25f)*dist;
-			g_PlayerArm[0]->pos = { g_Player[0].pos.x + pos.x, g_Player[0].pos.y, g_Player[0].pos.z + pos.z };
-			g_PlayerArm[1]->pos = { g_Player[0].pos.x + pos.x, g_Player[0].pos.y, g_Player[0].pos.z + pos.z };
+		XMFLOAT3 pos;
+		const float dist = 20.0f;
+		pos.x = sinf(g_Player[0].rot.y - XM_PI * 0.25f)*dist;
+		pos.z = cosf(g_Player[0].rot.y + XM_PI * 0.25f)*dist;
+		g_PlayerArm[0]->pos = { g_Player[0].pos.x + pos.x, g_Player[0].pos.y, g_Player[0].pos.z + pos.z };
+		g_PlayerArm[1]->pos = { g_Player[0].pos.x + pos.x, g_Player[0].pos.y, g_Player[0].pos.z + pos.z };
 
-			g_Player[i].spd *= 0.7f;
-			g_Player[i].moveVec.x *= 0.8f;
-			g_Player[i].moveVec.z *= 0.8f;
-			UpdateRescueMode();
-			CheckRescue();
+		IPUpdate();
 
-			//レスキューバレット処理
+		g_Player[i].spd *= 0.7f;
+		g_Player[i].moveVec.x *= 0.8f;
+		g_Player[i].moveVec.z *= 0.8f;
 
-			for (int k = 0; k < MAX_PLAYER_PARTS + 1; k++)
-			{
-				PlayerPartsIP(&g_Playerline[k]);
-			}
-			InvincibleFunc(&g_Player[i]);
-			UpdateArm();
+		//レスキューバレット処理
+		UpdateRescueMode();
+		CheckRescue();
+
+
+		InvincibleFunc(&g_Player[i]);
+		UpdateArm();
 	}
 #ifdef _DEBUG
 	PrintDebugProc("プレイヤー座標X:%f, Z:%f\n", g_Player[0].pos.x, g_Player[0].pos.z);
@@ -325,6 +327,49 @@ void UpdatePlayer(void)
 #endif
 }
 
+void IPUpdate(void)
+{
+	if (g_Player[0].spd >= VALUE_MOVE * VALUE_MOVE_DASH)
+	{
+		for (int k = 0; k < MAX_PLAYER_PARTS + 1; k++)
+		{
+			if (g_Playerline[k].old_data != run_data[k])
+				g_Playerline[k].move_time = 0.0f;
+
+			PlayerPartsIP(&g_Playerline[k], run_data[k], run_data_size[k]);
+			g_Playerline[k].old_data = run_data[k];
+		}
+	}
+	else if (g_Player[0].spd > 0.1f && g_Player[0].spd < VALUE_MOVE * VALUE_MOVE_DASH)
+	{
+		for (int k = 0; k < MAX_PLAYER_PARTS + 1; k++)
+		{
+			if (g_Playerline[k].old_data != walk_data[k])
+				g_Playerline[k].move_time = 0.0f;
+
+			PlayerPartsIP(&g_Playerline[k], walk_data[k], data_size[k]);
+			g_Playerline[k].old_data = walk_data[k];
+		}
+	}
+	else
+	{
+		for (int k = 0; k < MAX_PLAYER_PARTS + 1; k++)
+		{
+			if (g_Playerline[k].old_data != stop_data[k])
+				g_Playerline[k].move_time = 0.0f;
+
+			PlayerPartsIP(&g_Playerline[k], stop_data[k], stop_data_size[k]);
+			g_Playerline[k].old_data = stop_data[k];
+		}
+	}
+}
+void ResultIPUpdate(void)
+{
+	for (int k = 0; k < MAX_PLAYER_PARTS + 1; k++)
+	{
+		PlayerPartsIP(&g_Playerline[k], walk_data[k], data_size[k]);
+	}
+}
 
 //=============================================================================
 // 描画処理
@@ -402,7 +447,7 @@ void DrawPlayer(void)
 			DrawModel(&g_Parts[k].model);
 		}
 		//アームモデル描画
-		g_Arm[0]->Draw();	
+		g_Arm[0]->Draw();
 
 		//救出中だけノーマルアームの描画を行う
 		if (g_Player[0].rescue)
@@ -412,6 +457,7 @@ void DrawPlayer(void)
 	// カリング設定を戻す
 	SetCullingMode(CULL_MODE_BACK);
 }
+
 
 //待機ﾓｰｼｮﾝ処理
 void PlayerStandLiner(int i)
@@ -493,7 +539,7 @@ void PlayerStandLiner(int i)
 }
 
 //プレイヤーの線形補間
-void PlayerPartsIP(Playerliner* p)
+void PlayerPartsIP(Playerliner* p, INTERPOLATION_DATA *i, int t_size)
 {
 	if (p->tbl_adrM == NULL)return;
 	//
@@ -501,9 +547,9 @@ void PlayerPartsIP(Playerliner* p)
 	// 移動処理
 	int		index = (int)p->move_time;
 	float	time = p->move_time - index;
-	int		size = p->tbl_sizeM;
+	int		size = t_size;
 
-	float dt = 1.0f / p->tbl_adrM[index].frame;	// 1フレームで進める時間
+	float dt = 1.0f / i[index].frame;	// 1フレームで進める時間
 	p->move_time += dt;							// アニメーションの合計時間に足す
 
 	if (index > (size - 2))	// ゴールをオーバーしていたら、データを最初に戻して攻撃を終了
@@ -512,20 +558,20 @@ void PlayerPartsIP(Playerliner* p)
 		index = 0;
 	}
 	// 座標を求める	X = StartX + (EndX - StartX) * 今の時間
-	XMVECTOR p1 = XMLoadFloat3(&p->tbl_adrM[index + 1].pos);	// 次の場所
-	XMVECTOR p0 = XMLoadFloat3(&p->tbl_adrM[index + 0].pos);	// 現在の場所
+	XMVECTOR p1 = XMLoadFloat3(&i[index + 1].pos);	// 次の場所
+	XMVECTOR p0 = XMLoadFloat3(&i[index + 0].pos);	// 現在の場所
 	XMVECTOR vec = p1 - p0;
 	XMStoreFloat3(&p->pos, p0 + vec * time);
 
 	// 回転を求める	R = StartX + (EndX - StartX) * 今の時間
-	XMVECTOR r1 = XMLoadFloat3(&p->tbl_adrM[index + 1].rot);	// 次の角度
-	XMVECTOR r0 = XMLoadFloat3(&p->tbl_adrM[index + 0].rot);	// 現在の角度
+	XMVECTOR r1 = XMLoadFloat3(&i[index + 1].rot);	// 次の角度
+	XMVECTOR r0 = XMLoadFloat3(&i[index + 0].rot);	// 現在の角度
 	XMVECTOR rot = r1 - r0;
 	XMStoreFloat3(&p->rot, r0 + rot * time);
 
 	// scaleを求める S = StartX + (EndX - StartX) * 今の時間
-	XMVECTOR s1 = XMLoadFloat3(&p->tbl_adrM[index + 1].scl);	// 次のScale
-	XMVECTOR s0 = XMLoadFloat3(&p->tbl_adrM[index + 0].scl);	// 現在のScale
+	XMVECTOR s1 = XMLoadFloat3(&i[index + 1].scl);	// 次のScale
+	XMVECTOR s0 = XMLoadFloat3(&i[index + 0].scl);	// 現在のScale
 	XMVECTOR scl = s1 - s0;
 	XMStoreFloat3(&p->scl, s0 + scl * time);
 }
@@ -589,6 +635,9 @@ void ControlPlayer(void)
 		g_Player[0].moveVec.x -= sinf(cam->rot.y) * changeRotCamera;
 		g_Player[0].moveVec.z -= cosf(cam->rot.y) * changeRotCamera;
 	}
+
+	if (GetKeyboardPress(DIK_B))
+		g_Player[0].spd = VALUE_MOVE * VALUE_MOVE_DASH;
 }
 
 void ControlCamera(void)
@@ -614,7 +663,7 @@ void ControlCamera(void)
 	}
 	if (GetKeyboardPress(DIK_UP))
 	{
-		if (g_Cam->rot.x < XM_PI * 0.1f)
+		if (g_Cam->rot.x < 0.45f)
 		g_Cam->rot.x += XM_PI * 0.004f;
 	}
 	else if (GetKeyboardPress(DIK_DOWN))
@@ -772,11 +821,18 @@ void UpdateRescueMode(void)
 		g_Player[0].rescueBullet[k].x = g_Player[0].pos.x + sinf(g_Player[0].rot.y) * g_Player[0].cntBullet;
 		g_Player[0].rescueBullet[k].z = g_Player[0].pos.z + cosf(g_Player[0].rot.y) * g_Player[0].cntBullet;
 	}
+	if (g_Player[0].rescueUse)
+	{
+		g_Player[0].rs->pos = g_Player[0].rescueBullet[0];
+	}
 
 	if (g_Player[0].rescueUse && g_Player[0].cntBullet <= 0.0f) {
 		g_Player[0].rs->use = FALSE;
 		g_Player[0].rs->rescue = TRUE;
+		Reward* re = GetReward();
+		re->rescue_num++;
 	}
+
 
 	if (g_Player[0].cntBullet <= 0.0f)
 		g_Player[0].rescueUse = FALSE;
@@ -790,16 +846,14 @@ void CheckRescue(void)
 	RescueLife* rs = RescueLife::GetRescueLife();
 	for(int i = 0; i < 2; i++)
 	{ 
-		for (int k = 0; k < GetRemain(); k++) {
+		for (int k = 0; k < MAX_RESCUE; k++) {
 			if (!rs[k].use)continue;
 
-			if (!CollisionBC(rs[k].pos, g_Player[0].rescueBullet[i], 50.0f, 15.0f))
+			if (!CollisionBC(rs[k].pos, g_Player[0].rescueBullet[i], 15.0f, 15.0f))
 				continue;
 
 			g_Player[0].rescueUse = TRUE;
 			g_Player[0].rs = &rs[k];
-			Reward* re = GetReward();
-			re->rescue_num++;
 		}
 	}
 }

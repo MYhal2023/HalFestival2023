@@ -5,11 +5,14 @@
 //
 //=============================================================================
 #pragma once
-
+#define BASE_RESCUE_NUM (2)
 class Reserve
 {
 public:
-	int mode;	//ボタンを押した時の画面変化に使う
+	float vigilance;	//警戒度
+	float old_vigi;		//前回プレイ時の警戒度
+	int quota;		//ノルマ救助者数
+	int rank;			//現在ランク。これを100で除した際の商で現在ランクを表示する
 };
 
 class Button

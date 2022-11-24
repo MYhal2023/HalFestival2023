@@ -21,4 +21,4 @@ void UpdateMeshField(void);
 void DrawMeshField(void);
 
 BOOL RayHitField(XMFLOAT3 pos, XMFLOAT3 *HitPosition, XMFLOAT3 *Normal);
-
+void ResultFieldUpdate(void);

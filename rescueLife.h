@@ -28,6 +28,7 @@ public:
 	static BOOL GetRescue(int i);
 	static void SetRemain(XMFLOAT3 pos, XMFLOAT3 rot, int model);
 	static RescueLife* GetRescueLife(void);
+	static int GetRescueRemainLife(void);
 };
 
 int GetRemain(void);

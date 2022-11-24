@@ -40,6 +40,11 @@ struct Reward
 	int rank_gauge;			//現在のゲージ量
 	int rank_gauge_max;		//ランクアップに必要なゲージ量
 
+	int rank_bonus_beat;
+	int rank_bonus_time;
+	int rank_bonus_rescue;
+	int rank_bonus_score;
+
 	float dt;
 	float set_y;
 	int nEaseIndex;
@@ -53,6 +58,9 @@ enum ResultTexture
 	result_rescue,
 	result_time,
 	result_score,
+	result_var_bg,
+	result_xpvar_bg,
+	result_xpvar,
 	result_var,
 	MAX_RESULT_TEX
 };

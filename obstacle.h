@@ -21,8 +21,10 @@
 #define MAX_FALL_OBSTACLE (5)
 #define MAX_FALL_OBSTACLE_NUM (3)
 #define FALL_SPEED	(3.0f)
-#define FALL_COOL_TIME_BASE	(120.0f)
-#define FALL_RAND_TIME	(60)
+#define FALL_COOL_TIME_BASE	(60.0f)
+#define FALL_RAND_TIME	(30)
+#define FALL_INTERVAL	(600.0f)
+#define FALL_TIME (340.0f)
 #define	MODEL_CEILING			"data/MODEL/ceiling.obj"			// ì«Ç›çûÇﬁÉÇÉfÉãñº
 #define	MODEL_ROCK			"data/MODEL/fallingrock.obj"			// ì«Ç›çûÇﬁÉÇÉfÉãñº
 
@@ -92,4 +94,5 @@ public:
 	static void Distract(FallObject* p);
 	static void SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float durability, float size, int model);
 	static FallObject* GetObstacle(void);
+	static BOOL GetFallSwitch(void);
 };

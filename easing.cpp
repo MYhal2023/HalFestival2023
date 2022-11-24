@@ -18,7 +18,7 @@ void Easing::Update(void)
 {
 	for (int i = 0; i < MAX_EASE_DATA; i++)
 	{
-		if (!g_Ease[i].use)continue;
+		if (!g_Ease[i].use || g_Ease[i].time <= g_Ease[i].ct_frame)continue;
 
 		//‹K’èƒtƒŒ[ƒ€”‚Ü‚Å‚Í‰ÁŽZA‹K’èƒtƒŒ[ƒ€‚É“ž’B‚µ‚½‚ç‰ÁŽZ‚ðŽ~‚ß‚é
 		if (g_Ease[i].ct_frame < g_Ease[i].time) {
@@ -41,6 +41,9 @@ void Easing::Update(void)
 		}
 
 		g_Ease[i].ct_frame += 1.0f;
+
+		if (g_Ease[i].time <= g_Ease[i].ct_frame)
+			g_Ease[i].pos = g_Ease[i].f_pos;
 	}
 }
 

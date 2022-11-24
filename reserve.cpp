@@ -55,8 +55,11 @@ HRESULT InitReserve(void)
 	//‹N“®ŽžAˆê“x‚¾‚¯‰Šú‰»
 	if (!restart)
 	{
-		g_Reserve.mode = 99;
 		restart = TRUE;
+		g_Reserve.vigilance = 0.0f;
+		g_Reserve.old_vigi = 0.0f;
+		g_Reserve.quota = BASE_RESCUE_NUM;
+		g_Reserve.rank = 0;
 #ifdef _DEBUG
 
 #endif
@@ -101,6 +104,11 @@ HRESULT InitReserve(void)
 	g_Button[rs_start].pos = { SCREEN_WIDTH * 0.80f , SCREEN_HEIGHT * 0.80f };
 	g_Button[rs_start].size = { 100.0f * 3.0f , 100.0f * 2.0f };
 
+	int base = (int)((float)(g_Reserve.rank) *0.01f);
+	if (g_Reserve.vigilance >= ((float)(base)+ 1.0f) * 30.0f)
+		g_Reserve.vigilance = ((float)(base) + 1.0f) * 30.0f;
+	else if(g_Reserve.vigilance < ((float)(base)) * 30.0f)
+		g_Reserve.vigilance = (float)(base) * 30.0f;
 
 	cursol = 0;
 	cursolAlpha = 0.5f;
@@ -195,6 +203,7 @@ void DrawReserve(void)
 	g_Button[rs_vigilance].size = { 530 * 0.9f, 100 * 1.0f };
 	g_Button[rs_vigilance].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	DrawTexture(&g_Button[rs_vigilance]);
+	DrawNumberRe((int)(g_Reserve.vigilance), g_Button[rs_vigilance].pos.x, g_Button[rs_vigilance].pos.y, 50.0f, 100.0f, XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f));
 
 	g_Button[rs_rank].pos = { SCREEN_WIDTH * 1.2f - g_Button[rs_rank].set_pos.x , SCREEN_HEIGHT * 0.55f};
 	g_Button[rs_rank].size = { 530 * 0.9f, 100 * 1.0f };

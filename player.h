@@ -100,6 +100,7 @@ public:
 	//歩行時のモーションデータ
 	INTERPOLATION_DATA	*tbl_adrM;	// アニメデータのテーブル先頭アドレス
 	int					tbl_sizeM;	// 登録したテーブルのレコード総数
+	INTERPOLATION_DATA *old_data;
 };
 
 struct PlayerParts
@@ -143,6 +144,8 @@ HRESULT InitPlayer(void);
 void InitBootPlayer(void);
 void UninitPlayer(void);
 void UpdatePlayer(void);
+void IPUpdate(void);
+void ResultIPUpdate(void);
 void DrawPlayer(void);
 void MovePlayer(void);
 void ControlPlayer(void);
@@ -153,7 +156,7 @@ void ChangePlayerArm(BOOL flag);
 void UpdateArm(void);
 PLAYER *GetPlayer(void);
 void PlayerStandLiner(int i);
-void PlayerPartsIP(Playerliner* p);
+void PlayerPartsIP(Playerliner* p, INTERPOLATION_DATA *i, int t_size);
 void InvincibleFunc(PLAYER *p);
 void UpdateRescueMode(void);
 void CheckRescue(void);

@@ -2,10 +2,15 @@
 #include "player.h"
 #include "bullet.h"
 #include "collision.h"
+#include "result.h"
+#include "reserve.h"
+#include "camera.h"
 static FallObject g_Obstacle[MAX_FALL_OBSTACLE];
 static DX11_MODEL g_Model[MAX_FALL_OBSTACLE_NUM];
 static float fall_cool_time = 0.0f;
-
+static BOOL  fall_switch = FALSE;
+static float fall_interval = FALL_INTERVAL;
+static float fall_time = FALL_TIME;
 //èâä˙âª
 void FallObject::Init(void)
 {
@@ -16,6 +21,7 @@ void FallObject::Init(void)
 		g_Obstacle[i].efSwitch = FALSE;
 	}
 	fall_cool_time = 0.0f;
+	fall_switch = FALSE;
 }
 //ãNìÆéûÇÃèâä˙âª
 void FallObject::InitBoot(void)
@@ -37,19 +43,38 @@ void FallObject::Uninit(void)
 //çXêV
 void FallObject::Update(void)
 {
-	return;
-	fall_cool_time -= 1.0f;
-	if (fall_cool_time <= 0.0f) {
-		PLAYER *player = GetPlayer();
-		XMFLOAT3 pos = player[0].pos;
-		pos.x += (float)(rand() % 200) - 100.0f;
-		pos.y = 300.0f;
-		pos.z += (float)(rand() % 200) - 100.0f;
-		XMFLOAT3 rot = { (float)(rand() % -157) + 314 / 157.0f ,(float)(rand() % -157) + 314 / 157.0f ,(float)(rand() % -157) + 314 / 157.0f };
-		XMFLOAT3 scl = { 1.0f, 1.0f, 1.0f };
-		int num = rand() % 2;
-		SetObstacle(pos, rot, scl, 100.0f, 20.0f, num);
-		fall_cool_time = (float)(rand() % FALL_RAND_TIME) + FALL_COOL_TIME_BASE;
+	if(!fall_switch)
+	fall_interval -= 1.0f;
+
+	if (fall_interval <= 0.0f && !fall_switch)
+	{
+		fall_switch = TRUE;
+		SetVibTime(60);
+	}
+
+	if (fall_switch) 
+	{
+		fall_cool_time -= 1.0f;
+		fall_time -= 1.0f;
+		if (fall_cool_time <= 0.0f) {
+			PLAYER *player = GetPlayer();
+			XMFLOAT3 pos = player[0].pos;
+			pos.x += (float)(rand() % 200) - 100.0f;
+			pos.y = 500.0f;
+			pos.z += (float)(rand() % 200) - 100.0f;
+			XMFLOAT3 rot = { (float)(rand() % -157) + 314 / 157.0f ,(float)(rand() % -157) + 314 / 157.0f ,(float)(rand() % -157) + 314 / 157.0f };
+			XMFLOAT3 scl = { 1.0f, 1.0f, 1.0f };
+			int num = rand() % 2;
+			SetObstacle(pos, rot, scl, 100.0f, 20.0f, num);
+			fall_cool_time = (float)(rand() % FALL_RAND_TIME) + FALL_COOL_TIME_BASE;
+		}
+
+		if (fall_time <= 0.0f)
+		{
+			fall_interval = FALL_INTERVAL;
+			fall_time = FALL_TIME;
+			fall_switch = FALSE;
+		}
 	}
 
 	for (int i = 0; i < MAX_FALL_OBSTACLE; i++)
@@ -99,7 +124,8 @@ void FallObject::Distract(FallObject* p)
 	if (p->durability > 0)
 		return;		
 	
-
+	Reward* re = GetReward();
+	re->beatNum++;
 	p->use = FALSE;
 	p->efSwitch = TRUE;
 }
@@ -124,6 +150,11 @@ void FallObject::SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float dur
 FallObject * FallObject::GetObstacle(void)
 {
 	return &g_Obstacle[0];
+}
+
+BOOL FallObject::GetFallSwitch(void)
+{
+	return fall_switch;
 }
 
 void FallObject::Draw(void)
