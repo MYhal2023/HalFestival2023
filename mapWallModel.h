@@ -2,10 +2,10 @@
 #pragma once
 #include "model.h"
 #define	MODEL_NEUTROPHILS	"data/MODEL/neutrophils.obj"			// 読み込むモデル名
-#define	MODEL_WALL001	"data/MODEL/wall_door_closed.obj"			// 読み込むモデル名
+#define	MODEL_WALL001	"data/MODEL/doorerror.obj"			// 読み込むモデル名
 #define	MODEL_WALL002	"data/MODEL/wall_basic.obj"			// 読み込むモデル名
 #define	MODEL_WALL003	"data/MODEL/wall_window.obj"			// 読み込むモデル名
-#define	MODEL_WALL004	"data/MODEL/wall_door_open.obj"			// 読み込むモデル名
+#define	MODEL_WALL004	"data/MODEL/dooropen.obj"			// 読み込むモデル名
 
 //マップの壁モデルクラス
 class MapWallModel

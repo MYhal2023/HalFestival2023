@@ -35,9 +35,11 @@ void Obstacle::InitBoot(void)
 	LoadModel(MODEL_TROLLEY, &model[om_trolley]);
 	LoadModel(MODEL_BOX, &model[om_box]);
 	LoadModel(MODEL_DCUT, &model[om_duct]);
-	LoadModel(MODEL_GASTANK, &model[om_monitor]);
-	LoadModel(MODEL_MONITOR, &model[om_steel]);
-	LoadModel(MODEL_STEEL, &model[om_test]);
+	LoadModel(MODEL_GASTANK, &model[om_gastank]);
+	LoadModel(MODEL_MONITOR, &model[om_monitor]);
+	LoadModel(MODEL_STEEL, &model[om_steel]);
+	LoadModel(MODEL_TEST, &model[om_test]);
+	LoadModel(MODEL_BREAK_WALL, &model[om_break_wall]);
 }
 //èIóπèàóù
 void Obstacle::Uninit(void)

@@ -26,6 +26,8 @@
 #include "obstacle.h"
 #include "result.h"
 #include <algorithm>
+#include <iostream>
+#include <fstream>
 
 //*****************************************************************************
 // マクロ定義
@@ -70,6 +72,9 @@ static BOOL			g_Load = FALSE;
 static int			playerNum = 0;
 static int			atNum[MAX_PLAYER];
 static char name[2][64];
+using namespace std;
+static ofstream fout;
+
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -197,6 +202,8 @@ HRESULT InitPlayer(void)
 	g_Arm[1] = pArm::GetArm();
 	for (int i = 0; i < MAX_PLAYER; i++)
 		atNum[i] = 0;
+	fout.open("pos_data.txt");
+
 	return S_OK;
 }
 
@@ -282,6 +289,7 @@ void UninitPlayer(void)
 			g_Parts[i].load = FALSE;
 		}
 	}
+	fout.close();
 	g_Load = FALSE;
 }
 
@@ -638,6 +646,12 @@ void ControlPlayer(void)
 
 	if (GetKeyboardPress(DIK_B))
 		g_Player[0].spd = VALUE_MOVE * VALUE_MOVE_DASH;
+
+	if (GetKeyboardTrigger(DIK_RETURN))
+	{
+		fout << "座標:(" << g_Player[0].pos.x << "," << g_Player[0].pos.y << "," << g_Player[0].pos.z << ")" << endl;
+	}
+
 }
 
 void ControlCamera(void)

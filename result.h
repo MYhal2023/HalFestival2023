@@ -23,6 +23,8 @@ struct Reward
 	int time;		//経過した時間
 	int score;		//合計スコア
 	int rank_up;	//上昇するランク経験量
+	int  base_rank;
+	int increase_rank;
 
 	int ef_beatNum;	//障害物の破壊数上昇数
 	int ef_rescue_num;	//救助した数上昇数
@@ -61,6 +63,10 @@ enum ResultTexture
 	result_var_bg,
 	result_xpvar_bg,
 	result_xpvar,
+	result_rank_0,
+	result_rank_1,
+	result_rank_2,
+	result_rank_3,
 	result_var,
 	MAX_RESULT_TEX
 };

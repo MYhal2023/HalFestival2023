@@ -15,9 +15,10 @@
 #define	MODEL_GASTANK		"data/MODEL/gastank.obj"			// 読み込むモデル名
 #define	MODEL_MONITOR		"data/MODEL/monitor.obj"			// 読み込むモデル名
 #define	MODEL_STEEL		"data/MODEL/steelframe.obj"			// 読み込むモデル名
+#define	MODEL_BREAK_WALL	"data/MODEL/breakwall.obj"			// 読み込むモデル名
 #define	MODEL_TEST			"data/MODEL/neutrophils.obj"			// 読み込むモデル名
 
-#define MAX_OBSTACLE (30)
+#define MAX_OBSTACLE (60)
 #define MAX_FALL_OBSTACLE (5)
 #define MAX_FALL_OBSTACLE_NUM (3)
 #define FALL_SPEED	(3.0f)
@@ -30,18 +31,19 @@
 
 enum ObstacleModel
 {
-	om_book,
-	om_bookshelf,
-	om_Ldesk,
-	om_tank,
-	om_tankglass,
-	om_trolley,
-	om_box,
-	om_duct,
-	om_gastank,
-	om_monitor,
-	om_steel,
-	om_test,
+	om_book,		//本
+	om_bookshelf,	//本だな
+	om_Ldesk,		//L字の机
+	om_tank,		//タンク
+	om_tankglass,	//タンクのガラス部分
+	om_trolley,		//台車
+	om_box,			//謎のがらくた
+	om_duct,		//ダクトの接続部分？
+	om_gastank,		//ガスタンク
+	om_monitor,		//モニター
+	om_steel,		//鉄鋼
+	om_break_wall,	//破壊できる壁
+	om_test,		//テスト用のモデル
 	MAX_OBSTACLE_MODEL
 };
 //落下物モデル

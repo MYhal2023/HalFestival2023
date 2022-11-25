@@ -4,13 +4,15 @@
 #include "rescueLife.h"
 #include "mapWallModel.h"
 #include "game.h"
+#include "reserve.h"
 
 static Map g_Map;
+
 //ここにマップの全要素を初期化(メッシュフィールド以外)
 void Map::InitMap(void)
 {
 	//サンプル
-		//壁モデル
+	//壁モデル
 
 	//メッシュウォールの設置
 		//InitMeshWall();
@@ -152,6 +154,7 @@ void Map::InitMap(void)
 	XMFLOAT3 r = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT3 m = { 1.0f, 1.0f, 1.0f };
 
+	//モデル表示用のやつ
 	Obstacle::SetObstacle(XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 1.0f, 1.0f, 1.0f }, 100.0f, 50.0f, om_duct);
 	Obstacle::SetObstacle(XMFLOAT3{ 100.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 1.0f, 1.0f, 1.0f }, 100.0f, 50.0f, om_bookshelf);
 	Obstacle::SetObstacle(XMFLOAT3{ 200.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 1.0f, 1.0f, 1.0f }, 100.0f, 50.0f, om_Ldesk);
@@ -167,13 +170,52 @@ void Map::InitMap(void)
 	Obstacle::SetObstacle(XMFLOAT3{ -500.0f, 0.0f, 550.0f }, XMFLOAT3{ 0.0f, 1.57f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
 
 	// 書庫
-	Obstacle::SetObstacle(XMFLOAT3{ 550.0f, 0.0f, -765.0f }, XMFLOAT3{ 0.0f, 4.7f, 0.0f }, XMFLOAT3{ 5.0f, 2.0f, 3.0f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 750.0f, 0.0f, -900.0f }, XMFLOAT3{ 0.0f, 3.1f, 0.0f }, XMFLOAT3{ 5.0f, 2.0f, 3.0f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 550.0f, 0.0f, -765.0f }, XMFLOAT3{ 0.0f, 4.7f, 0.0f }, XMFLOAT3{ 3.0f, 3.0f, 3.0f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 750.0f, 0.0f, -900.0f }, XMFLOAT3{ 0.0f, 3.1f, 0.0f }, XMFLOAT3{ 3.0f, 3.0f, 3.0f }, 100.0f, 50.0f, om_bookshelf);
 
 	// 部品置き室
-	Obstacle::SetObstacle(XMFLOAT3{ 900.0f, 0.0f, 850.0f }, XMFLOAT3{ 0.0f, 0.7f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 900.0f, 0.0f, 850.0f }, XMFLOAT3{ 0.0f, 0.7f, 0.0f }, XMFLOAT3{ 3.0f, 3.0f, 3.0f }, 100.0f, 50.0f, om_bookshelf);
 
-	//テスト
+	//ランダム設置
+	Reserve *re = GetReserve();
+	float rand_base = re->vigilance;		//警戒度を基準にランダム性をもたせる
+	int set_num = (int)(rand_base / 5.0f);	//追加設置数
+	while (set_num > 0)
+	{
+		if (set_num > 11)
+		{
+			for (int i = 0; i < MAX_OBSTACLE_RAND_POS; i++)
+			{
+				g_Map.use[i] = TRUE;
+			}
+			break;
+		}
+		int k = rand() % MAX_OBSTACLE_RAND_POS;
+
+		if (!g_Map.use[k]) {
+			g_Map.use[k] = TRUE;
+			set_num--;
+		}
+	}
+	int s = 0;
+	for (int i = 0; i < MAX_OBSTACLE_RAND_POS; i++) {
+		if (!g_Map.use[i])
+			continue;
+		int rand_obstacle = rand() % 2;
+		switch (rand_obstacle)
+		{
+		case 0:
+			g_Map.set_pos[i].y += 15.0f;
+			Obstacle::SetObstacle(g_Map.set_pos[i], XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, XMFLOAT3{ 5.0f, 5.0f, 5.0f }, 100.0f, 50.0f, om_steel);
+			break;
+		case 1:
+			Obstacle::SetObstacle(g_Map.set_pos[i], XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.0f, 3.0f, 3.0f }, 100.0f, 50.0f, om_box);
+			break;
+		}
+	}
+	
+	//ランダムで破壊できる壁を設置
+
 
 	////設置救助者
 	////RescueLife()
@@ -184,4 +226,30 @@ void Map::InitMap(void)
 	RescueLife::SetRemain(p, r, 0);
 	//設置オブジェクト
 
+}
+
+void Map::InitBootMap(void)
+{
+	g_Map.set_pos[0] = XMFLOAT3(-298.003, 0.0, 176.499);
+	g_Map.set_pos[1] = XMFLOAT3(-298.002, 0.0, -182.175);
+	g_Map.set_pos[2] = XMFLOAT3(-711.908, 0.0, 162.985);
+	g_Map.set_pos[3] = XMFLOAT3(-1243.71, 0.0, 183.222);
+	g_Map.set_pos[4] = XMFLOAT3(-1678.95, 0.0, 194.4);
+	g_Map.set_pos[5] = XMFLOAT3(-1701.7, 0.0, -190.484);
+	g_Map.set_pos[6] = XMFLOAT3(-1335.37, 0.0, -204.254);
+	g_Map.set_pos[7] = XMFLOAT3(252.105, 0.0, -646.464);
+	g_Map.set_pos[8] = XMFLOAT3(738.792, 0.0, -175.682);
+	g_Map.set_pos[9] = XMFLOAT3(1240.1, 0.0, -164.904);
+	g_Map.set_pos[10] = XMFLOAT3(1739.5, 0.0, -164.86);
+	g_Map.set_pos[11] = XMFLOAT3(1552.4, 0.0, 179.575);
+	g_Map.set_pos[12] = XMFLOAT3(781.047, 0.0, 199.842);
+	g_Map.set_pos[13] = XMFLOAT3(251.184, 0.0, 664.722);
+}
+
+void Map::InitReserveMap(void)
+{
+}
+
+void Map::InitResultMap(void)
+{
 }

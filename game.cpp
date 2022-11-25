@@ -126,6 +126,7 @@ void InitBoot(void)
 	Obstacle::InitBoot();
 	InitBulletBoot();
 	InitBootPlayer();
+	Map::InitBootMap();
 }
 
 void InitMap(void)
@@ -136,6 +137,8 @@ void InitMap(void)
 	{
 	case MODE_TITLE:
 		Map::InitMap();
+		break;
+	case MODE_RESERVE:
 		break;
 	case MODE_GAME:
 		Map::InitMap();

@@ -56,10 +56,10 @@ HRESULT InitReserve(void)
 	if (!restart)
 	{
 		restart = TRUE;
-		g_Reserve.vigilance = 0.0f;
+		g_Reserve.vigilance = 200.0f;
 		g_Reserve.old_vigi = 0.0f;
 		g_Reserve.quota = BASE_RESCUE_NUM;
-		g_Reserve.rank = 0;
+		g_Reserve.rank = 500;
 #ifdef _DEBUG
 
 #endif

@@ -41,6 +41,10 @@ static char* g_TextureName[MAX_RESULT_TEX] = {
 	"data/TEXTURE/xpbar_haikei.png",
 	"data/TEXTURE/xpbar_mae.png",
 	"data/TEXTURE/xpbar_iro.png",
+	"data/TEXTURE/rank_0.png",
+	"data/TEXTURE/rank_1.png",
+	"data/TEXTURE/rank_2.png",
+	"data/TEXTURE/rank_3.png",
 	"data/TEXTURE/var.png",
 };
 
@@ -308,13 +312,25 @@ void DrawResult(void)
 			g_Result[result_var].color = { 0.0f, 0.0f, 0.0f, 0.5f };
 			DrawResultTexture(&g_Result[result_var]);
 		}
-		g_Result[result_var_bg].pos = { SCREEN_CENTER_X , g_Reward.set_y };
-		g_Result[result_var_bg].size = { 1800.0f * 0.5f, 1000.0f *0.5f};
+		Reserve* re = GetReserve();
+
+		int rank = result_rank_0 + g_Reward.rank;
+		if (rank > result_rank_3) {
+			rank = result_rank_3;
+			g_Reward.rank_gauge = g_Reward.rank_gauge_max;
+		}
+		g_Result[rank].pos = { SCREEN_CENTER_X , g_Reward.set_y };
+		g_Result[rank].size = { 1900.0f * 0.75f, 800.0f *0.75f };
+		g_Result[rank].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		DrawResultTexture(&g_Result[rank]);
+
+		g_Result[result_var_bg].pos = { SCREEN_CENTER_X , g_Reward.set_y + 50.0f };
+		g_Result[result_var_bg].size = { 1800.0f * 0.5f, 1000.0f *0.25f };
 		g_Result[result_var_bg].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		DrawResultTexture(&g_Result[result_var_bg]);
 
 
-		g_Result[result_xpvar_bg].pos = { SCREEN_CENTER_X , g_Reward.set_y };
+		g_Result[result_xpvar_bg].pos = { SCREEN_CENTER_X , g_Reward.set_y + 50.0f };
 		g_Result[result_xpvar_bg].size = { 810.0f, 80.0f };
 		g_Result[result_xpvar_bg].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		DrawResultTexture(&g_Result[result_xpvar_bg]);
@@ -322,7 +338,7 @@ void DrawResult(void)
 
 		float par = (float)(g_Reward.rank_gauge) / (float)(g_Reward.rank_gauge_max);
 		g_Result[result_xpvar].size = { 800.0f * par , 72.0f };
-		g_Result[result_xpvar].pos = { SCREEN_CENTER_X + (800.0f * (par - 1.0f)) * 0.5f, g_Reward.set_y };
+		g_Result[result_xpvar].pos = { SCREEN_CENTER_X + (800.0f * (par - 1.0f)) * 0.5f, g_Reward.set_y + 50.0f };
 		g_Result[result_xpvar].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		DrawResultGauge(&g_Result[result_xpvar], par);
 
@@ -444,6 +460,8 @@ void SetReward(void)
 	//ランクアップ経験値の計算をここでする
 	int num = 150;
 	g_Reward.rank_up = g_Reward.rank_bonus_time + g_Reward.rank_bonus_beat + g_Reward.rank_bonus_rescue + g_Reward.rank_bonus_score + 20;
+	g_Reward.base_rank = re->rank;
+	g_Reward.increase_rank = 0;
 	re->rank += g_Reward.rank_up;
 }
 
