@@ -13,6 +13,7 @@
 #include "debugproc.h"
 #include "player.h"
 #include "time.h"
+#include "easing.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -35,15 +36,16 @@ static char* g_TextureName[] = {
 	"data/TEXTURE/rescue_ng.png",
 	"data/TEXTURE/rescue_ok.png",
 	"data/TEXTURE/checkmark.png",
-	"data/TEXTURE/arm_UI_gauge.png",
 	"data/TEXTURE/arm_UI_tama.png",
-	"data/TEXTURE/var.png",
+	"data/TEXTURE/number.png",
 };
 
 
 static UI g_UI[TEXTURE_MAX];
 static BOOL g_Load = FALSE;
 static BOOL g_Help = FALSE;
+static int nIndex[3];
+static int k = 0;
 HRESULT InitUI(void)
 {
 	ID3D11Device *pDevice = GetDevice();
@@ -108,16 +110,12 @@ HRESULT InitUI(void)
 
 	const XMFLOAT2 armPos = { 1600.0f, SCREEN_CENTER_Y * 1.6f };
 	const float armSize = 1.1f;
-	const float armSlotSize = 1.0f;
-
-	g_UI[arm_UI_gauge].pos = armPos;
-	g_UI[arm_UI_gauge].size = { 500.0f*armSize, 500.0f *armSize };
-	g_UI[arm_UI_gauge].tex = { 1.0f, 1.0f };
+	const float armSlotSize = 0.75f;
 
 	g_UI[arm_UI_slot].pos = armPos;
 	g_UI[arm_UI_slot].size = { 500.0f*armSlotSize, 500.0f *armSlotSize };
 	g_UI[arm_UI_slot].tex = { 1.0f, 1.0f };
-
+	k = 0;
 	g_Load = TRUE;
 	return S_OK;
 }
@@ -197,13 +195,23 @@ void DrawUI(void)
 	DrawTexture(&g_UI[hp_var_bg]);
 	DrawTexture(&g_UI[hp_var]);
 	DrawTexture(&g_UI[hp_box]);
-	DrawTexture(&g_UI[arm_UI_gauge]);
 	DrawTexture(&g_UI[arm_UI_slot]);
 	RescueLife* p = RescueLife::GetRescueLife();
 	DrawRescueLife(p);
-	DrawTime();
 
-	PrintDebugProc("救助:%d", p->GetRescue(0));
+	if (GetSetTime() <= 180 && GetSetTime() > 0) {
+		if (GetSetTime() == 180 ||
+			GetSetTime() == 120 ||
+			GetSetTime() == 60)
+		{
+			nIndex[k] = Easing::SetEase(0.0f, 150.0f, 10.0f);
+			k++;
+		}
+		float set_size = Easing::GetEase(nIndex[k - 1]);
+		int num = (GetSetTime() / 60) + 1;
+		DrawNumber(num, SCREEN_CENTER_X, SCREEN_CENTER_Y, set_size, set_size*2.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	}
+
 	SetDepthEnable(TRUE);
 
 	// ライティングを無効

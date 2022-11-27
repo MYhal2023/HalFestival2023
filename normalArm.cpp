@@ -73,7 +73,7 @@ void Normal::UninitArm(void)
 		UnloadModel(&g_ArmParts[i].model);
 	}
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		UnloadModel(&g_ArmWeapon[i].model);
 	}

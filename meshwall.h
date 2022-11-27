@@ -51,3 +51,4 @@ void SetToiletWall(XMFLOAT3 pos);
 void SetBedWall(XMFLOAT3 pos, float rot);
 void SetTableWall(XMFLOAT3 pos);
 void SetWashletWall(XMFLOAT3 pos);
+void ResultMoveMeshWall(void);

@@ -40,7 +40,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-
+#define LEAD_TIME (180)		//ゲーム開始前の秒数 * 60
 
 
 //*****************************************************************************
@@ -62,7 +62,7 @@ static int	g_PlayMode = MAIN_GAME;
 static int mode = 1;
 static 	XMFLOAT3 cam_pos = { 0.0f, 0.0f, 0.0f };
 static 	XMFLOAT3 cam_rot = { 0.0f, 0.0f, 0.0f };
-
+static int set_time = LEAD_TIME + 10;
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -111,6 +111,7 @@ void InitSystem(void)
 	InitMap();
 	//InitReward();
 	mode = 1;
+	set_time = LEAD_TIME + 30;
 	g_bPause = TRUE;
 	gameover = FALSE;
 }
@@ -139,11 +140,13 @@ void InitMap(void)
 		Map::InitMap();
 		break;
 	case MODE_RESERVE:
+		Map::InitMap();
 		break;
 	case MODE_GAME:
 		Map::InitMap();
 		break;
 	case MODE_RESULT:
+		Map::InitResultMap();
 		break;
 	}
 }
@@ -215,6 +218,9 @@ void UpdateGame(void)
 
 	if(g_bPause == FALSE)
 		return;
+
+	if(set_time > 0)set_time--;
+	if (set_time > 0)return;
 
 	UpdateOver();
 
@@ -288,6 +294,8 @@ void DrawGame0(void)
 
 	// ライティングを無効
 	SetLightEnable(FALSE);
+
+	DrawTime();
 
 	DrawUI();
 
@@ -490,8 +498,8 @@ void DrawGameResult(void)
 	}
 	PrintDebugProc("\nカメラ座標x:%f,y:%f,z:%f\n", cam_pos.x, cam_pos.y, cam_pos.z);
 #endif
-	XMFLOAT3 pos;
-	// プレイヤー視点
+	XMFLOAT3 pos = cam_pos;
+	 //プレイヤー視点
 	pos = XMFLOAT3{256.0f,-91.0f,-149.0f};
 	cam->rot.y = 2.03f;
 	cam->rot.x = 0.38f;
@@ -749,4 +757,9 @@ int DamageFunc(int attacker, int diffender)
 int GetSpeedMode(void)
 {
 	return mode;
+}
+
+int GetSetTime(void)
+{
+	return set_time;
 }

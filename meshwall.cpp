@@ -50,7 +50,7 @@ static MESH_WALL g_aMeshWall[MAX_MESH_WALL];		// メッシュ壁ワーク
 static int g_nNumMeshWall = 0;						// メッシュ壁の数
 static int g_CeilingWall = 0;
 static char* g_TextureName[TEXTURE_MAX] = {
-	"data/TEXTURE/field101.jpg",
+	"data/TEXTURE/wall101.png",
 	"data/TEXTURE/field101.jpg",
 };
 
@@ -91,10 +91,10 @@ HRESULT InitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT4 col,
 
 	// マテリアル情報の初期化
 	ZeroMemory(&pMesh->material, sizeof(pMesh->material));
-	pMesh->material.Diffuse = col;
-	if (pMesh->texNo == WALL_RAY)pMesh->material.Diffuse = { 0.0f, 1.0f, 0.0f, 0.5f };
-
 	pMesh->texNo = texNo;
+	if (pMesh->texNo == WALL_RAY)pMesh->material.Diffuse = { 0.0f, 1.0f, 0.0f, 0.5f };
+	else pMesh->material.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };;
+
 
 	// ポリゴン表示位置の中心座標を設定
 	pMesh->pos = pos;
@@ -515,6 +515,19 @@ void ResetMeshWall(void)
 		g_aMeshWall[i].fBlockSizeY = 0;					// ブロックサイズ
 		g_aMeshWall[i].texNo = WALL_GRAY;				//使用するテクスチャの指定
 		g_aMeshWall[i].use = FALSE;
+	}
+}
+
+void ResultMoveMeshWall(void)
+{
+	for (int i = 0; i < MAX_MESH_WALL; i++)
+	{
+		if (!g_aMeshWall[i].use)continue;
+
+		g_aMeshWall[i].pos.x += 0.8f;
+		if (g_aMeshWall[i].pos.x >= 0.8f * 2000.0f)
+			g_aMeshWall[i].pos.x = -220.0f;
+
 	}
 }
 

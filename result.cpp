@@ -20,6 +20,8 @@
 #include "rescueLife.h"
 #include "player.h"
 #include "meshfield.h"
+#include "mapWallModel.h"
+#include "meshwall.h"
 //*****************************************************************************
 // É}ÉNÉçíËã`
 //*****************************************************************************
@@ -129,6 +131,8 @@ void UpdateResult(void)
 {
 	ResultIPUpdate();
 	ResultFieldUpdate();
+	MapWallModel::ResultMoveWall();
+	ResultMoveMeshWall();
 	skip++;
 	if (skip < 10)return;
 

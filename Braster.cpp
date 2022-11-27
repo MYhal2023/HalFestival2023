@@ -5,14 +5,12 @@ static Braster g_PlayerArm;
 
 void Braster::InitArm(void)
 {
-	g_PlayerArm.attackUse = FALSE;
-	g_PlayerArm.atInterval = 15.0f;
-	g_PlayerArm.atCount = 0.0f;
+	g_PlayerArm.attack = FALSE;
 }
 
 void Braster::Action(void)
 {
-	if (!g_PlayerArm.attackUse)
+	if (!g_PlayerArm.attack)
 	{
 		PLAYER *player = GetPlayer();
 		CAMERA *cam = GetCamera();
@@ -20,7 +18,7 @@ void Braster::Action(void)
 		XMFLOAT3 pos2 = player[0].pos;
 		XMFLOAT3 rot = player[0].rot;
 		const float dist = 5.0f;
-		float high = 0.0f;
+		float high = 10.0f;
 		pos.x += sinf(player[0].rot.y + XM_PI * 0.20f) * dist;
 		pos.y += high;
 		pos.z += cosf(player[0].rot.y + XM_PI * 0.20f) * dist;
@@ -35,16 +33,8 @@ void Braster::Action(void)
 		SetBullet(pos, rot, 8.0f, 50.0f, 40, Bullet_Braster);
 		SetBullet(pos2, rot, 8.0f, 50.0f, 40, Bullet_Braster);
 
-		g_PlayerArm.atCount = g_PlayerArm.atInterval;
-
-		g_PlayerArm.attackUse = TRUE;
+		g_PlayerArm.attack = TRUE;
 	}
-
-	if (g_PlayerArm.atCount > 0.0f)
-		g_PlayerArm.atCount -= 1.0f;
-
-	if (g_PlayerArm.atCount <= 0.0f)
-		g_PlayerArm.attackUse = FALSE;
 
 }
 

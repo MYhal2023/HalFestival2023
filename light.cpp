@@ -52,10 +52,10 @@ void InitLight(void)
 	}
 
 	// 光源の設定（世界を照らす光）
-	g_Light[0].Position = XMFLOAT3(300.0f, 300.0f, 300.0f);
+	g_Light[0].Position = XMFLOAT3(500.0f, 300.0f, 300.0f);
 	g_Light[0].Direction = XMFLOAT3(-0.5f, -1.0f, 0.5f);
 	float diffuse = 1.0f;
-	g_Light[0].Diffuse = XMFLOAT4(diffuse, diffuse, diffuse, 1.0f);
+	g_Light[0].Diffuse = XMFLOAT4(1.0f, 0.8f, 0.8f, 1.0f);
 	g_Light[0].Type = LIGHT_TYPE_DIRECTIONAL;					// 並行光源
 	g_Light[0].Enable = TRUE;									// このライトをON
 	SetLight(0, &g_Light[0]);									// これで設定している
@@ -64,7 +64,7 @@ void InitLight(void)
 	// フォグの初期化（霧の効果）
 	g_Fog.FogStart = GAME_FOG_ST;									// 視点からこの距離離れるとフォグがかかり始める
 	g_Fog.FogEnd   = GAME_FOG_ED;									// ここまで離れるとフォグの色で見えなくなる
-	g_Fog.FogColor = XMFLOAT4( 0.0f, 0.0f, 0.0f, 1.0f );		// フォグの色
+	g_Fog.FogColor = XMFLOAT4( 1.0f, 0.2f, 0.2f, 1.0f );		// フォグの色
 	SetFog(&g_Fog);
 	SetFogEnable(FALSE);		// 他の場所もチェックする shadow
 }
@@ -100,22 +100,22 @@ void SetFogData(FOG *fog)
 void UpdateLight(void)
 {
 #ifdef _DEBUG
-	//if (GetKeyboardPress(DIK_Z))
-	//{
-	//	g_Light[0].Position.x += 1.0f;
-	//}
-	//else if (GetKeyboardPress(DIK_X))
-	//{
-	//	g_Light[0].Position.x -= 1.0f;
-	//}
-	//else if (GetKeyboardPress(DIK_C))
-	//{
-	//	g_Light[0].Position.z += 1.0f;
-	//}
-	//else if (GetKeyboardPress(DIK_V))
-	//{
-	//	g_Light[0].Position.z -= 1.0f;
-	//}
+	if (GetKeyboardPress(DIK_Z))
+	{
+		g_Light[0].Position.x += 1.0f;
+	}
+	else if (GetKeyboardPress(DIK_X))
+	{
+		g_Light[0].Position.x -= 1.0f;
+	}
+	else if (GetKeyboardPress(DIK_C))
+	{
+		g_Light[0].Position.z += 1.0f;
+	}
+	else if (GetKeyboardPress(DIK_V))
+	{
+		g_Light[0].Position.z -= 1.0f;
+	}
 	PLAYER *player = GetPlayer();
 	g_Light[0].Position.x = player[0].pos.x + 150.0f;
 	g_Light[0].Position.z = player[0].pos.z + 100.0f;

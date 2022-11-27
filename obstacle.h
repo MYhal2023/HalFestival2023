@@ -16,11 +16,12 @@
 #define	MODEL_MONITOR		"data/MODEL/monitor.obj"			// 読み込むモデル名
 #define	MODEL_STEEL		"data/MODEL/steelframe.obj"			// 読み込むモデル名
 #define	MODEL_BREAK_WALL	"data/MODEL/breakwall.obj"			// 読み込むモデル名
+#define	MODEL_TERMINAL	"data/MODEL/terminal.obj"			// 読み込むモデル名
 #define	MODEL_TEST			"data/MODEL/neutrophils.obj"			// 読み込むモデル名
 
 #define MAX_OBSTACLE (60)
-#define MAX_FALL_OBSTACLE (5)
-#define MAX_FALL_OBSTACLE_NUM (3)
+#define MAX_FALL_OBSTACLE (20)
+#define MAX_FALL_OBSTACLE_NUM (2)
 #define FALL_SPEED	(3.0f)
 #define FALL_COOL_TIME_BASE	(60.0f)
 #define FALL_RAND_TIME	(30)
@@ -43,6 +44,7 @@ enum ObstacleModel
 	om_monitor,		//モニター
 	om_steel,		//鉄鋼
 	om_break_wall,	//破壊できる壁
+	om_terminal,		//テスト用のモデル
 	om_test,		//テスト用のモデル
 	MAX_OBSTACLE_MODEL
 };
@@ -67,6 +69,7 @@ public:
 	float				size;		//当たり判定
 	float				durability; //耐久度
 	int					model_num;	//モデル番号
+	int					mesh_wall[4];	//1モデルに4つの当たり判定用メッシュを使うので4つ
 	BOOL				use;		//使用されているか
 	BOOL				load;
 
@@ -79,6 +82,7 @@ public:
 	static void Distract(Obstacle* p);
 	static void SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float durability, float size, int model);
 	static Obstacle* GetObstacle(void);
+	static void SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacle *ob);
 };
 
 //落下物クラス
@@ -94,7 +98,7 @@ public:
 	static void Update(void);
 	static void Effect(FallObject* p);
 	static void Distract(FallObject* p);
-	static void SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float durability, float size, int model);
 	static FallObject* GetObstacle(void);
+	static void FallObject::SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float durability, float size, int model);
 	static BOOL GetFallSwitch(void);
 };

@@ -4,6 +4,7 @@
 #include "collision.h"
 #include "debugproc.h"
 #include "result.h"
+#include "meshwall.h"
 static Obstacle g_Obstacle[MAX_OBSTACLE];
 static 	DX11_MODEL		model[MAX_OBSTACLE_MODEL];		// モデル情報
 static XMFLOAT4			tankglass_diffuse[16];
@@ -40,6 +41,7 @@ void Obstacle::InitBoot(void)
 	LoadModel(MODEL_STEEL, &model[om_steel]);
 	LoadModel(MODEL_TEST, &model[om_test]);
 	LoadModel(MODEL_BREAK_WALL, &model[om_break_wall]);
+	//LoadModel(MODEL_TERMINAL, &model[om_terminal]);
 }
 //終了処理
 void Obstacle::Uninit(void)
@@ -87,6 +89,8 @@ void Obstacle::Distract(Obstacle* p)
 	re->beatNum++;
 	p->use = FALSE;
 	p->efSwitch = TRUE;
+	for(int i = 0; i < 4; i++)
+	DeleteMeshWall(p->mesh_wall[i]);
 }
 
 void Obstacle::SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float durability, float size, int model)
@@ -101,6 +105,7 @@ void Obstacle::SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float durab
 		g_Obstacle[i].scl = scl;
 		g_Obstacle[i].size = size;
 		g_Obstacle[i].durability = durability;
+		Obstacle::SetHitMeshWall(pos, rot, model, &g_Obstacle[i]);
 		break;
 	}
 }
@@ -108,6 +113,133 @@ void Obstacle::SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float durab
 Obstacle * Obstacle::GetObstacle(void)
 {
 	return &g_Obstacle[0];
+}
+
+void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacle *ob)
+{
+	int x = -1;
+	int z = -1;
+	float set_x = 2.0f;
+	float set_z = 2.0f;
+	int i = 0;
+	switch (model_num)
+	{
+	case om_book:		//本
+		break;
+	case om_bookshelf:	//本だな
+		set_x = 20.0f;
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x - set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z + set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x + set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		break;
+	case om_Ldesk:		//L字の机
+		set_x = 80.0f;
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x - set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z + set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x + set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+
+		break;
+	case om_tank:		//タンク
+		set_x = 50.0f;
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x - set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z + set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x + set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+
+		break;
+	case om_box:			//謎のがらくた
+		set_x = 45.0f;
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x - set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z + set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x + set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		break;
+	case om_duct:		//ダクトの接続部分？
+		break;
+	case om_monitor:		//モニター
+		if (rot.y == 0.0f) {
+			set_x = 15.0f;
+			set_z = 40.0f;
+		}
+		else
+		{
+			set_x = 40.0f;
+			set_z = 15.0f;
+		}
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x - set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z + set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x + set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		break; 
+	case om_steel:		//鉄鋼
+		break; 
+	case om_break_wall:	//破壊できる壁
+		if (rot.y == 0.0f) {
+			set_x = 120.0f;
+			set_z = 10.0f;
+		}
+		else
+		{
+			set_x = 10.0f;
+			set_z = 120.0f;
+		}
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x - set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z + set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x + set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		break;
+	}
+
 }
 
 void Obstacle::Draw(void)

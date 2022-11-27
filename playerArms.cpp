@@ -59,7 +59,7 @@ void pArm::InitArm(void)
 		}
 
 		g_ArmParts[i].tbl_adrXgun = NULL;
-		g_ArmParts[i].tbl_adr = wait_armLeft;
+		g_ArmParts[i].tbl_adr = nullptr;
 		g_ArmParts[i].move_time = 0.0f;
 		g_ArmParts[i].spead = 0.0f;
 		g_ArmParts[i].ct_frame = 0.0f;
@@ -265,19 +265,24 @@ void pArm::UpdateReleaseArm(void)
 {
 	PLAYER *player = GetPlayer();
 	//0:Xgun,1:Braster,3:Saw
-	switch (player[0].armType)
-	{
-	case 0:
-		UpdateXgunArm();
-		break;
-	case 1:
-		UpdateBrasterArm();
-		break;
-	case 2:
-		UpdateSawArm();
-		break;
+	if (player[0].attack) {
+		switch (player[0].armType)
+		{
+		case 0:
+			UpdateXgunArm();
+			break;
+		case 1:
+			UpdateBrasterArm();
+			break;
+		case 2:
+			UpdateSawArm();
+			break;
+		}
 	}
-
+	else
+	{
+		UpdateWaitArm();
+	}
 }
 
 void pArm::UpdateXgunArm(void)
@@ -378,6 +383,38 @@ void pArm::UpdateSawArm(void)
 	}
 }
 
+void pArm::UpdateWaitArm(void)
+{
+	for (int i = 1; i < MAX_ARM_PARTS; i++)
+	{
+		if (i < MAX_ARM_PARTS / 2)
+		{	//下半分のモーション
+			g_ArmParts[i].tbl_sizeA = tblsize[M_wait_armL01];
+			IPArm(&g_ArmParts[i], wait_armLeft001);
+		}
+		else if (i >= MAX_ARM_PARTS / 2)	//上半分のモーション
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_wait_armL02];
+			IPArm(&g_ArmParts[i], wait_armLeft002);
+		}
+	}
+
+	//右腕
+	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
+	{
+		if (i < (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2) {
+			g_ArmParts[i].tbl_sizeA = tblsize[M_wait_armR01];
+			IPArm(&g_ArmParts[i], wait_armRight001);
+		}
+		else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_wait_armR02];
+			IPArm(&g_ArmParts[i], wait_armRight002);
+
+		}
+	}
+}
+
 INTERPOLATION_DATA * pArm::CheckMotionData(PLAYER *p)
 {
 	return nullptr;
@@ -452,9 +489,17 @@ void pArm::IPArm(pArm* p, INTERPOLATION_DATA_EASING* i)
 
 	if (index > (size - 2))	// ゴールをオーバーしていたら、データを最初に戻して終了
 	{
+		PLAYER *player = GetPlayer();
+		player[0].attack = FALSE;
+		pArm* pab = Braster::GetArm();
+		pArm* pax = Xgun::GetArm();
+		pArm* pas = Saw::GetArm();
 		p->move_time = 0.0f;
 		p->spead = 0.0f;
 		p->ct_frame = 0.0f;
+		pab->attack = FALSE;
+		pax->attack = FALSE;
+		pas->attack = FALSE;
 		index = 0;
 	}
 	// 座標を求める	X = StartX + (EndX - StartX) * 今の時間
@@ -585,5 +630,5 @@ pArm* pArm::GetArm(void)
 
 pArm* pArm::GetArmParts(void)
 {
-	return &g_ArmParts[0];	//先端部の情報が欲しいのでこうなっている
+	return &g_ArmParts[0];	
 }

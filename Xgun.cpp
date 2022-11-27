@@ -5,15 +5,12 @@ static Xgun g_PlayerArm;
 
 void Xgun::InitArm(void)
 {
-	pArm* p = pArm::GetArmParts();
-	g_PlayerArm.attackUse = FALSE;
-	g_PlayerArm.atInterval = 60.0f;
-	g_PlayerArm.atCount = 0.0f;
+	g_PlayerArm.attack = FALSE;
 }
 
 void Xgun::Action(void)
 {
-	if (!g_PlayerArm.attackUse) 
+	if (!g_PlayerArm.attack)
 	{
 		PLAYER *player = GetPlayer();
 		CAMERA *cam = GetCamera();
@@ -35,16 +32,9 @@ void Xgun::Action(void)
 		SetBullet(pos, rot, 10.0f, 50.0f, 60, Bullet_XGun);
 		SetBullet(pos2, rot, 10.0f, 50.0f, 60, Bullet_XGun);
 
-		g_PlayerArm.atCount = g_PlayerArm.atInterval;
-
-		g_PlayerArm.attackUse = TRUE;
+		g_PlayerArm.attack = TRUE;
 	}
 
-	if(g_PlayerArm.atCount > 0.0f)
-		g_PlayerArm.atCount -= 1.0f;
-
-	if (g_PlayerArm.atCount <= 0.0f)
-		g_PlayerArm.attackUse = FALSE;
 }
 //void Xgun::Draw(void)
 //{

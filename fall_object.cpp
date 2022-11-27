@@ -33,7 +33,7 @@ void FallObject::InitBoot(void)
 //終了処理
 void FallObject::Uninit(void)
 {
-	for (int i = 0; i < MAX_FALL_OBSTACLE; i++)
+	for (int i = 0; i < MAX_FALL_OBSTACLE_NUM; i++)
 	{
 		// モデルの解放処理
 		UnloadModel(&g_Model[i]);
@@ -43,6 +43,9 @@ void FallObject::Uninit(void)
 //更新
 void FallObject::Update(void)
 {
+//#ifdef _DEBUG
+//	return;
+//#endif
 	if(!fall_switch)
 	fall_interval -= 1.0f;
 
@@ -57,15 +60,21 @@ void FallObject::Update(void)
 		fall_cool_time -= 1.0f;
 		fall_time -= 1.0f;
 		if (fall_cool_time <= 0.0f) {
-			PLAYER *player = GetPlayer();
-			XMFLOAT3 pos = player[0].pos;
-			pos.x += (float)(rand() % 200) - 100.0f;
-			pos.y = 500.0f;
-			pos.z += (float)(rand() % 200) - 100.0f;
-			XMFLOAT3 rot = { (float)(rand() % -157) + 314 / 157.0f ,(float)(rand() % -157) + 314 / 157.0f ,(float)(rand() % -157) + 314 / 157.0f };
-			XMFLOAT3 scl = { 1.0f, 1.0f, 1.0f };
-			int num = rand() % 2;
-			SetObstacle(pos, rot, scl, 100.0f, 20.0f, num);
+			Reserve* re = GetReserve();
+			int difficult = re->rank / 150 + 1;
+			if (difficult > 4)difficult = 4;
+			for (int i = 0; i < difficult; i++) 
+			{
+				PLAYER *player = GetPlayer();
+				XMFLOAT3 pos = player[0].pos;
+				pos.x += (float)(rand() % 300) - 150.0f;
+				pos.y = (float)(rand() % 200) + 500.0f;
+				pos.z += (float)(rand() % 300) - 150.0f;
+				XMFLOAT3 rot = { (float)(rand() % -157) + 314 / 157.0f ,(float)(rand() % -157) + 314 / 157.0f ,(float)(rand() % -157) + 314 / 157.0f };
+				XMFLOAT3 scl = { 1.0f, 1.0f, 1.0f };
+				int num = rand() % 2;
+				SetObstacle(pos, rot, scl, 100.0f, 20.0f, num);
+			}
 			fall_cool_time = (float)(rand() % FALL_RAND_TIME) + FALL_COOL_TIME_BASE;
 		}
 

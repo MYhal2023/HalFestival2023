@@ -90,33 +90,33 @@ void UpdateCamera(void)
 	pos.z = pos2.z + cosf(g_Cam.rot.y)*dist;
 	g_Cam.pos = pos;
 #ifdef _DEBUG	//デバッグ用のカメラ操作。モード関係なく動かせる
-	//if (GetKeyboardPress(DIK_Q))
-	//{
-	//	g_Cam.rot.y -= VALUE_ROTATE_CAMERA;
-	//	if (g_Cam.rot.y < -XM_PI)
-	//	{
-	//		g_Cam.rot.y += XM_PI * 2.0f;
-	//	}
-	//}
-	//else if (GetKeyboardPress(DIK_E))
-	//{
-	//	g_Cam.rot.y += VALUE_ROTATE_CAMERA;
-	//	if (g_Cam.rot.y > XM_PI)
-	//	{
-	//		g_Cam.rot.y -= XM_PI * 2.0f;
-	//	}
+	if (GetKeyboardPress(DIK_Q))
+	{
+		g_Cam.rot.y -= VALUE_ROTATE_CAMERA;
+		if (g_Cam.rot.y < -XM_PI)
+		{
+			g_Cam.rot.y += XM_PI * 2.0f;
+		}
+	}
+	else if (GetKeyboardPress(DIK_E))
+	{
+		g_Cam.rot.y += VALUE_ROTATE_CAMERA;
+		if (g_Cam.rot.y > XM_PI)
+		{
+			g_Cam.rot.y -= XM_PI * 2.0f;
+		}
 
-	//}
-	//if (GetKeyboardPress(DIK_UP))
-	//{
-	//	if (g_Cam.rot.x < XM_PI * 0.2f)
-	//		g_Cam.rot.x += XM_PI * 0.004f;
-	//}
-	//else if (GetKeyboardPress(DIK_DOWN))
-	//{
-	//	if (g_Cam.rot.x > 0.0f)
-	//		g_Cam.rot.x -= XM_PI * 0.004f;
-	//}
+	}
+	if (GetKeyboardPress(DIK_UP))
+	{
+		if (g_Cam.rot.x < XM_PI * 0.2f)
+			g_Cam.rot.x += XM_PI * 0.004f;
+	}
+	else if (GetKeyboardPress(DIK_DOWN))
+	{
+		if (g_Cam.rot.x > 0.0f)
+			g_Cam.rot.x -= XM_PI * 0.004f;
+	}
 
 
 #endif
@@ -281,9 +281,9 @@ void SetCameraAT(XMFLOAT3 pos)
 	if (FallObject::GetFallSwitch() && vibration_inv > 0)
 	{
 		vibration_inv--;
-		random = (float)(rand() % 10) - 5.0f;
-		random_x = (float)(rand() % 10) - 5.0f;
-		random_z = (float)(rand() % 10) - 5.0f;
+		random = (float)(rand() % 6) - 3.0f;
+		random_x = (float)(rand() % 6) - 3.0f;
+		random_z = (float)(rand() % 6) - 3.0f;
 		pos.y += random;
 		pos.x += random_x;
 		pos.z += random_z;

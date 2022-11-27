@@ -1,19 +1,15 @@
 #include "mapWallModel.h"
 #include "game.h"
 #define MAX_WALL_MODEL (4)
-static MapWallModel g_MapWallModel[MAX_WALL_MODEL];
-
+static MapWallModel g_MapWallModel[MAX_WALL_MODEL_NUM];
+static 	DX11_MODEL			model[MAX_WALL_MODEL];		// モデル
 
 //初期化
 void MapWallModel::Init(void)
 {
-	g_MapWallModel[0].pos = { 0.0f, 0.0f, -FIELD_Z_LIMIT };
-	g_MapWallModel[1].pos = { 0.0f, 0.0f, FIELD_Z_LIMIT };
-	g_MapWallModel[2].pos = { FIELD_X_LIMIT, 0.0f, 0.0f };
-	g_MapWallModel[3].pos = { -FIELD_X_LIMIT, 0.0f, 0.0f };
-	for (int i = 0; i < MAX_WALL_MODEL; i++)
+	for (int i = 0; i < MAX_WALL_MODEL_NUM; i++)
 	{
-		g_MapWallModel[i].use = TRUE;
+		g_MapWallModel[i].use = FALSE;
 		g_MapWallModel[i].rot = { 0.0f, XM_PI * 0.0f, 0.0f };
 		g_MapWallModel[i].scl = { 5.0f, 5.0f, 5.0f };
 	}
@@ -21,10 +17,10 @@ void MapWallModel::Init(void)
 
 void MapWallModel::InitBoot(void)
 {
-	LoadModel(MODEL_WALL001, &g_MapWallModel[0].model);
-	LoadModel(MODEL_WALL002, &g_MapWallModel[1].model);
-	LoadModel(MODEL_WALL003, &g_MapWallModel[2].model);
-	LoadModel(MODEL_WALL004, &g_MapWallModel[3].model);
+	LoadModel(MODEL_WALL001, &model[0]);
+	LoadModel(MODEL_WALL002, &model[1]);
+	LoadModel(MODEL_WALL003, &model[2]);
+	LoadModel(MODEL_WALL004, &model[3]);
 }
 
 void MapWallModel::Uninit(void)
@@ -34,7 +30,7 @@ void MapWallModel::Uninit(void)
 		// モデルの解放処理
 		if (g_MapWallModel[i].use)
 		{
-			UnloadModel(&g_MapWallModel[i].model);
+			UnloadModel(&model[i]);
 			g_MapWallModel[i].use = FALSE;
 		}
 	}
@@ -44,9 +40,37 @@ void MapWallModel::Uninit(void)
 //更新
 void MapWallModel::Update(void)
 {
-	for (int i = 0; i < MAX_WALL_MODEL; i++)
+	for (int i = 0; i < MAX_WALL_MODEL_NUM; i++)
 	{
 		if (!g_MapWallModel[i].use)continue;
+
+	}
+}
+
+void MapWallModel::SetMapWallModel(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, int num)
+{
+	for (int i = 0; i < MAX_WALL_MODEL_NUM; i++)
+	{
+		if (g_MapWallModel[i].use)continue;
+
+		g_MapWallModel[i].use = TRUE;
+		g_MapWallModel[i].pos = pos;
+		g_MapWallModel[i].rot = rot;
+		g_MapWallModel[i].scl = scl;
+		g_MapWallModel[i].model_num = num;
+		break;
+	}
+}
+
+void MapWallModel::ResultMoveWall(void)
+{
+	for (int i = 0; i < MAX_WALL_MODEL_NUM; i++)
+	{
+		if (!g_MapWallModel[i].use)continue;
+
+		g_MapWallModel[i].pos.x += 0.8f;
+		if (g_MapWallModel[i].pos.x >= 0.8f * 2500.0f)
+			g_MapWallModel[i].pos.x = -220.0f;
 
 	}
 }
@@ -58,7 +82,7 @@ void MapWallModel::Draw(void)
 
 	XMMATRIX mtxScl, mtxRot, mtxTranslate, mtxWorld;
 
-	for (int i = 0; i < MAX_WALL_MODEL; i++)
+	for (int i = 0; i < MAX_WALL_MODEL_NUM; i++)
 	{
 		if (g_MapWallModel[i].use != TRUE)continue;
 		// ワールドマトリックスの初期化
@@ -82,7 +106,7 @@ void MapWallModel::Draw(void)
 		XMStoreFloat4x4(&g_MapWallModel[i].mtxWorld, mtxWorld);
 
 		// モデル描画
-		DrawModel(&g_MapWallModel[i].model);
+		DrawModel(&model[g_MapWallModel[i].model_num]);
 
 	}
 

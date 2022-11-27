@@ -27,9 +27,6 @@ protected:
 	// 階層アニメーション用のメンバー変数
 	int					tbl_sizeA;	// 登録したテーブルのレコード総数
 	int					tbl_sizeM;	// 登録したテーブルのレコード総数
-	float				move_time;	// 実行時間
-	float				spead;
-	float				ct_frame;
 	INTERPOLATION_DATA*					old_tbl;	//現在の使用テーブル
 
 	int					partsNum;	//アームのパーツ数
@@ -46,6 +43,9 @@ protected:
 public:
 	XMFLOAT4X4			mtxWorld;	// ワールドマトリックス
 	XMFLOAT3			pos;		// ポリゴンの位置
+	float				move_time;	// 実行時間
+	float				spead;
+	float				ct_frame;
 	pArm* parent;
 	static void SetArmParent(PLAYER *p);
 	static void InitArm(void);
@@ -56,6 +56,7 @@ public:
 	static void UpdateXgunArm(void);
 	static void UpdateBrasterArm(void);
 	static void UpdateSawArm(void);
+	static void UpdateWaitArm(void);
 	static INTERPOLATION_DATA* CheckMotionData(PLAYER *p);
 	static void IPArm(pArm* p, INTERPOLATION_DATA_EASING* i);
 	static pArm* GetArm(void);

@@ -108,7 +108,7 @@ HRESULT InitPlayer(void)
 	for (int i = 0; i < MAX_PLAYER; i++)
 	{
 		g_Player[i].load = FALSE;
-		g_Player[i].pos = { 0.0f, PLAYER_OFFSET_Y, 0.0f };
+		g_Player[i].pos = { 0.0f, PLAYER_OFFSET_Y, 200.0f };
 		g_Player[i].rot = { 0.0f, -XM_PI * 0.5f, 0.0f };
 		g_Player[i].scl = { 1.0f, 1.0f, 1.0f };
 		g_Player[i].moveVec = { 0.0f, 0.0f, 0.0f };
@@ -611,7 +611,7 @@ void MovePlayer(void)
 	XMVECTOR moveVec = XMLoadFloat3(&g_Player[0].moveVec);
 	XMVECTOR now = XMLoadFloat3(&g_Player[0].pos);								// 現在の場所
 	XMStoreFloat3(&g_Player[0].pos, now + XMVector3Normalize(moveVec) * g_Player[0].spd);	//単位ベクトルを元に移動
-	MeshWallHit(g_Player[0].pos, 10.0f, old_x, old_z);
+	MeshWallHit(g_Player[0].pos, 15.0f, old_x, old_z);
 
 }
 void ControlPlayer(void)
@@ -711,6 +711,14 @@ void ChangePlayerArm(BOOL flag)
 {
 	if (g_Player[0].attack)return;	//攻撃中なら変更不可
 
+	pArm* arm = pArm::GetArmParts();
+	for (int i = 0; i < MAX_ARM_PARTS * 2; i++)
+	{
+		arm[i].ct_frame = 0.0f;
+		arm[i].move_time = 0.0f;
+		arm[i].spead = 0.0f;
+	}
+
 	if (flag)
 	{
 		g_Player[0].armType++;
@@ -728,9 +736,9 @@ void ChangePlayerArm(BOOL flag)
 void UpdateArm(void)
 {
 	pArm::UpdateArm();
-	//pArm::UpdateReleaseArm();	//リリース時はこっちを使う
+	pArm::UpdateReleaseArm();	//リリース時はこっちを使う
 	//攻撃開始
-	if (GetKeyboardTrigger(DIK_Z) && g_Player[0].motionTime <= 0.0f)
+	if (GetKeyboardTrigger(DIK_Z))
 	{
 		g_Player[0].attack = TRUE;
 	}
@@ -766,7 +774,7 @@ void UpdateArm(void)
 		case 1:
 			Braster::Action();
 			if (g_Player[0].motionTime <= 0.0f)
-				g_Player[0].motionTime = 30.0f;
+				g_Player[0].motionTime = 67.0f;
 			break;
 		case 2:
 			Saw::Action();
@@ -787,9 +795,9 @@ void UpdateArm(void)
 		g_Player[0].n_motionTime -= 1.0f;
 	}
 
-	//モーション時間で処理を終了させる
-	if (g_Player[0].motionTime <= 0.0f)
-		g_Player[0].attack = FALSE;
+	////モーション時間で処理を終了させる
+	//if (g_Player[0].motionTime <= 0.0f)
+	//	g_Player[0].attack = FALSE;
 	//モーション時間で処理を終了させる
 	if (g_Player[0].n_motionTime <= 0.0f) {
 		g_Player[0].rescue = FALSE;
