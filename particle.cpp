@@ -47,6 +47,7 @@ typedef struct
 	int				nLife;			// 寿命
 	int				nDecay;			// 減衰タイミング(nDecay <= nLife)
 	int				g_TexNo;
+	BOOL			blend;
 	BOOL			bUse;			// 使用しているかどうか
 
 } PARTICLE;
@@ -248,28 +249,28 @@ void UpdateParticle(void)
 		//	// ビルボードの設定
 		//	SetParticle(pos, move, XMFLOAT4(0.8f, 0.7f, 0.2f, 0.85f), fSize, fSize, nLife);
 		//}
-		if (GetKeyboardPress(DIK_SPACE))
-		{
-			for (int i = 0; i < for_p_num; i++) {
-				CAMERA *cam = GetCamera();
-				XMFLOAT3 move = { 0.0f, 0.0f, 0.0f, };			
-				float fAngle = (float)(rand() % rand_angle);	//加算する方向(数式結果の数字が大きいほど、左右にばらつきが出る)
-				fAngle = XMConvertToRadians(fAngle);
-				float fLength = (float)(rand() % rand_length + 1) * 0.1f;	//xとz方向の加算速度この結果が大きいと素早く動く
-				float fHigh = (float)(rand() % rand_high + 1) * 0.1f;	//xとz方向の加算速度この結果が大きいと素早く動く
-				move.x += cosf(fAngle) * fLength;
-				move.y += sinf(fAngle) * fHigh;			//高さの移動加算量
-				//move.z += cosf(fAngle) * fLength;
-				
-				float angle = atan2f(move.y, move.x);
-				XMFLOAT3 scl = { 0.025f + scale, 0.4f, 0.025f +scale};	//拡大率
-				XMFLOAT3 rot = { 0.0f, cam->rot.y, 0.0f };	//回転率。いじる必要なし
-				int nLife = rand() % p_Life + p_decay;
-				rot.z = angle - XM_PI * 0.5f;
-				rot.y = cam->rot.y;
-				SetParticle(XMFLOAT3(0.0f, 30.0f, 100.0f), move, rot, scl, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nLife, p_decay, tex_num);
-			}
-		}
+		//if (GetKeyboardPress(DIK_SPACE))
+		//{
+		//	for (int i = 0; i < for_p_num; i++) {
+		//		CAMERA *cam = GetCamera();
+		//		XMFLOAT3 move = { 0.0f, 0.0f, 0.0f, };			
+		//		float fAngle = (float)(rand() % rand_angle);	//加算する方向(数式結果の数字が大きいほど、左右にばらつきが出る)
+		//		fAngle = XMConvertToRadians(fAngle);
+		//		float fLength = (float)(rand() % rand_length + 1) * 0.1f;	//xとz方向の加算速度この結果が大きいと素早く動く
+		//		float fHigh = (float)(rand() % rand_high + 1) * 0.1f;	//xとz方向の加算速度この結果が大きいと素早く動く
+		//		move.x += cosf(fAngle) * fLength;
+		//		move.y += sinf(fAngle) * fHigh;			//高さの移動加算量
+		//		//move.z += cosf(fAngle) * fLength;
+		//		
+		//		float angle = atan2f(move.y, move.x);
+		//		XMFLOAT3 scl = { 0.025f + scale, 0.4f, 0.025f +scale};	//拡大率
+		//		XMFLOAT3 rot = { 0.0f, cam->rot.y, 0.0f };	//回転率。いじる必要なし
+		//		int nLife = rand() % p_Life + p_decay;
+		//		rot.z = angle - XM_PI * 0.5f;
+		//		rot.y = cam->rot.y;
+		//		SetParticle(XMFLOAT3(0.0f, 30.0f, 100.0f), move, rot, scl, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nLife, p_decay, tex_num);
+		//	}
+		//}
 		//if (GetKeyboardPress(DIK_1))
 		//{
 		//	if(rand_angle < 360)
@@ -378,11 +379,6 @@ void DrawParticle(void)
 	// ライティングを無効に
 	SetLightEnable(FALSE);
 
-	// 加算合成に設定
-	if (blend_mode)
-		SetBlendState(BLEND_MODE_ADD);
-	else if (!blend_mode)
-		SetBlendState(BLEND_MODE_ALPHABLEND);
 
 	// Z比較無し
 	SetDepthEnable(FALSE);
@@ -400,6 +396,12 @@ void DrawParticle(void)
 	{
 		if(g_aParticle[nCntParticle].bUse)
 		{
+			// 加算合成に設定
+			if (g_aParticle[nCntParticle].blend)
+				SetBlendState(BLEND_MODE_ADD);
+			else
+				SetBlendState(BLEND_MODE_ALPHABLEND);
+
 			// テクスチャ設定
 			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_aParticle[nCntParticle].g_TexNo]);
 
@@ -524,7 +526,7 @@ void SetColorParticle(int nIdxParticle, XMFLOAT4 col)
 //=============================================================================
 // パーティクルの発生処理
 //=============================================================================
-int SetParticle(XMFLOAT3 pos, XMFLOAT3 move, XMFLOAT3 rot, XMFLOAT3 scl, XMFLOAT4 col,int nLife, int nDecay, int texNo)
+int SetParticle(XMFLOAT3 pos, XMFLOAT3 move, XMFLOAT3 rot, XMFLOAT3 scl, XMFLOAT4 col,int nLife, int nDecay, int texNo, BOOL blend)
 {
 	int nIdxParticle = -1;
 
@@ -543,6 +545,7 @@ int SetParticle(XMFLOAT3 pos, XMFLOAT3 move, XMFLOAT3 rot, XMFLOAT3 scl, XMFLOAT
 			g_aParticle[nCntParticle].nDecay = nDecay;
 			g_aParticle[nCntParticle].g_TexNo = texNo;
 			g_aParticle[nCntParticle].bUse = TRUE;
+			g_aParticle[nCntParticle].blend = blend;
 
 			nIdxParticle = nCntParticle;
 			break;

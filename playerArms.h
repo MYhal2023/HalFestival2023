@@ -56,6 +56,7 @@ public:
 	static void UpdateXgunArm(void);
 	static void UpdateBrasterArm(void);
 	static void UpdateSawArm(void);
+	static void UpdateSawArmSecond(void);
 	static void UpdateWaitArm(void);
 	static INTERPOLATION_DATA* CheckMotionData(PLAYER *p);
 	static void IPArm(pArm* p, INTERPOLATION_DATA_EASING* i);

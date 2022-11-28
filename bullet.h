@@ -41,6 +41,7 @@ typedef struct
 	int			shadowIdx;		// 影ID
 	int			life;
 	int			model_num;		//使用するモデル
+	int			p_time;
 	BOOL		efSwitch;
 	BOOL		use;			// 使用しているかどうか
 
@@ -58,3 +59,5 @@ void DrawBullet(void);
 void DrawBulletModel(void);
 BULLET *GetBullet(void);
 void SetBullet(XMFLOAT3 pos, XMFLOAT3 rot, float spd, float attack, int life, int model_num);
+void XgunParticle(XMFLOAT3 pos); 
+void BrasterParticle(XMFLOAT3 pos);

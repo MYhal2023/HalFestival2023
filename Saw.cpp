@@ -86,7 +86,7 @@ void Saw::Effect(void)
 		XMFLOAT3 rot = efRot[i];
 		int nLife = rand() % 100 + 50;
 		rot.z = angle - XM_PI * 0.5f;
-		SetParticle(efPos[i], move, rot, scl, XMFLOAT4(1.0f, 0.3f, 0.3f, 1.0f), nLife, 40, P_T_box);
+		SetParticle(efPos[i], move, rot, scl, XMFLOAT4(1.0f, 0.3f, 0.3f, 1.0f), nLife, 40, P_T_box, TRUE);
 		efTime[i] -= 1.0f;
 		if (efTime[i] <= 0.0f)
 			efSwitch[i] = FALSE;

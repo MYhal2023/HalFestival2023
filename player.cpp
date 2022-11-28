@@ -738,9 +738,16 @@ void UpdateArm(void)
 	pArm::UpdateArm();
 	pArm::UpdateReleaseArm();	//リリース時はこっちを使う
 	//攻撃開始
-	if (GetKeyboardTrigger(DIK_Z))
+	if (GetKeyboardTrigger(DIK_Z) && !g_Player[0].attack)
 	{
 		g_Player[0].attack = TRUE;
+		pArm* arm = pArm::GetArmParts();
+		for (int i = 0; i < MAX_ARM_PARTS * 2; i++)
+		{
+			arm[i].ct_frame = 0.0f;
+			arm[i].move_time = 0.0f;
+			arm[i].spead = 0.0f;
+		}
 	}
 	else if (GetKeyboardTrigger(DIK_0) && g_Player[0].n_motionTime <= 0.0f)
 	{
@@ -768,22 +775,15 @@ void UpdateArm(void)
 		{
 		case 0:
 			Xgun::Action();
-			if (g_Player[0].motionTime <= 0.0f)
-				g_Player[0].motionTime = 60.0f;
 			break;
 		case 1:
 			Braster::Action();
-			if (g_Player[0].motionTime <= 0.0f)
-				g_Player[0].motionTime = 67.0f;
 			break;
 		case 2:
 			Saw::Action();
-			if (g_Player[0].motionTime <= 0.0f)
-				g_Player[0].motionTime = 120.0f;
 			break;
 
 		}
-		g_Player[0].motionTime -= 1.0f;
 	}
 
 	if (g_Player[0].rescue)

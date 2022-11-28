@@ -275,7 +275,8 @@ void pArm::UpdateReleaseArm(void)
 			UpdateBrasterArm();
 			break;
 		case 2:
-			UpdateSawArm();
+			//UpdateSawArm();
+			UpdateSawArmSecond();
 			break;
 		}
 	}
@@ -378,6 +379,38 @@ void pArm::UpdateSawArm(void)
 		{
 			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawR002];
 			IPArm(&g_ArmParts[i], AttackArmSawRight002);
+
+		}
+	}
+}
+
+void pArm::UpdateSawArmSecond(void)
+{
+	for (int i = 1; i < MAX_ARM_PARTS; i++)
+	{
+		if (i < MAX_ARM_PARTS / 2)
+		{	//下半分のモーション
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL101];
+			IPArm(&g_ArmParts[i], AttackArmSawLeft101);
+		}
+		else if (i >= MAX_ARM_PARTS / 2)	//上半分のモーション
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawL102];
+			IPArm(&g_ArmParts[i], AttackArmSawLeft102);
+		}
+	}
+
+	//右腕
+	for (int i = MAX_ARM_PARTS + 1; i < MAX_ARM_PARTS * 2; i++)
+	{
+		if (i < (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2) {
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawR101];
+			IPArm(&g_ArmParts[i], AttackArmSawRight101);
+		}
+		else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
+		{
+			g_ArmParts[i].tbl_sizeA = tblsize[M_AttackArmSawR102];
+			IPArm(&g_ArmParts[i], AttackArmSawRight102);
 
 		}
 	}

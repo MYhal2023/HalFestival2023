@@ -112,8 +112,8 @@ void Normal::UpdateArm(void)
 		}
 		else if (i >= MAX_ARM_PARTS / 2)	//上半分のモーション
 		{
-			g_ArmParts[i].tbl_sizeA = tblsize[M_NormalArmL001];
-			IPArm(&g_ArmParts[i], NormalArmLeft001);
+			g_ArmParts[i].tbl_sizeA = tblsize[M_NormalArmL002];
+			IPArm(&g_ArmParts[i], NormalArmLeft002);
 		}
 	}
 	//右腕
@@ -125,8 +125,8 @@ void Normal::UpdateArm(void)
 		}
 		else if (i >= (MAX_ARM_PARTS + 1) + MAX_ARM_PARTS / 2)
 		{
-			g_ArmParts[i].tbl_sizeA = tblsize[M_NormalArmR001];
-			IPArm(&g_ArmParts[i], NormalArmRight001);
+			g_ArmParts[i].tbl_sizeA = tblsize[M_NormalArmR002];
+			IPArm(&g_ArmParts[i], NormalArmRight002);
 		}
 	}
 	PrintDebugProc("アーム座標:%f\n", g_ArmParts[MAX_ARM_PARTS - 1]);
@@ -272,6 +272,8 @@ void Normal::Draw(void)
 
 		// ワールドマトリックスの設定
 		SetWorldMatrix(&mtxWorld);
+
+		if (k == MAX_ARM_PARTS - 1)continue;
 
 		//モデル描画
 		//先端部分に来た時のみ、モデルを描画

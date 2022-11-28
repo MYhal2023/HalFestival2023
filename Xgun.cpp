@@ -1,16 +1,22 @@
 #include "playerArms.h"
 #include "bullet.h"
 #include "camera.h"
+
+#define INTERVAL (10.0f)
 static Xgun g_PlayerArm;
 
 void Xgun::InitArm(void)
 {
 	g_PlayerArm.attack = FALSE;
+	g_PlayerArm.atCount = INTERVAL;
 }
 
 void Xgun::Action(void)
 {
-	if (!g_PlayerArm.attack)
+	if (!g_PlayerArm.attack && g_PlayerArm.atCount > 0.0f)
+	g_PlayerArm.atCount -= 1.0f;
+
+	if (!g_PlayerArm.attack && g_PlayerArm.atCount <= 0.0f)
 	{
 		PLAYER *player = GetPlayer();
 		CAMERA *cam = GetCamera();
@@ -19,13 +25,13 @@ void Xgun::Action(void)
 		XMFLOAT3 rot = player[0].rot;
 		const float dist = 5.0f;
 		float high = 0.0f;
-		pos.x += sinf(player[0].rot.y + XM_PI * 0.20f) * dist;
+		pos.x += sinf(player[0].rot.y + XM_PI * 0.40f) * dist;
 		pos.y += high;
-		pos.z += cosf(player[0].rot.y + XM_PI * 0.20f) * dist;
+		pos.z += cosf(player[0].rot.y + XM_PI * 0.40f) * dist;
 
-		pos2.x += sinf(player[0].rot.y - XM_PI * 0.20f) * dist;
+		pos2.x += sinf(player[0].rot.y - XM_PI * 0.40f) * dist;
 		pos2.y += high;
-		pos2.z += cosf(player[0].rot.y - XM_PI * 0.20f) * dist;
+		pos2.z += cosf(player[0].rot.y - XM_PI * 0.40f) * dist;
 		player[0].rot.y = cam->rot.y;
 		rot.y = cam->rot.y;
 		rot.x = cam->rot.x;
@@ -33,6 +39,7 @@ void Xgun::Action(void)
 		SetBullet(pos2, rot, 10.0f, 50.0f, 60, Bullet_XGun);
 
 		g_PlayerArm.attack = TRUE;
+		g_PlayerArm.atCount = INTERVAL;
 	}
 
 }
