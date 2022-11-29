@@ -1,14 +1,18 @@
 #include "playerArms.h"
 #include "bullet.h"
 #include "camera.h"
+#include "particle.h"
 
 #define INTERVAL (10.0f)
+#define EFFECT_FRME (5)
+#define POS_ROT_VAL (90)
 static Xgun g_PlayerArm;
 
 void Xgun::InitArm(void)
 {
 	g_PlayerArm.attack = FALSE;
 	g_PlayerArm.atCount = INTERVAL;
+	g_PlayerArm.ef_frame = EFFECT_FRME;
 }
 
 void Xgun::Action(void)
@@ -23,15 +27,16 @@ void Xgun::Action(void)
 		XMFLOAT3 pos = player[0].pos;
 		XMFLOAT3 pos2 = player[0].pos;
 		XMFLOAT3 rot = player[0].rot;
-		const float dist = 5.0f;
+		const float dist = 10.0f;
 		float high = 0.0f;
-		pos.x += sinf(player[0].rot.y + XM_PI * 0.40f) * dist;
+		float rot_y = XMConvertToDegrees(player[0].rot.y);
+		pos.x += sinf(XMConvertToRadians(rot_y + POS_ROT_VAL)) * dist;
 		pos.y += high;
-		pos.z += cosf(player[0].rot.y + XM_PI * 0.40f) * dist;
+		pos.z += cosf(XMConvertToRadians(rot_y + POS_ROT_VAL)) * dist;
 
-		pos2.x += sinf(player[0].rot.y - XM_PI * 0.40f) * dist;
+		pos2.x += sinf(XMConvertToRadians(rot_y - POS_ROT_VAL)) * dist;
 		pos2.y += high;
-		pos2.z += cosf(player[0].rot.y - XM_PI * 0.40f) * dist;
+		pos2.z += cosf(XMConvertToRadians(rot_y - POS_ROT_VAL)) * dist;
 		player[0].rot.y = cam->rot.y;
 		rot.y = cam->rot.y;
 		rot.x = cam->rot.x;
@@ -40,6 +45,50 @@ void Xgun::Action(void)
 
 		g_PlayerArm.attack = TRUE;
 		g_PlayerArm.atCount = INTERVAL;
+		g_PlayerArm.ef_frame = EFFECT_FRME;
+	}
+	if (g_PlayerArm.attack && g_PlayerArm.ef_frame > 0)
+	{
+		PLAYER *player = GetPlayer();
+		CAMERA *cam = GetCamera();
+		XMFLOAT3 pos = player[0].pos;
+		XMFLOAT3 pos2 = player[0].pos;
+		XMFLOAT3 rot = player[0].rot;
+		const float dist = 8.0f;
+		float high = 22.0f;
+		float rot_y = XMConvertToDegrees(player[0].rot.y);
+		pos.x += sinf(XMConvertToRadians(rot_y + POS_ROT_VAL)) * dist;
+		pos.y += high;
+		pos.z += cosf(XMConvertToRadians(rot_y + POS_ROT_VAL)) * dist;
+
+		pos2.x += sinf(XMConvertToRadians(rot_y - POS_ROT_VAL)) * dist;
+		pos2.y += high;
+		pos2.z += cosf(XMConvertToRadians(rot_y - POS_ROT_VAL)) * dist;
+		g_PlayerArm.ef_frame--;
+		for (int i = 0; i < 1; i++) {
+			CAMERA *cam = GetCamera();
+			XMFLOAT3 move = { 0.0f, 0.0f, 0.0f, };
+			float fAngle = (float)(rand() % 163) + 30;	//‰ÁŽZ‚·‚é•ûŒü(”Ž®Œ‹‰Ê‚Ì”Žš‚ª‘å‚«‚¢‚Ù‚ÇA¶‰E‚É‚Î‚ç‚Â‚«‚ªo‚é)
+			fAngle = XMConvertToRadians(fAngle);
+			float fLength = (float)(rand() % 10 + 1) * 0.1f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
+			float fHigh = (float)(rand() % 26 + 1) * 0.1f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
+			move.x += cosf(fAngle) * fLength;
+			move.y += sinf(fAngle) * fHigh;			//‚‚³‚ÌˆÚ“®‰ÁŽZ—Ê
+
+			float angle = atan2f(move.y, move.x);
+			XMFLOAT3 scl = { 0.02f, 0.2f, 0.02f };	//Šg‘å—¦
+			XMFLOAT3 rot = { 0.0f, cam->rot.y, 0.0f };	//‰ñ“]—¦B‚¢‚¶‚é•K—v‚È‚µ
+			int nLife = rand() % 41 + 118;
+			rot.z = angle - XM_PI * 0.5f;
+			rot.y = cam->rot.y;
+			if ((rot.y > XM_PI * 0.25f && rot.y < XM_PI * 0.75f) || (rot.y < XM_PI * -0.25f && rot.y > XM_PI * -0.75f)) {
+				move.z = move.x;
+				move.x = 0.0f;
+			}
+			SetParticle(pos, move, rot, scl, XMFLOAT4(0.5f, 0.5f, 1.0f, 1.0f), nLife, 118, 0, TRUE);
+			SetParticle(pos2, move, rot, scl, XMFLOAT4(0.5f, 0.5f, 1.0f, 1.0f), nLife, 118, 0, TRUE);
+		}
+
 	}
 
 }

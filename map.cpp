@@ -186,8 +186,9 @@ void Map::InitMap(void)
 
 	//ランダム設置
 	Reserve *re = GetReserve();
-	float rand_base = re->vigilance;		//警戒度を基準にランダム性をもたせる
-	int set_num = (int)(rand_base / 5.0f);	//追加設置数
+	//float rand_base = re->vigilance;		//警戒度を基準にランダム性をもたせる
+	//int set_num = (int)(rand_base / 5.0f);	//追加設置数
+	int set_num = 14;
 	while (set_num > 0)
 	{
 		if (set_num > 11)
@@ -205,7 +206,6 @@ void Map::InitMap(void)
 			set_num--;
 		}
 	}
-	int s = 0;
 	for (int i = 0; i < MAX_OBSTACLE_RAND_POS; i++) {
 		if (!g_Map.use[i])
 			continue;
@@ -224,14 +224,38 @@ void Map::InitMap(void)
 	
 	//ランダムで破壊できる壁を設置
 
+	//設置救助者
+	//RescueLife()
+	set_num = MAX_RESCUE_RAND_POS;	//設置数
+	while (set_num > 0)
+	{
+		if (set_num > MAX_RESCUE_RAND_POS - 2)
+		{
+			for (int i = 0; i < MAX_RESCUE_RAND_POS; i++)
+			{
+				g_Map.use_res[i] = TRUE;
+			}
+			break;
+		}
+		int k = rand() % MAX_RESCUE_RAND_POS;
 
-	////設置救助者
-	////RescueLife()
-	p = { 400.0f, 0.0f, 0.0f };
-	r = { 0.0f, 0.0f, 0.0f };
-	RescueLife::SetRemain(p, r, 0);
-	p = { 600.0f, 0.0f, 0.0f };
-	RescueLife::SetRemain(p, r, 0);
+		if (!g_Map.use_res[k]) {
+			g_Map.use_res[k] = TRUE;
+			set_num--;
+		}
+	}
+	for (int i = 0; i < MAX_RESCUE_RAND_POS; i++) {
+		if (!g_Map.use_res[i])
+			continue;
+		int rand_rescue = rand() % 1;
+		switch (rand_rescue)
+		{
+		case 0:
+			XMFLOAT3 pos = g_Map.set_res_pos[i];
+			RescueLife::SetRemain(pos, XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, 0);
+			break;
+		}
+	}
 	//設置オブジェクト
 
 }
@@ -252,6 +276,27 @@ void Map::InitBootMap(void)
 	g_Map.set_pos[11] = XMFLOAT3(1552.4, 0.0, 179.575);
 	g_Map.set_pos[12] = XMFLOAT3(781.047, 0.0, 199.842);
 	g_Map.set_pos[13] = XMFLOAT3(251.184, 0.0, 664.722);
+
+	g_Map.set_res_pos[0] = XMFLOAT3(-31.0f, 0.0f, 372.0f);
+	g_Map.set_res_pos[1] = XMFLOAT3(-966.0f, 0.0f, 809.0f);
+	g_Map.set_res_pos[2] = XMFLOAT3(-1085.0f, 0.0f, 931.0f);
+	g_Map.set_res_pos[3] = XMFLOAT3(-1918.0f, 0.0f, 294.0f);
+	g_Map.set_res_pos[4] = XMFLOAT3(-1930.0f, 0.0f, 928.0f);
+	g_Map.set_res_pos[5] = XMFLOAT3(-1848.f, 0.0f, -226.0f);
+	g_Map.set_res_pos[6] = XMFLOAT3(-1970.f, 0.0f, -459.0f);
+	g_Map.set_res_pos[7] = XMFLOAT3(-1141.0f, 0.0f, -969.0f);
+	g_Map.set_res_pos[8] = XMFLOAT3(-57.0f, 0.0f, -829.0f);
+	g_Map.set_res_pos[9] = XMFLOAT3(41.0f, 0.0f, -921.0f);
+	for (int i = 0; i < MAX_OBSTACLE_RAND_POS; i++)
+	{
+		g_Map.use[i] = FALSE;
+	}
+
+	for (int i = 0; i < MAX_RESCUE_RAND_POS; i++)
+	{
+		g_Map.use_res[i] = FALSE;
+	}
+
 }
 
 void Map::InitReserveMap(void)

@@ -206,7 +206,7 @@ void ForthSeq(void)
 	if (g_Reward.score == g_Reward.max_score && GetKeyboardTrigger(DIK_RETURN)) { 
 		sequence++; 
 		g_Reward.nEaseIndex = Easing::SetEase(-500.0f, SCREEN_CENTER_Y, 30.0f);
-		skip = 0;
+		skip = -30;
 	}
 
 }
@@ -428,7 +428,7 @@ void SetReward(void)
 	if (g_Reward.ef_time < 1)
 		g_Reward.ef_time = 1;
 
-	g_Reward.score = (int)((float)(g_Reward.beatNum * 100 + g_Reward.rescue_num * 200) * (re->vigilance + 1.0f));
+	g_Reward.score = (int)((float)(g_Reward.beatNum * 100 + g_Reward.rescue_num * 200 + GetTime() * 150) * (re->vigilance + 1.0f));
 	g_Reward.ef_score = g_Reward.score / 100;
 	if (g_Reward.ef_score < 1)
 		g_Reward.ef_score = 1;
@@ -437,8 +437,13 @@ void SetReward(void)
 	//ランクボーナスの計算
 	if (re->quota <= g_Reward.rescue_num)
 	{
-		if (g_Reward.time > 10 && RescueLife::GetRescueRemainLife() <= 0)
-			g_Reward.rank_bonus_time = g_Reward.time / 2;
+		g_Reward.rank_bonus_time = 0;
+		if (g_Reward.time <= 30 && RescueLife::GetRescueRemainLife() <= 0)
+			g_Reward.rank_bonus_time += g_Reward.time / 2;
+		if (g_Reward.time <= 60 && RescueLife::GetRescueRemainLife() <= 0)
+			g_Reward.rank_bonus_time += g_Reward.time / 2;
+		if (g_Reward.time <= 90 && RescueLife::GetRescueRemainLife() <= 0)
+			g_Reward.rank_bonus_time += g_Reward.time / 2;
 
 		g_Reward.rank_bonus_beat = g_Reward.beatNum / 10 * 5;
 		g_Reward.rank_bonus_rescue = g_Reward.rescue_num * 2;

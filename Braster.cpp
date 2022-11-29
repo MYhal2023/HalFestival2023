@@ -1,6 +1,7 @@
 #include "playerArms.h"
 #include "bullet.h"
 #include "camera.h"
+#include "particle.h"
 static Braster g_PlayerArm;
 
 void Braster::InitArm(void)
@@ -17,21 +18,48 @@ void Braster::Action(void)
 		XMFLOAT3 pos = player[0].pos;
 		XMFLOAT3 pos2 = player[0].pos;
 		XMFLOAT3 rot = player[0].rot;
-		const float dist = 5.0f;
-		float high = 10.0f;
-		pos.x += sinf(player[0].rot.y + XM_PI * 0.20f) * dist;
+		const float dist = 7.0f;
+		float high = 17.0f;
+		pos.x += sinf(player[0].rot.y + XM_PI * 0.30f) * dist;
 		pos.y += high;
-		pos.z += cosf(player[0].rot.y + XM_PI * 0.20f) * dist;
+		pos.z += cosf(player[0].rot.y + XM_PI * 0.30f) * dist;
 
-		pos2.x += sinf(player[0].rot.y - XM_PI * 0.20f) * dist;
+		pos2.x += sinf(player[0].rot.y - XM_PI * 0.30f) * dist;
 		pos2.y += high;
-		pos2.z += cosf(player[0].rot.y - XM_PI * 0.20f) * dist;
+		pos2.z += cosf(player[0].rot.y - XM_PI * 0.30f) * dist;
 		player[0].rot.y = cam->rot.y;
 		rot.y = cam->rot.y;
 		rot.x = cam->rot.x;
 
 		SetBullet(pos, rot, 8.0f, 50.0f, 40, Bullet_Braster);
 		SetBullet(pos2, rot, 8.0f, 50.0f, 40, Bullet_Braster);
+
+		pos.y += 8.0f;
+		pos2.y += 8.0f;
+		for (int i = 0; i < 10; i++) {
+			CAMERA *cam = GetCamera();
+			XMFLOAT3 move = { 0.0f, 0.0f, 0.0f, };
+			float fAngle = (float)(rand() % 90)+30;	//‰ÁŽZ‚·‚é•ûŒü(”Ž®Œ‹‰Ê‚Ì”Žš‚ª‘å‚«‚¢‚Ù‚ÇA¶‰E‚É‚Î‚ç‚Â‚«‚ªo‚é)
+			fAngle = XMConvertToRadians(fAngle);
+			float fLength = (float)(rand() % 2 + 1) * 0.1f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
+			float fHigh = (float)(rand() % 2 + 1) * 0.1f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
+			move.x += cosf(fAngle) * fLength;
+			move.y += sinf(fAngle) * fHigh;			//‚‚³‚ÌˆÚ“®‰ÁŽZ—Ê
+
+			float angle = atan2f(move.y, move.x);
+			XMFLOAT3 scl = { 0.2f, 0.2f, 0.2f };	//Šg‘å—¦
+			XMFLOAT3 rot = { 0.0f, cam->rot.y, 0.0f };	//‰ñ“]—¦B‚¢‚¶‚é•K—v‚È‚µ
+			int nLife = rand() % 12 + 76;
+			rot.z = angle - XM_PI * 0.5f;
+			rot.y = cam->rot.y;
+			if ((rot.y > XM_PI * 0.25f && rot.y < XM_PI * 0.75f) || (rot.y < XM_PI * -0.25f && rot.y > XM_PI * -0.75f)) {
+				move.z = move.x;
+				move.x = 0.0f;
+			}
+			SetParticle(pos, move, rot, scl, XMFLOAT4(0.5f, 0.5f, 1.0f, 1.0f), nLife, 76, 0, TRUE);
+			SetParticle(pos2, move, rot, scl, XMFLOAT4(0.5f, 0.5f, 1.0f, 1.0f), nLife, 76, 0, TRUE);
+		}
+
 
 		g_PlayerArm.attack = TRUE;
 	}

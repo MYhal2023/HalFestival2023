@@ -46,6 +46,7 @@ public:
 	float				move_time;	// ÀsŠÔ
 	float				spead;
 	float				ct_frame;
+	float				ef_frame;
 	pArm* parent;
 	static void SetArmParent(PLAYER *p);
 	static void InitArm(void);

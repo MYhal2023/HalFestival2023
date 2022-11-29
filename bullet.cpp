@@ -424,10 +424,11 @@ void SetBullet(XMFLOAT3 pos, XMFLOAT3 rot, float spd, float attack, int life, in
 		{
 		case Bullet_XGun:
 			g_Bullet[i].size = 5.0f;
+			g_Bullet[i].p_time = 5;
 			break;
 		case Bullet_Braster:
 			g_Bullet[i].size = 5.0f;
-			g_Bullet[i].p_time = 60;
+			g_Bullet[i].p_time = 5;
 			break;
 		case Bullet_Saw:
 			g_Bullet[i].size = 5.0f;
@@ -440,47 +441,52 @@ void SetBullet(XMFLOAT3 pos, XMFLOAT3 rot, float spd, float attack, int life, in
 
 void XgunParticle(XMFLOAT3 pos)
 {
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 3; i++) {
 		CAMERA *cam = GetCamera();
 		XMFLOAT3 move = { 0.0f, 0.0f, 0.0f, };
 		float fAngle = (float)(rand() % 360);	//‰ÁŽZ‚·‚é•ûŒü(”Ž®Œ‹‰Ê‚Ì”Žš‚ª‘å‚«‚¢‚Ù‚ÇA¶‰E‚É‚Î‚ç‚Â‚«‚ªo‚é)
 		fAngle = XMConvertToRadians(fAngle);
-		float fLength = (float)(rand() % 6 + 1) * 0.1f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
-		float fHigh = (float)(rand() % 8 + 1) * 0.1f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
+		float fLength = (float)(rand() % 3 + 1) * 0.5f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
+		float fHigh = (float)(rand() % 3 + 1) * 0.5f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
 		move.x += cosf(fAngle) * fLength;
 		move.y += sinf(fAngle) * fHigh;			//‚‚³‚ÌˆÚ“®‰ÁŽZ—Ê
-		//move.z += cosf(fAngle) * fLength;
-
 		float angle = atan2f(move.y, move.x);
-		XMFLOAT3 scl = { 0.025f + 0.05f, 0.4f, 0.025f + 0.05f };	//Šg‘å—¦
+		XMFLOAT3 scl = { 0.025f + 0.05f, 0.5f, 0.025f + 0.05f };	//Šg‘å—¦
 		XMFLOAT3 rot = { 0.0f, cam->rot.y, 0.0f };	//‰ñ“]—¦B‚¢‚¶‚é•K—v‚È‚µ
-		int nLife = rand() % 90 + 2;
-		rot.z = angle - XM_PI * 0.5f;
+		int nLife = rand() % 40 + 57;
+		rot.z = angle - XM_PI * 0.0f;
 		rot.y = cam->rot.y;
-		SetParticle(pos, move, rot, scl, XMFLOAT4(0.1f, 0.8f, 0.8f, 1.0f), nLife, 90, 2, TRUE);
+		if ((rot.y > XM_PI * 0.25f && rot.y < XM_PI * 0.75f) || (rot.y < XM_PI * -0.25f && rot.y > XM_PI * -0.75f)) {
+			move.z = move.x;
+			move.x = 0.0f;
+		}
+		SetParticle(pos, move, rot, scl, XMFLOAT4(0.4f, 0.4f, 0.9f, 1.0f), nLife, 57, 0, TRUE);
 	}
 
 }
 void BrasterParticle(XMFLOAT3 pos)
 {
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 3; i++) {
 		CAMERA *cam = GetCamera();
 		XMFLOAT3 move = { 0.0f, 0.0f, 0.0f, };
-		float fAngle = (float)(rand() % 360);	//‰ÁŽZ‚·‚é•ûŒü(”Ž®Œ‹‰Ê‚Ì”Žš‚ª‘å‚«‚¢‚Ù‚ÇA¶‰E‚É‚Î‚ç‚Â‚«‚ªo‚é)
+		float fAngle = (float)(rand() % 180);	//‰ÁŽZ‚·‚é•ûŒü(”Ž®Œ‹‰Ê‚Ì”Žš‚ª‘å‚«‚¢‚Ù‚ÇA¶‰E‚É‚Î‚ç‚Â‚«‚ªo‚é)
 		fAngle = XMConvertToRadians(fAngle);
-		float fLength = (float)(rand() % 6 + 1) * 0.1f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
-		float fHigh = (float)(rand() % 8 + 1) * 0.1f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
+		float fLength = (float)(rand() % 40 + 1) * 0.1f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
+		float fHigh = (float)(rand() % 20 + 1) * 0.1f;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x‚±‚ÌŒ‹‰Ê‚ª‘å‚«‚¢‚Æ‘f‘‚­“®‚­
 		move.x += cosf(fAngle) * fLength;
 		move.y += sinf(fAngle) * fHigh;			//‚‚³‚ÌˆÚ“®‰ÁŽZ—Ê
-		//move.z += cosf(fAngle) * fLength;
 
 		float angle = atan2f(move.y, move.x);
-		XMFLOAT3 scl = { 0.025f + 0.05f, 0.4f, 0.025f + 0.05f };	//Šg‘å—¦
+		XMFLOAT3 scl = { 0.025f + 0.25f, 0.4f, 0.025f + 0.25f };	//Šg‘å—¦
 		XMFLOAT3 rot = { 0.0f, cam->rot.y, 0.0f };	//‰ñ“]—¦B‚¢‚¶‚é•K—v‚È‚µ
-		int nLife = rand() % 90 + 2;
+		int nLife = rand() % 30 + 2;
 		rot.z = angle - XM_PI * 0.5f;
 		rot.y = cam->rot.y;
-		SetParticle(pos, move, rot, scl, XMFLOAT4(0.1f, 0.8f, 0.8f, 1.0f), nLife, 2, 0, TRUE);
+		if ((rot.y > XM_PI * 0.25f && rot.y < XM_PI * 0.75f) || (rot.y < XM_PI * -0.25f && rot.y > XM_PI * -0.75f)) {
+			move.z = move.x;
+			move.x = 0.0f;
+		}
+		SetParticle(pos, move, rot, scl, XMFLOAT4(0.5f, 0.5f, 1.0f, 1.0f), nLife, 2, 0, TRUE);
 	}
 
 }

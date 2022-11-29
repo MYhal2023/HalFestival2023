@@ -109,6 +109,10 @@ HRESULT InitPlayer(void)
 	{
 		g_Player[i].load = FALSE;
 		g_Player[i].pos = { 0.0f, PLAYER_OFFSET_Y, 200.0f };
+		//g_Player[i].pos = { 0.0f, 0.0f, 200.0f };
+
+		if(GetMode() != MODE_GAME)
+		g_Player[i].pos = { 0.0f, PLAYER_OFFSET_Y, 0.0f };
 		g_Player[i].rot = { 0.0f, -XM_PI * 0.5f, 0.0f };
 		g_Player[i].scl = { 1.0f, 1.0f, 1.0f };
 		g_Player[i].moveVec = { 0.0f, 0.0f, 0.0f };
@@ -735,7 +739,7 @@ void ChangePlayerArm(BOOL flag)
 
 void UpdateArm(void)
 {
-	pArm::UpdateArm();
+	//pArm::UpdateArm();
 	pArm::UpdateReleaseArm();	//リリース時はこっちを使う
 	//攻撃開始
 	if (GetKeyboardTrigger(DIK_Z) && !g_Player[0].attack)

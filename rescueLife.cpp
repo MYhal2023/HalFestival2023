@@ -11,6 +11,7 @@ void RescueLife::InitRescue(void)
 		g_RscLife[i].use = FALSE;
 		g_RscLife[i].load = FALSE;
 		g_RscLife[i].rescue = FALSE;
+		g_RscLife[i].pos = {0.0f, 0.0f, 0.0f};
 	}
 	remain = 0;
 }
