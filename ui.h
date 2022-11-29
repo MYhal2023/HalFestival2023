@@ -29,6 +29,9 @@ enum UI_TEXTURE
 	check_mark,
 	arm_UI_slot,
 	number,
+	ic_xgun,
+	ic_braster,
+	ic_saw,
 	UI_MAX,
 };
 

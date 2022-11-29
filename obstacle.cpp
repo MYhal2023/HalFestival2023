@@ -5,6 +5,7 @@
 #include "debugproc.h"
 #include "result.h"
 #include "meshwall.h"
+#include "fire.h"
 static Obstacle g_Obstacle[MAX_OBSTACLE];
 static 	DX11_MODEL		model[MAX_OBSTACLE_MODEL];		// モデル情報
 static XMFLOAT4			tankglass_diffuse[16];
@@ -83,14 +84,18 @@ void Obstacle::Distract(Obstacle* p)
 {
 	//耐久度0以下で消滅
 	if (p->durability > 0)
-		return;		
+		return;
 
 	Reward* re = GetReward();
 	re->beatNum++;
 	p->use = FALSE;
 	p->efSwitch = TRUE;
-	for(int i = 0; i < 4; i++)
-	DeleteMeshWall(p->mesh_wall[i]);
+	for (int i = 0; i < 4; i++)
+		DeleteMeshWall(p->mesh_wall[i]);
+	for (int i = 0; i < 4; i++) {
+		if (p->p_fire[i] != nullptr)
+			p->p_fire[i]->use = FALSE;
+	}
 }
 
 void Obstacle::SetObstacle(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scl, float durability, float size, int model)
@@ -127,20 +132,38 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 	case om_book:		//本
 		break;
 	case om_bookshelf:	//本だな
-		set_x = 20.0f;
+		if (rot.y == 0.0f) {
+			set_x = 15.0f;
+			set_z = 40.0f;
+		}
+		else
+		{
+			set_x = 40.0f;
+			set_z = 15.0f;
+		}
+
 		ob->mesh_wall[i++] = GetMeshWallNum();
+
 		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
-			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->p_fire[0] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 40.0f, pos.z - set_x), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f));
+
 		ob->mesh_wall[i++] = GetMeshWallNum();
-		InitMeshWall(XMFLOAT3(pos.x - set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+		InitMeshWall(XMFLOAT3(pos.x - set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->p_fire[1] = SetFireEffect(XMFLOAT3(pos.x - set_z, pos.y + 40.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f));
+
 		ob->mesh_wall[i++] = GetMeshWallNum();
 		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z + set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
-			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->p_fire[2] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 40.0f, pos.z + set_x), XMFLOAT3(0.0f, XM_PI * 1.0f, 0.0f));
+
 		ob->mesh_wall[i++] = GetMeshWallNum();
-		InitMeshWall(XMFLOAT3(pos.x + set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+		InitMeshWall(XMFLOAT3(pos.x + set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->p_fire[3] = SetFireEffect(XMFLOAT3(pos.x + set_z, pos.y + 40.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 1.5f, 0.0f));
 		break;
+
 	case om_Ldesk:		//L字の机
 		set_x = 80.0f;
 		ob->mesh_wall[i++] = GetMeshWallNum();

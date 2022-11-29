@@ -38,6 +38,9 @@ static char* g_TextureName[] = {
 	"data/TEXTURE/checkmark.png",
 	"data/TEXTURE/arm_UI_tama.png",
 	"data/TEXTURE/number.png",
+	"data/TEXTURE/icon_xgun.png",
+	"data/TEXTURE/icon_braster.png",
+	"data/TEXTURE/icon_saw.png",
 };
 
 
@@ -46,6 +49,7 @@ static BOOL g_Load = FALSE;
 static BOOL g_Help = FALSE;
 static int nIndex[3];
 static int k = 0;
+static XMFLOAT2 ic_pos[3];
 HRESULT InitUI(void)
 {
 	ID3D11Device *pDevice = GetDevice();
@@ -111,10 +115,27 @@ HRESULT InitUI(void)
 	const XMFLOAT2 armPos = { 1600.0f, SCREEN_CENTER_Y * 1.6f };
 	const float armSize = 1.1f;
 	const float armSlotSize = 0.75f;
-
+	const float icon_size = 130.0f;
 	g_UI[arm_UI_slot].pos = armPos;
 	g_UI[arm_UI_slot].size = { 500.0f*armSlotSize, 500.0f *armSlotSize };
 	g_UI[arm_UI_slot].tex = { 1.0f, 1.0f };
+
+	g_UI[ic_xgun].pos = { armPos.x, armPos.y - 73.0f };
+	g_UI[ic_xgun].size = { icon_size, icon_size };
+	g_UI[ic_xgun].tex = { 1.0f, 1.0f };
+
+	g_UI[ic_braster].pos = { armPos.x - 82.0f, armPos.y + 70.0f };
+	g_UI[ic_braster].size = { icon_size, icon_size };
+	g_UI[ic_braster].tex = { 1.0f, 1.0f };
+
+	g_UI[ic_saw].pos = { armPos.x + 86.0f, armPos.y + 70.0f };
+	g_UI[ic_saw].size = { icon_size, icon_size };
+	g_UI[ic_saw].tex = { 1.0f, 1.0f };
+	
+	ic_pos[0] = g_UI[ic_xgun].pos;
+	ic_pos[1] = g_UI[ic_braster].pos;
+	ic_pos[2] = g_UI[ic_saw].pos;
+
 	k = 0;
 	g_Load = TRUE;
 	return S_OK;
@@ -211,6 +232,28 @@ void DrawUI(void)
 		int num = (GetSetTime() / 60) + 1;
 		DrawNumber(num, SCREEN_CENTER_X, SCREEN_CENTER_Y, set_size, set_size*2.0f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 	}
+	switch (player[0].armType)
+	{
+	case 0:
+		g_UI[ic_xgun].pos = ic_pos[0];
+		g_UI[ic_braster].pos = ic_pos[1];
+		g_UI[ic_saw].pos = ic_pos[2];
+		break;
+	case 1:
+		g_UI[ic_xgun].pos = ic_pos[2];
+		g_UI[ic_braster].pos = ic_pos[0];
+		g_UI[ic_saw].pos = ic_pos[1];
+		break;
+	case 2:
+		g_UI[ic_xgun].pos = ic_pos[1];
+		g_UI[ic_braster].pos = ic_pos[2];
+		g_UI[ic_saw].pos = ic_pos[0];
+		break;
+	}
+
+	DrawTexture(&g_UI[ic_xgun]);
+	DrawTexture(&g_UI[ic_braster]);
+	DrawTexture(&g_UI[ic_saw]);
 
 	SetDepthEnable(TRUE);
 

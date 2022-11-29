@@ -47,7 +47,7 @@ typedef struct
 	int				nLife;			// 寿命
 	int				nDecay;			// 減衰タイミング(nDecay <= nLife)
 	int				g_TexNo;
-	BOOL			blend;
+	int			blend;
 	BOOL			bUse;			// 使用しているかどうか
 
 } PARTICLE;
@@ -394,14 +394,20 @@ void DrawParticle(void)
 
 	for(int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++)
 	{
-		if(g_aParticle[nCntParticle].bUse)
+		if (g_aParticle[nCntParticle].bUse)
 		{
 			// 加算合成に設定
-			if (g_aParticle[nCntParticle].blend)
-				SetBlendState(BLEND_MODE_ADD);
-			else
+			switch (g_aParticle[nCntParticle].blend) {
+			case 0:
 				SetBlendState(BLEND_MODE_ALPHABLEND);
-
+				break;
+			case 1:
+				SetBlendState(BLEND_MODE_ADD);
+				break;
+			case 2:
+				SetBlendState(BLEND_MODE_SUBTRACT);
+				break;
+			}
 			// テクスチャ設定
 			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_aParticle[nCntParticle].g_TexNo]);
 

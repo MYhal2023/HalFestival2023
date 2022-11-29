@@ -4,6 +4,7 @@
 
 #pragma once
 #include "model.h"
+#include "fire.h"
 #define	MODEL_BOOK			"data/MODEL/book.obj"			// 読み込むモデル名
 #define	MODEL_BOOKSHELF		"data/MODEL/bookshelf.obj"		// 読み込むモデル名
 #define	MODEL_LDESK			"data/MODEL/Ldesk.obj"			// 読み込むモデル名
@@ -72,7 +73,7 @@ public:
 	int					mesh_wall[4];	//1モデルに4つの当たり判定用メッシュを使うので4つ
 	BOOL				use;		//使用されているか
 	BOOL				load;
-
+	FireEffect			*p_fire[4];
 	static void Draw(void);
 	static void Init(void);
 	static void InitBoot(void);

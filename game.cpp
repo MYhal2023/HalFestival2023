@@ -35,6 +35,7 @@
 #include "unitdata.h"
 #include "time.h"
 #include "title.h"
+#include "fire.h"
 
 
 //*****************************************************************************
@@ -103,6 +104,7 @@ void InitSystem(void)
 
 	InitParticle();
 	InitUI();
+	InitFire();
 	RescueLife::InitRescue();
 	MapWallModel::Init();
 	Obstacle::Init();
@@ -163,6 +165,8 @@ void UninitGame(void)
 	UninitBullet();
 
 	UninitUI();
+
+	UninitFire();
 
 	UninitParticle();
 
@@ -246,6 +250,8 @@ void UpdateGame(void)
 
 		UpdateTime();
 
+		UpdateFire();
+
 		UpdateParticle();
 		UpdateCharFade();
 		//// 影の更新処理
@@ -280,6 +286,8 @@ void DrawGame0(void)
 	FallObject::Draw();
 
 	RescueLife::DrawRescue();
+
+	DrawFire();
 
 	DrawPlayer();
 
@@ -440,6 +448,8 @@ void DrawGameTitle(void)
 
 	RescueLife::DrawRescue();
 
+	DrawFire();
+
 	DrawParticle();
 
 	// 2D座標で物を描画する処理
@@ -523,6 +533,8 @@ void DrawGameResult(void)
 	Obstacle::Draw();
 
 	RescueLife::DrawRescue();
+
+	DrawFire();
 
 	DrawPlayer();
 
@@ -609,6 +621,8 @@ void DrawGameReserve(void)
 	DrawMeshWall();
 
 	Obstacle::Draw();
+
+	DrawFire();
 
 	// プレイヤー視点
 	pos = XMFLOAT3{ 243.0f,-124.0f,-143.0f };

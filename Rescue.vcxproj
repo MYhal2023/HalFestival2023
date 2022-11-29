@@ -26,6 +26,7 @@
     <ClInclude Include="easing.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="file.h" />
+    <ClInclude Include="fire.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gameover.h" />
     <ClInclude Include="IPArmData.h" />
@@ -66,6 +67,7 @@
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="fall_object.cpp" />
     <ClCompile Include="file.cpp" />
+    <ClCompile Include="fire.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gameovera.cpp" />
     <ClCompile Include="input.cpp" />
