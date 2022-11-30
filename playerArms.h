@@ -32,8 +32,6 @@ protected:
 	int					partsNum;	//アームのパーツ数
 
 	BOOL				use;		//使用されているか
-	//攻撃
-	BOOL			attack;			//攻撃中か否か
 
 	INTERPOLATION_DATA	*tbl_adrXgun;	// 攻撃アニメデータのテーブル先頭アドレス
 	INTERPOLATION_DATA_EASING	*tbl_adr;	// 移動アニメデータのテーブル先頭アドレス
@@ -47,6 +45,8 @@ public:
 	float				spead;
 	float				ct_frame;
 	float				ef_frame;
+	//攻撃
+	BOOL			attack;			//攻撃中か否か
 	pArm* parent;
 	static void SetArmParent(PLAYER *p);
 	static void InitArm(void);

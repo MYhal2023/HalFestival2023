@@ -88,7 +88,9 @@ HRESULT InitTime(void)
 	g_TexNo = 0;
 
 	g_Time = GAME_TIME;	// §ŒÀŠÔ‚Ì‰Šú‰»
-
+#ifdef _DEBUG
+	g_Time = 1000;
+#endif
 	second = 0;
 	g_Load = TRUE;
 	return S_OK;

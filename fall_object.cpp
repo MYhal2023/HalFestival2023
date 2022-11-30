@@ -43,9 +43,9 @@ void FallObject::Uninit(void)
 //çXêV
 void FallObject::Update(void)
 {
-//#ifdef _DEBUG
-//	return;
-//#endif
+#ifdef _DEBUG
+	return;
+#endif
 	if(!fall_switch)
 	fall_interval -= 1.0f;
 

@@ -92,7 +92,7 @@ HRESULT InitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT4 col,
 	// ƒ}ƒeƒŠƒAƒ‹î•ñ‚Ì‰Šú‰»
 	ZeroMemory(&pMesh->material, sizeof(pMesh->material));
 	pMesh->texNo = texNo;
-	if (pMesh->texNo == WALL_RAY)pMesh->material.Diffuse = { 0.0f, 1.0f, 0.0f, 0.5f };
+	if (pMesh->texNo == WALL_RAY)pMesh->material.Diffuse = { 0.0f, 1.0f, 0.0f, 0.25f };
 	else pMesh->material.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };;
 
 

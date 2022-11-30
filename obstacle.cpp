@@ -61,9 +61,6 @@ void Obstacle::Update(void)
 	{
 		if (!g_Obstacle[i].use)continue;
 
-#ifdef _DEBUG
-		PrintDebugProc("\n耐久度:%f", g_Obstacle[i].durability);
-#endif
 		Obstacle::Distract(&g_Obstacle[i]);	//壊れてるのかをチェック
 	}
 }
@@ -130,9 +127,38 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 	switch (model_num)
 	{
 	case om_book:		//本
+		if (rot.y == 0.0f || rot.y == 1.0f) {
+			set_x = 20.0f;
+			set_z = 20.0f;
+		}
+		else
+		{
+			set_x = 20.0f;
+			set_z = 20.0f;
+		}
+
+		ob->mesh_wall[i++] = GetMeshWallNum();
+
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->p_fire[0] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 40.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f));
+		ob->p_fire[1] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 40.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 1.0f, 0.0f));
+
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x - set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z + set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x + set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+
 		break;
 	case om_bookshelf:	//本だな
-		if (rot.y == 0.0f) {
+		if (rot.y == 0.0f || rot.y == 1.0f) {
 			set_x = 15.0f;
 			set_z = 40.0f;
 		}
@@ -165,18 +191,27 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 		break;
 
 	case om_Ldesk:		//L字の机
-		set_x = 80.0f;
+		pos.y -= 20.0f;
+		if (rot.y == 0.0f || rot.y == 1.0f) {
+			set_x = 100.0f;
+			set_z = 37.0f;
+		}
+		else
+		{
+			set_x = 37.0f;
+			set_z = 100.0f;
+		}
 		ob->mesh_wall[i++] = GetMeshWallNum();
 		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
-			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
 		ob->mesh_wall[i++] = GetMeshWallNum();
-		InitMeshWall(XMFLOAT3(pos.x - set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+		InitMeshWall(XMFLOAT3(pos.x - set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
 		ob->mesh_wall[i++] = GetMeshWallNum();
 		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z + set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
-			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
 		ob->mesh_wall[i++] = GetMeshWallNum();
-		InitMeshWall(XMFLOAT3(pos.x + set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+		InitMeshWall(XMFLOAT3(pos.x + set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
 
 		break;
@@ -214,7 +249,7 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 	case om_duct:		//ダクトの接続部分？
 		break;
 	case om_monitor:		//モニター
-		if (rot.y == 0.0f) {
+		if (rot.y == 0.0f || rot.y == 1.0f) {
 			set_x = 15.0f;
 			set_z = 40.0f;
 		}

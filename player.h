@@ -80,6 +80,7 @@ public:
 	float				n_motionTime;
 	float				inv_time;
 	float				cntBullet;
+	int					attack_num;
 	RescueLife*			rs;
 	BOOL				attack;
 	BOOL				invincible;
