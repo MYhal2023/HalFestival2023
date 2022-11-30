@@ -45,7 +45,7 @@ struct MESH_WALL
 //*****************************************************************************
 static ID3D11ShaderResourceView		*g_Texture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
 static int							g_TexNo;		// テクスチャ番号
-
+static BOOL							hitwall_sw = FALSE;
 static MESH_WALL g_aMeshWall[MAX_MESH_WALL];		// メッシュ壁ワーク
 static int g_nNumMeshWall = 0;						// メッシュ壁の数
 static int g_CeilingWall = 0;
@@ -266,6 +266,11 @@ void UninitMeshWall(void)
 //=============================================================================
 void UpdateMeshWall(void)
 {
+#ifdef _DEBUG
+	if (IsMouseRightTriggered())
+		if (hitwall_sw == TRUE)hitwall_sw = FALSE;
+			else hitwall_sw = TRUE;
+#endif
 }
 
 //=============================================================================
@@ -289,6 +294,9 @@ void DrawMeshWall(void)
 		if (pMesh->texNo == WALL_RAY)ans = TRUE;
 #endif
 		if (g_aMeshWall[nCntMeshField].use == FALSE || ans == FALSE)continue;
+
+		if (hitwall_sw && pMesh->texNo == WALL_RAY)continue;
+
 		// 頂点バッファ設定
 		UINT stride = sizeof(VERTEX_3D);
 		UINT offset = 0;

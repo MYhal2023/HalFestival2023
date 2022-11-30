@@ -524,6 +524,7 @@ void pArm::IPArm(pArm* p, INTERPOLATION_DATA_EASING* i)
 	{
 		PLAYER *player = GetPlayer();
 		player[0].attack = FALSE;
+		player[0].attack_num = 0;
 		pArm* pab = Braster::GetArm();
 		pArm* pax = Xgun::GetArm();
 		pArm* pas = Saw::GetArm();

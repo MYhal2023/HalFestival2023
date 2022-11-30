@@ -18,7 +18,9 @@ void Saw::InitArm(void)
 	g_PlayerArm.attack = 10.0f;
 	g_PlayerArm.atInterval = 10.0f;
 	g_PlayerArm.atCount = 0.0f;
-	g_PlayerArm.motionTime = 60.0f;
+	g_PlayerArm.motionTime = 0.0f;
+	g_PlayerArm.attack = FALSE;
+	g_PlayerArm.ct_frame = 0.0f;
 	for (int i = 0; i < 3; i++)
 	{
 		efSwitch[i] = FALSE;
@@ -33,6 +35,11 @@ void Saw::Action(void)
 	PLAYER *player = GetPlayer();
 	CAMERA *camera = GetCamera();
 	g_PlayerArm.atCount += 1.0f;
+	g_PlayerArm.motionTime += 1.0f;
+	if (g_PlayerArm.motionTime == 60.0f)
+		g_PlayerArm.attack = TRUE;
+	else if (g_PlayerArm.motionTime <= 15)
+		return;
 	if (g_PlayerArm.atCount >= g_PlayerArm.atInterval)
 	{
 		for (int k = 0; k < MAX_OBSTACLE; k++)

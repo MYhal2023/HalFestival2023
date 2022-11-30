@@ -243,6 +243,8 @@ void UpdateGame(void)
 
 		UpdateLight();
 
+		UpdateMeshWall();
+
 		MapWallModel::Update();
 
 		UpdateBullet();

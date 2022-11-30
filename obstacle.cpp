@@ -141,8 +141,10 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 
 		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
-		ob->p_fire[0] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 40.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f));
-		ob->p_fire[1] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 40.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 1.0f, 0.0f));
+		ob->p_fire[0] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 35.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f));
+		ob->p_fire[1] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 35.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 1.0f, 0.0f));
+		ob->p_fire[2] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 35.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f));
+		ob->p_fire[3] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 35.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 1.5f, 0.0f));
 
 		ob->mesh_wall[i++] = GetMeshWallNum();
 		InitMeshWall(XMFLOAT3(pos.x - set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
@@ -232,7 +234,7 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 
 		break;
 	case om_box:			//“ä‚Ì‚ª‚ç‚­‚½
-		set_x = 45.0f;
+		set_x = 55.0f;
 		ob->mesh_wall[i++] = GetMeshWallNum();
 		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
@@ -272,6 +274,20 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
 		break; 
 	case om_steel:		//“S|
+		set_x = 60.0f;
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x - set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z + set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x + set_x, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+
 		break; 
 	case om_break_wall:	//”j‰ó‚Å‚«‚é•Ç
 		if (rot.y == 0.0f) {

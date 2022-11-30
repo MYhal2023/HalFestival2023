@@ -156,6 +156,12 @@ void DrawFire(void)
 	{
 		if (!g_Fire[i].use)continue;
 
+		CAMERA *cam = GetCamera();
+		float p_rot_y = XMConvertToDegrees(g_Fire[i].rot.y);
+		float cam_rot_y = XMConvertToDegrees(cam->rot.y);
+		float fab = fabsf(fabsf(p_rot_y) - fabsf(cam_rot_y));
+		if (fab > 60)continue;
+
 		int num = (int)(g_Fire[i].u) + (int)(g_Fire[i].v) * TEX_WIDTH;
 
 		// 頂点バッファ設定
