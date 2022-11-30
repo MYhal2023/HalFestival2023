@@ -114,6 +114,9 @@ void InitSystem(void)
 	//InitReward();
 	mode = 1;
 	set_time = LEAD_TIME + 30;
+#ifdef _DEBUG
+	set_time = 0;
+#endif
 	g_bPause = TRUE;
 	gameover = FALSE;
 }
