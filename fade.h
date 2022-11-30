@@ -19,6 +19,8 @@ typedef enum
 	FADE_OUT,			// フェードアウト処理
 	FADE_BOX_IN,
 	FADE_BOX_OUT,
+	TRANSITION_CLOSE,
+	TRANSITION_OPEN,
 	FADE_MAX
 } FADE;
 

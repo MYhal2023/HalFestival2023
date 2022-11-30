@@ -201,7 +201,7 @@ void UpdateGame(void)
 		else
 			g_bPause = TRUE;
 	}
-	if (GetKeyboardTrigger(DIK_G))
+	if (GetKeyboardTrigger(DIK_J))
 	{
 		gameover = TRUE;
 	}
@@ -630,7 +630,7 @@ void DrawGameReserve(void)
 	DrawFire();
 
 	// プレイヤー視点
-	pos = XMFLOAT3{ 243.0f,-124.0f,-143.0f };
+	pos = XMFLOAT3{ 200.0f,-124.0f,-100.0f };
 	cam->rot.y = 2.03f;
 	cam->rot.x = 0.3f;
 	dist = 0.0f;
@@ -649,7 +649,7 @@ void DrawGameReserve(void)
 	ans = MODE_PLANE;
 	SwapShader(ans);
 
-	DrawPlayer();
+	//DrawPlayer();
 
 	// 2D座標で物を描画する処理
 	// Z比較なし

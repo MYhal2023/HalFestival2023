@@ -64,6 +64,7 @@ public:
 	static pArm* GetArm(void);
 	static pArm* GetArmParts(void);
 	static pArm* GetLeftArmParts(void);
+	static void SetIntervalAt(void);
 	void Draw(void);
 };
 
@@ -109,7 +110,7 @@ public:
 class Saw :public pArm
 {
 public:
-	float attack;
+	float attack_damage;
 	float atInterval;
 	float atCount;
 	float motionTime;

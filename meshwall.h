@@ -9,7 +9,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	MAX_MESH_WALL		(200)					// 壁の総数
+#define	MAX_MESH_WALL		(400)					// 壁の総数
 
 #define	WAVE_POS_Y			(-20.0f)	// 壁を少し下げる
 #define	WALL_A_POS_XZ		(500.0f)	// 壁Aの座標
@@ -38,6 +38,7 @@ void UninitMeshWall(void);
 void UpdateMeshWall(void);
 void DrawMeshWall(void);
 void MeshWallHit(XMFLOAT3 pos, float size, float old_x, float old_z);
+BOOL MeshWallHit(XMFLOAT3 pos, float size);
 BOOL MeshWallPointHitCheck(int pos[], XMFLOAT3 player_pos);
 void InitFieldMeshWall(void);
 XMFLOAT3 GetMeshWallStPosition(int i);

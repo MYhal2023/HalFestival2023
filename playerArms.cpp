@@ -15,6 +15,7 @@ static ofstream fout;
 static float etc = 1.0f;
 static BOOL flag = TRUE;
 static BOOL change = FALSE;
+static int ct_interval = 0;
 void pArm::InitArm(void)
 {
 	for (int i = 0; i < MAX_ARM; i++)
@@ -386,6 +387,10 @@ void pArm::UpdateSawArm(void)
 
 void pArm::UpdateSawArmSecond(void)
 {
+	if (ct_interval < 5)
+		ct_interval++;
+	if (ct_interval < 5)return;
+
 	for (int i = 1; i < MAX_ARM_PARTS; i++)
 	{
 		if (i < MAX_ARM_PARTS / 2)
@@ -534,6 +539,7 @@ void pArm::IPArm(pArm* p, INTERPOLATION_DATA_EASING* i)
 		pab->attack = FALSE;
 		pax->attack = FALSE;
 		pas->attack = FALSE;
+		pas->ct_frame = 0.0f;
 		index = 0;
 	}
 	// À•W‚ð‹‚ß‚é	X = StartX + (EndX - StartX) * ¡‚ÌŽžŠÔ
@@ -554,6 +560,11 @@ void pArm::IPArm(pArm* p, INTERPOLATION_DATA_EASING* i)
 	XMVECTOR scl = s1 - s0;
 	XMStoreFloat3(&p->scl, s0 + scl * time);
 
+}
+
+void pArm::SetIntervalAt(void)
+{
+	ct_interval = 0;
 }
 
 void pArm::Draw(void)

@@ -15,7 +15,7 @@
 //*****************************************************************************
 #define TEXTURE_WIDTH				(SCREEN_WIDTH)	// îwåiÉTÉCÉY
 #define TEXTURE_HEIGHT				(SCREEN_HEIGHT)	// 
-#define TEXTURE_MAX					(2)				// ÉeÉNÉXÉ`ÉÉÇÃêî
+#define TEXTURE_MAX					(6)				// ÉeÉNÉXÉ`ÉÉÇÃêî
 #define FADE_BOX_MAX				(145)				// ÉeÉNÉXÉ`ÉÉÇÃêî
 #define FADE_BOX_SIZE				(120.0f)				// ÉeÉNÉXÉ`ÉÉÇÃêî
 #define FADE_BOX_WIDTH_NUM			(SCREEN_WIDTH / 120.0f)				// ÉeÉNÉXÉ`ÉÉÇÃêî
@@ -42,6 +42,10 @@ static ID3D11ShaderResourceView	*g_Texture[TEXTURE_MAX] = { NULL };	// ÉeÉNÉXÉ`É
 static char *g_TexturName[TEXTURE_MAX] = {
 	"data/TEXTURE/var.png",
 	"data/TEXTURE/fade_black.png",
+	"data/TEXTURE/ts_open.png",
+	"data/TEXTURE/ts_close.png",
+	"data/TEXTURE/ts_right_door.png",
+	"data/TEXTURE/ts_left_door.png",
 };
 
 
@@ -233,6 +237,12 @@ void UpdateFade(void)
 
 				SetFade(FADE_NONE, g_ModeNext, g_TexNo);
 			}
+		}
+		else if (g_Fade == TRANSITION_CLOSE)
+		{
+		}
+		else if (g_Fade == TRANSITION_OPEN)
+		{
 		}
 	}
 

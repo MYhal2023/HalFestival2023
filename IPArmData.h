@@ -69,7 +69,7 @@ static INTERPOLATION_DATA_EASING AttackArmSawLeft101[] = {
 			{ XMFLOAT3(0.75, 2.5, -0.7),XMFLOAT3(0, 0, -0.24) , XMFLOAT3(1.0f, 1.0f, 1.0f), 10, EASING },
 		{ XMFLOAT3(2.5f, -2.5f, 0.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 30,  EASING   },
 		{ XMFLOAT3(2.5f, 4.5f, -4.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f),  10,  EASE_OUT   },
-		{ XMFLOAT3(2.5f, -2.5f, 0.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 40,  EASE_IN  },
+		{ XMFLOAT3(2.5f, -2.5f, 0.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 60,  EASE_IN  },
 		{ XMFLOAT3(0.75, 2.5, -0.7),XMFLOAT3(0, 0, -0.24) , XMFLOAT3(1.0f, 1.0f, 1.0f), 20, NON_EASE },
 
 };
@@ -78,7 +78,7 @@ static INTERPOLATION_DATA_EASING AttackArmSawLeft102[] = {
 			{ XMFLOAT3(1.5, 3.2, -0.5),XMFLOAT3(0, 0, -0.2) , XMFLOAT3(1.0f, 1.0f, 1.0f), 10, EASING },
 		{ XMFLOAT3(4.0f,-9.5f, 2.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 30, EASING     },
 		{ XMFLOAT3(2.0f, 2.5f, -4.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 10, EASE_OUT   },
-		{ XMFLOAT3(4.0f,-9.5f, 2.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 40, EASE_IN   },
+		{ XMFLOAT3(4.0f,-9.5f, 2.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 60, EASE_IN   },
 					{ XMFLOAT3(1.5, 3.2, -0.5),XMFLOAT3(0, 0, -0.2) , XMFLOAT3(1.0f, 1.0f, 1.0f), 20, EASING },
 
 };
@@ -88,7 +88,7 @@ static INTERPOLATION_DATA_EASING AttackArmSawRight101[] = {
 			{ XMFLOAT3(0.75, 2.5, 0.7),XMFLOAT3(0, 0, -0.23) , XMFLOAT3(1.0f, 1.0f, 1.0f), 10, EASING },
 	{ XMFLOAT3(2.5f, -2.5f, 0.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 30,  EASING   },
 		{ XMFLOAT3(2.5f, 4.5f, 4.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f),  10,  EASE_OUT   },
-		{ XMFLOAT3(2.5f, -2.5f, 0.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 40,  EASE_IN  },
+		{ XMFLOAT3(2.5f, -2.5f, 0.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 60,  EASE_IN  },
 					{ XMFLOAT3(0.75, 2.5, 0.7),XMFLOAT3(0, 0, -0.23) , XMFLOAT3(1.0f, 1.0f, 1.0f), 20, NON_EASE },
 
 };
@@ -97,7 +97,7 @@ static INTERPOLATION_DATA_EASING AttackArmSawRight102[] = {
 		{ XMFLOAT3(1.5, 3.2, 0.5),XMFLOAT3(0, 0, -0.2) , XMFLOAT3(1.0f, 1.0f, 1.0f), 10, EASING },
 		{ XMFLOAT3(4.0f,-9.5f, -2.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 30, EASING     },
 		{ XMFLOAT3(2.0f, 2.5f, 4.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 10, EASE_OUT   },
-		{ XMFLOAT3(4.0f,-9.5f, -2.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 40, EASE_IN   },
+		{ XMFLOAT3(4.0f,-9.5f, -2.0f), XMFLOAT3(0.0f, 0.0f, XM_PI * (-0.5f / (float)(MAX_ARM_PARTS - 1))), XMFLOAT3(1.0f, 1.0f, 1.0f), 60, EASE_IN   },
 				{ XMFLOAT3(1.5, 3.2, 0.5),XMFLOAT3(0, 0, -0.2) , XMFLOAT3(1.0f, 1.0f, 1.0f), 20, NON_EASE },
 
 };

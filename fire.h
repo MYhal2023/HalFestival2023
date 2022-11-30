@@ -11,7 +11,7 @@
 // マクロ定義
 //*****************************************************************************
 #define TIME_MAX			(3599)		// 制限時間の最大値59分59秒
-#define MAX_FIRE_EFFECT			(50)			// 最大数
+#define MAX_FIRE_EFFECT			(150)			// 最大数
 #define GAME_TIME			(120)
 
 class FireEffect

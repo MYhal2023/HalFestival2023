@@ -1,5 +1,5 @@
 #pragma once
-#define MAX_RESCUE (10)
+#define MAX_RESCUE (30)
 #define MODEL_VAR (3)
 #define	MODEL_RESCUE001	"data/MODEL/helper1.obj"			// ì«Ç›çûÇﬁÉÇÉfÉãñº
 #include "main.h"

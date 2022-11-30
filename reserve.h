@@ -44,6 +44,7 @@ enum Reserve_TEXTURE
 	rs_start,		//スタートボタン
 	rs_Button_tx,	//ボタン下地
 	rs_number,		//数字テクスチャ
+	rs_number_w,
 	RESERVE_TEXTURE_MAX
 
 };

@@ -3,6 +3,7 @@
 #include "obstacle.h"
 #include "particle.h"
 #include "camera.h"
+#include "debugproc.h"
 static Saw g_PlayerArm;
 static XMFLOAT3 efPos[3];
 static XMFLOAT3 efRot[3];
@@ -15,8 +16,8 @@ void Saw::InitArm(void)
 	g_PlayerArm.pos = { 0.0f, 0.0f, 0.0f };
 	g_PlayerArm.rot = { 0.0f, 0.0f, 0.0f };
 	g_PlayerArm.scl = { 1.0f, 1.0f, 1.0f };
-	g_PlayerArm.attack = 10.0f;
-	g_PlayerArm.atInterval = 10.0f;
+	g_PlayerArm.attack_damage = 10.0f;
+	g_PlayerArm.atInterval = 5.0f;
 	g_PlayerArm.atCount = 0.0f;
 	g_PlayerArm.motionTime = 0.0f;
 	g_PlayerArm.attack = FALSE;
@@ -36,10 +37,13 @@ void Saw::Action(void)
 	CAMERA *camera = GetCamera();
 	g_PlayerArm.atCount += 1.0f;
 	g_PlayerArm.motionTime += 1.0f;
-	if (g_PlayerArm.motionTime == 60.0f)
-		g_PlayerArm.attack = TRUE;
-	else if (g_PlayerArm.motionTime <= 15)
-		return;
+	CAMERA *cam = GetCamera();
+	player[0].rot.y = cam->rot.y;
+	g_PlayerArm.ct_frame += 1.0f;
+	PrintDebugProc("アクションフレーム数:%f", g_PlayerArm.ct_frame);
+
+	if (g_PlayerArm.ct_frame <= 5.0f ||(g_PlayerArm.ct_frame >= 20.0f && g_PlayerArm.ct_frame <= 60.0f) || g_PlayerArm.ct_frame >= 85.0f)return;
+
 	if (g_PlayerArm.atCount >= g_PlayerArm.atInterval)
 	{
 		for (int k = 0; k < MAX_OBSTACLE; k++)
@@ -50,15 +54,15 @@ void Saw::Action(void)
 			float dist = 30.0f;
 			pos.x += sinf(player[0].rot.y) * dist;
 			pos.z += cosf(player[0].rot.y) * dist;
-			if (CollisionBC(pos, ob[k].pos, 1.0f, ob[k].size))
+			if (CollisionBC(pos, ob[k].pos, 15.0f, ob[k].size))
 			{
-				ob[k].durability -= g_PlayerArm.attack;
+				ob[k].durability -= g_PlayerArm.attack_damage;
 				g_PlayerArm.atCount = 0.0f;
 				SetEffect(pos, camera->rot.y, 10.0f);
+				pArm::SetIntervalAt();
 			}
 		}
 	}
-
 	Effect();
 }
 

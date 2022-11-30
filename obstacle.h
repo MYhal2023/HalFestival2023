@@ -20,7 +20,7 @@
 #define	MODEL_TERMINAL	"data/MODEL/terminal.obj"			// ì«Ç›çûÇﬁÉÇÉfÉãñº
 #define	MODEL_TEST			"data/MODEL/neutrophils.obj"			// ì«Ç›çûÇﬁÉÇÉfÉãñº
 
-#define MAX_OBSTACLE (60)
+#define MAX_OBSTACLE (150)
 #define MAX_FALL_OBSTACLE (20)
 #define MAX_FALL_OBSTACLE_NUM (2)
 #define FALL_SPEED	(3.0f)

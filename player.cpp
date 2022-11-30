@@ -702,6 +702,7 @@ void ControlChangeArm(void)
 		ChangePlayerArm(FALSE);
 	}
 }
+
 //初期化段階でのアームセット
 void SetPlayerArm(void)
 {
@@ -717,8 +718,10 @@ void ChangePlayerArm(BOOL flag)
 	if (!g_Player[0].attack)g_Player[0].attack_num = 0;
 
 	if (g_Player[0].attack_num >= 2)return;	//攻撃中なら変更不可
-		//攻撃の後隙中に攻撃ボタンを押すと即移行
-	else if (g_Player[0].attack && arm[g_Player[0].armType].attack && g_Player[0].attack_num < 2)
+
+
+	//攻撃の後隙中に攻撃ボタンを押すと即移行
+	if (g_Player[0].attack && g_Player[0].attack_num < 2)
 	{
 		g_Player[0].attack_num++;
 	}
@@ -729,7 +732,9 @@ void ChangePlayerArm(BOOL flag)
 		arm[i].move_time = 0.0f;
 		arm[i].spead = 0.0f;
 	}
-
+	Saw::InitArm();
+	Xgun::InitArm();
+	Braster::InitArm();
 	if (flag)
 	{
 		g_Player[0].armType++;

@@ -2,7 +2,7 @@
 #include "main.h"
 #define MAX_OBSTACLE_POS	(30)
 #define MAX_OBSTACLE_RAND_POS	(14)
-#define MAX_RESCUE_RAND_POS	(10)
+#define MAX_RESCUE_RAND_POS	(30)
 class Map
 {
 private:

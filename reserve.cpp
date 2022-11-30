@@ -33,11 +33,12 @@
 static ID3D11Buffer					*g_VertexBuffer = NULL;	// 頂点情報
 
 static char* g_TextureName[TEXTURE_MAX] = {
-	"data/TEXTURE/var.png",
+	"data/TEXTURE/keikaiji.png",
 	"data/TEXTURE/var.png",
 	"data/TEXTURE/t_startbutton.png",
 	"data/TEXTURE/var.png",
 	"data/TEXTURE/number.png",
+	"data/TEXTURE/numbers_w.png",
 };
 
 static Reserve g_Reserve;
@@ -200,10 +201,10 @@ void DrawReserve(void)
 
 
 	g_Button[rs_vigilance].pos = { SCREEN_WIDTH * 1.2f - g_Button[rs_vigilance].set_pos.x, SCREEN_HEIGHT * 0.25f };
-	g_Button[rs_vigilance].size = { 530 * 0.9f, 100 * 1.0f };
+	g_Button[rs_vigilance].size = { 530 * 0.9f, 100 * 1.2f };
 	g_Button[rs_vigilance].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	DrawTexture(&g_Button[rs_vigilance]);
-	DrawNumberRe((int)(g_Reserve.vigilance), g_Button[rs_vigilance].pos.x, g_Button[rs_vigilance].pos.y, 50.0f, 100.0f, XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f));
+	DrawNumberRe((int)(g_Reserve.vigilance), g_Button[rs_vigilance].pos.x + 80.0f, g_Button[rs_vigilance].pos.y, 50.0f, 100.0f, XMFLOAT4(1.0f, 0.4f, 0.4f, 1.0f));
 
 	g_Button[rs_rank].pos = { SCREEN_WIDTH * 1.2f - g_Button[rs_rank].set_pos.x , SCREEN_HEIGHT * 0.55f};
 	g_Button[rs_rank].size = { 530 * 0.9f, 100 * 1.0f };
@@ -256,7 +257,7 @@ void DrawNumberRe(int numb, float px, float py, float sx, float sy, XMFLOAT4 col
 		float tx = x * 0.1f;			// テクスチャの左上X座標
 
 		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Button[rs_number].g_Texture);
+		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Button[rs_number_w].g_Texture);
 
 		// １枚のポリゴンの頂点とテクスチャ座標を設定
 		SetSpriteColor(g_VertexBuffer, psx, py, sx, sy, tx, 0.0f, 0.1f, 1.0f,

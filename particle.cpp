@@ -13,6 +13,7 @@
 #include "particle.h"
 #include "player.h"
 #include "math.h"
+#include "meshwall.h"
 #include <iostream>
 #include <fstream>
 
@@ -195,6 +196,9 @@ void UpdateParticle(void)
 				g_aParticle[nCntParticle].move.x += (g_aParticle[nCntParticle].move.x) * 0.015f;
 				g_aParticle[nCntParticle].move.y += (g_aParticle[nCntParticle].move.y) * 0.015f;
 				g_aParticle[nCntParticle].move.z += (g_aParticle[nCntParticle].move.z) * 0.015f;
+
+				if(MeshWallHit(g_aParticle[nCntParticle].pos, 50.0f))
+					g_aParticle[nCntParticle].bUse = FALSE;
 
 				g_aParticle[nCntParticle].nLife--;
 				if (g_aParticle[nCntParticle].nLife <= 0)
@@ -535,6 +539,10 @@ void SetColorParticle(int nIdxParticle, XMFLOAT4 col)
 int SetParticle(XMFLOAT3 pos, XMFLOAT3 move, XMFLOAT3 rot, XMFLOAT3 scl, XMFLOAT4 col,int nLife, int nDecay, int texNo, BOOL blend)
 {
 	int nIdxParticle = -1;
+	PLAYER *player = GetPlayer();
+	float set_x = fabsf(player[0].pos.x - pos.x);
+	float set_z = fabsf(player[0].pos.z - pos.z);
+	if (set_x + set_z >= 1000.0f)return nIdxParticle;
 
 	for(int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++)
 	{

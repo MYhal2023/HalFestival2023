@@ -160,7 +160,7 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 
 		break;
 	case om_bookshelf:	//–{‚¾‚È
-		if (rot.y == 0.0f || rot.y == 1.0f) {
+		if (rot.y == XM_PI * 0.0f || rot.y == XM_PI * 1.0f) {
 			set_x = 15.0f;
 			set_z = 40.0f;
 		}
@@ -194,7 +194,7 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 
 	case om_Ldesk:		//LŽš‚ÌŠ÷
 		pos.y -= 20.0f;
-		if (rot.y == 0.0f || rot.y == 1.0f) {
+		if (rot.y == XM_PI * 0.0f || rot.y == XM_PI * 1.0f) {
 			set_x = 100.0f;
 			set_z = 37.0f;
 		}
