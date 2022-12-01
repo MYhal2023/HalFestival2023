@@ -165,12 +165,12 @@ void UpdateTitle(void)
 	g_Title[title_cursol].color.z += speed[title_cursol];
 
 	//カーソル変更
-	if (GetKeyboardTrigger(DIK_UP) && cursol > 0)
+	if ((GetKeyboardTrigger(DIK_UP) || IsButtonTriggered(0, BUTTON_UP)) && cursol > 0)
 	{
 		cursol--;
 		PlaySound(SOUND_LABEL_SE_select);
 	}
-	else if (GetKeyboardTrigger(DIK_DOWN) && TITLE_BUTTON_NUM - 1 > cursol)
+	else if ((GetKeyboardTrigger(DIK_DOWN) || IsButtonTriggered(0, BUTTON_DOWN)) && TITLE_BUTTON_NUM - 1 > cursol)
 	{
 		cursol++;
 		PlaySound(SOUND_LABEL_SE_select);
@@ -178,7 +178,7 @@ void UpdateTitle(void)
 	int num = title_start + cursol;
 	g_Title[title_cursol].pos = g_Title[num].pos;
 	
-	if (GetKeyboardTrigger(DIK_RETURN))
+	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_A))
 	{
 		switch (cursol) {
 		case 0://はじめから

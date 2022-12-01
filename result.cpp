@@ -362,7 +362,7 @@ void WinResult(void)
 	//	sequence++;
 	//}
 
-	if(sequence >= MAX_RESULT_SEQUENCE && GetKeyboardTrigger(DIK_RETURN))
+	if(sequence >= MAX_RESULT_SEQUENCE && (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_A)))
 	SetFade(FADE_OUT, MODE_RESERVE, WhiteBox);	//Œ»óƒ‹[ƒv‚·‚é‚æ‚¤‚É
 
 }

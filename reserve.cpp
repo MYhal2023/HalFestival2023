@@ -157,7 +157,7 @@ void UninitReserve(void)
 //=============================================================================
 void UpdateReserve(void)
 {
-	if (GetKeyboardTrigger(DIK_RETURN))
+	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_A))
 	{
 		SetFade(FADE_BOX_OUT, MODE_GAME, WhiteBox);
 		PlaySound(SOUND_LABEL_SE_decision);

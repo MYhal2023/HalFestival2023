@@ -34,8 +34,8 @@
 #define BUTTON_M		0x00002000l	// Ｍボタン(.rgbButtons[9]&0x80)
 #define BUTTON_R_RIGHT	0x00004000l	// 右スティック右(.lZ<0)
 #define BUTTON_R_LEFT	0x00008000l	// 右スティック左(.lZ<0)
-#define RGDW_UP			0x00010000l	// ＳＴＡＲＴボタン(.rgbButtons[8]&0x80)
-#define RGDW_DOWN		0x00020000l	// Ｍボタン(.rgbButtons[9]&0x80)
+#define RGDW_UP			0x00010000l	// 右スティック上
+#define RGDW_DOWN		0x00020000l	// 右スティック下
 #define RGDW_LEFT		0x00040000l	// 右スティック右(.lZ<0)
 #define RGDW_RIGHT		0x00080000l	// 右スティック左(.lZ<0)
 

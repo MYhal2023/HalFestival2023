@@ -662,7 +662,7 @@ void ControlPlayer(void)
 		g_Player[0].moveVec.z -= cosf(cam->rot.y) * changeRotCamera;
 	}
 
-	if (GetKeyboardPress(DIK_B))
+	if (GetKeyboardPress(DIK_B) || IsButtonPressed(0, BUTTON_B))
 		g_Player[0].spd = VALUE_MOVE * VALUE_MOVE_DASH;
 
 
@@ -689,12 +689,12 @@ void ControlCamera(void)
 		}
 
 	}
-	if (GetKeyboardPress(DIK_UP))
+	if (GetKeyboardPress(DIK_UP) || IsButtonPressed(0, RGDW_UP))
 	{
 		if (g_Cam->rot.x < 0.45f)
 		g_Cam->rot.x += XM_PI * 0.004f;
 	}
-	else if (GetKeyboardPress(DIK_DOWN))
+	else if (GetKeyboardPress(DIK_DOWN) || IsButtonPressed(0, RGDW_DOWN))
 	{
 		if (g_Cam->rot.x > -0.20f)
 		g_Cam->rot.x -= XM_PI * 0.004f;
@@ -703,11 +703,11 @@ void ControlCamera(void)
 
 void ControlChangeArm(void)
 {
-	if (GetKeyboardTrigger(DIK_F))
+	if (GetKeyboardTrigger(DIK_F) || IsButtonTriggered(0, BUTTON_R))
 	{
 		ChangePlayerArm(TRUE);
 	}
-	else if (GetKeyboardTrigger(DIK_G))
+	else if (GetKeyboardTrigger(DIK_G) || IsButtonTriggered(0, BUTTON_L))
 	{
 		ChangePlayerArm(FALSE);
 	}
@@ -778,7 +778,7 @@ void UpdateArm(void)
 	pArm::UpdateReleaseArm();	//リリース時はこっちを使う
 	pArm* arm = pArm::GetArmParts();
 	//攻撃開始
-	if (GetKeyboardTrigger(DIK_Z) && !g_Player[0].attack)
+	if ((GetKeyboardTrigger(DIK_Z) || IsButtonTriggered(0, BUTTON_A))&& !g_Player[0].attack)
 	{
 		g_Player[0].attack = TRUE;
 		for (int i = 0; i < MAX_ARM_PARTS * 2; i++)
@@ -789,7 +789,7 @@ void UpdateArm(void)
 		}
 	}
 	
-	if (GetKeyboardTrigger(DIK_0) && g_Player[0].n_motionTime <= 0.0f)
+	if ((GetKeyboardTrigger(DIK_0) || IsButtonTriggered(0, BUTTON_X)) && g_Player[0].n_motionTime <= 0.0f)
 	{
 		g_Player[0].rescue = TRUE;
 		g_Player[0].rescueUse = FALSE;

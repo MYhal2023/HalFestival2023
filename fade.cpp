@@ -344,8 +344,7 @@ void DrawFade(void)
 		// ƒ|ƒŠƒSƒ“•`‰æ
 		GetDeviceContext()->Draw(4, 0);
 	}
-
-	if (g_Fade == FADE_BOX_OUT || FADE_BOX_IN)
+	else if (g_Fade == FADE_BOX_OUT || FADE_BOX_IN)
 	{
 		int width = (int)(FADE_BOX_WIDTH_NUM);
 		int height = (int)(FADE_BOX_HEIGHT_NUM);
