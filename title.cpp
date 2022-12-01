@@ -118,7 +118,7 @@ HRESULT InitTitle(void)
 		}
 	}
 	cursol = 0;
-		g_Load = TRUE;
+	g_Load = TRUE;
 	return S_OK;
 }
 
@@ -168,12 +168,12 @@ void UpdateTitle(void)
 	if (GetKeyboardTrigger(DIK_UP) && cursol > 0)
 	{
 		cursol--;
-		//PlaySound(SOUND_LABEL_SE_Select);
+		PlaySound(SOUND_LABEL_SE_select);
 	}
 	else if (GetKeyboardTrigger(DIK_DOWN) && TITLE_BUTTON_NUM - 1 > cursol)
 	{
 		cursol++;
-		//PlaySound(SOUND_LABEL_SE_Select);
+		PlaySound(SOUND_LABEL_SE_select);
 	}
 	int num = title_start + cursol;
 	g_Title[title_cursol].pos = g_Title[num].pos;
@@ -182,7 +182,7 @@ void UpdateTitle(void)
 	{
 		switch (cursol) {
 		case 0://‚Í‚¶‚ß‚©‚ç
-			//PlaySound(SOUND_LABEL_SE_Decision);
+			PlaySound(SOUND_LABEL_SE_decision);
 			SetFade(FADE_BOX_OUT, MODE_RESERVE, WhiteBox);
 			break;
 		}

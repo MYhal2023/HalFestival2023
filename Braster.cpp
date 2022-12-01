@@ -2,6 +2,7 @@
 #include "bullet.h"
 #include "camera.h"
 #include "particle.h"
+#include "sound.h"
 static Braster g_PlayerArm;
 
 void Braster::InitArm(void)
@@ -58,6 +59,7 @@ void Braster::Action(void)
 			}
 			SetParticle(pos, move, rot, scl, XMFLOAT4(0.5f, 0.5f, 1.0f, 1.0f), nLife, 76, 0, TRUE);
 			SetParticle(pos2, move, rot, scl, XMFLOAT4(0.5f, 0.5f, 1.0f, 1.0f), nLife, 76, 0, TRUE);
+			PlaySound(SOUND_LABEL_SE_Braster_hit);
 		}
 
 

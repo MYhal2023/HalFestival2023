@@ -226,6 +226,8 @@ void UpdateGame(void)
 	if(g_bPause == FALSE)
 		return;
 
+	UpdateUI();
+
 	if(set_time > 0)set_time--;
 	if (set_time > 0)return;
 
@@ -266,7 +268,6 @@ void UpdateGame(void)
 
 		//UpdateSound();
 
-		UpdateUI();
 }
 
 //=============================================================================

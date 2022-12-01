@@ -2,6 +2,7 @@
 #include "bullet.h"
 #include "camera.h"
 #include "particle.h"
+#include "sound.h"
 
 #define INTERVAL (10.0f)
 #define EFFECT_FRME (5)
@@ -42,11 +43,13 @@ void Xgun::Action(void)
 		rot.x = cam->rot.x;
 		SetBullet(pos, rot, 10.0f, 50.0f, 60, Bullet_XGun);
 		SetBullet(pos2, rot, 10.0f, 50.0f, 60, Bullet_XGun);
-
+		PlaySound(SOUND_LABEL_SE_xgun_hit);
 		g_PlayerArm.attack = TRUE;
 		g_PlayerArm.atCount = INTERVAL;
 		g_PlayerArm.ef_frame = EFFECT_FRME;
 	}
+
+	//エフェクトコード
 	if (g_PlayerArm.attack && g_PlayerArm.ef_frame > 0)
 	{
 		PLAYER *player = GetPlayer();

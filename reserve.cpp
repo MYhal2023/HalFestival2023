@@ -39,6 +39,12 @@ static char* g_TextureName[TEXTURE_MAX] = {
 	"data/TEXTURE/var.png",
 	"data/TEXTURE/number.png",
 	"data/TEXTURE/numbers_w.png",
+	"data/TEXTURE/xpbar_mae.png",
+	"data/TEXTURE/xpbar_iro.png",
+	"data/TEXTURE/rank_0.png",
+	"data/TEXTURE/rank_1.png",
+	"data/TEXTURE/rank_2.png",
+	"data/TEXTURE/rank_3.png",
 };
 
 static Reserve g_Reserve;
@@ -57,10 +63,10 @@ HRESULT InitReserve(void)
 	if (!restart)
 	{
 		restart = TRUE;
-		g_Reserve.vigilance = 200.0f;
+		g_Reserve.vigilance = 0.0f;
 		g_Reserve.old_vigi = 0.0f;
 		g_Reserve.quota = BASE_RESCUE_NUM;
-		g_Reserve.rank = 500;
+		g_Reserve.rank = 0;
 #ifdef _DEBUG
 
 #endif
@@ -153,8 +159,8 @@ void UpdateReserve(void)
 {
 	if (GetKeyboardTrigger(DIK_RETURN))
 	{
-		//PlaySound(SOUND_LABEL_SE_Decision);
 		SetFade(FADE_BOX_OUT, MODE_GAME, WhiteBox);
+		PlaySound(SOUND_LABEL_SE_decision);
 	}
 	if (!once)
 	{

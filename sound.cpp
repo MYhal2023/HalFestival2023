@@ -69,26 +69,30 @@ float g_RMSLevels[2];			//RMSレベルの受信場所
 // 各音素材のパラメータ
 SOUNDPARAM g_aParam[SOUND_LABEL_MAX] =
 {
-	{ (char*)"data/SE/cancel.wav", 0 },		// キャンセル音
-	{ (char*)"data/SE/decision.wav", 0 },		// 決定音
-	{ (char*)"data/SE/powerup.wav", 0 },		// levelup音
-	{ (char*)"data/SE/select.wav", 0 },		// cursol select音
-	{ (char*)"data/SE/cannon.wav", 0 },		// cannon音
-	{ (char*)"data/SE/hit2.wav", 0 },		// hit音
-	{ (char*)"data/SE/hit3.wav", 0 },		// hit-strong音
-	{ (char*)"data/SE/kick1.wav", 0 },		// kick音
-	{ (char*)"data/SE/kick2.wav", 0 },		// kick-strong音
-	{ (char*)"data/SE/panch1.wav", 0 },		// panch音
-	{ (char*)"data/SE/panch2.wav", 0 },		// panch-strong音
-	{ (char*)"data/SE/machine_gun.wav", 0 },		// panch-strong音
-	{ (char*)"data/SE/machine_gunLong.wav", 0 },		// panch-strong音
-	{ (char*)"data/BGM/BGM000.wav", 1 },		// panch-strong音
-	{ (char*)"data/BGM/BGM001.wav", 1 },		// panch-strong音
-	{ (char*)"data/BGM/BGM002.wav", 1 },		// panch-strong音
-	{ (char*)"data/BGM/BGM101.wav", 1 },		// panch-strong音
-	{ (char*)"data/BGM/BGM102.wav", 1 },		// panch-strong音
-	{ (char*)"data/BGM/BGM201.wav", 1 },		// panch-strong音
-	{ (char*)"data/BGM/BGM202.wav", 1 },		// panch-strong音
+	{ (char*)"data/SE/blade_hit.wav", 0 },		// キャンセル音
+	{ (char*)"data/SE/blade_ready.wav", 0 },		// 決定音
+	{ (char*)"data/SE/arm_wave.wav", 0 },		// 決定音
+	{ (char*)"data/SE/Braster_hit.wav", 0 },		// levelup音
+	{ (char*)"data/SE/Braster_hits.wav", 0 },		// cursol select音
+	{ (char*)"data/SE/Braster_ready.wav", 0 },		// cannon音
+	{ (char*)"data/SE/xgun_hit.wav", 0 },		// cannon音
+	{ (char*)"data/SE/xgun_ready.wav", 0 },		// cannon音
+	{ (char*)"data/SE/xgun_ready1.wav", 0 },		// cannon音
+	{ (char*)"data/SE/count.wav", 0 },		// hit音
+	{ (char*)"data/SE/decision.wav", 0 },		// hit-strong音
+	{ (char*)"data/SE/select.wav", 0 },		// hit-strong音
+	{ (char*)"data/SE/earthquake.wav", 0 },		// kick音
+	{ (char*)"data/SE/game_over.wav", 0 },		// kick-strong音
+	{ (char*)"data/SE/glass.wav", 0 },		// panch音
+	{ (char*)"data/SE/lock.wav", 0 },		// panch-strong音
+	{ (char*)"data/SE/run.wav", 1 },		// panch-strong音
+	{ (char*)"data/SE/walk.wav", 1 },		// panch-strong音
+	{ (char*)"data/SE/fire.wav", 1 },		// panch-strong音
+	{ (char*)"data/BGM/title.wav", 1 },		// panch-strong音
+	{ (char*)"data/BGM/game.wav", 1 },		// panch-strong音
+	{ (char*)"data/BGM/result.wav", 1 },		// panch-strong音
+	{ (char*)"data/BGM/result_1.wav", 1 },		// panch-strong音
+	{ (char*)"data/BGM/clear.wav", 1 },		// panch-strong音
 };
 
 //Fade関連

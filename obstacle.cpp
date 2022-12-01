@@ -6,6 +6,7 @@
 #include "result.h"
 #include "meshwall.h"
 #include "fire.h"
+#include "sound.h"
 static Obstacle g_Obstacle[MAX_OBSTACLE];
 static 	DX11_MODEL		model[MAX_OBSTACLE_MODEL];		// ƒ‚ƒfƒ‹î•ñ
 static XMFLOAT4			tankglass_diffuse[16];
@@ -87,6 +88,8 @@ void Obstacle::Distract(Obstacle* p)
 	re->beatNum++;
 	p->use = FALSE;
 	p->efSwitch = TRUE;
+	if (p->model_num == om_tankglass)
+		PlaySound(SOUND_LABEL_SE_glass);
 	for (int i = 0; i < 4; i++)
 		DeleteMeshWall(p->mesh_wall[i]);
 	for (int i = 0; i < 4; i++) {

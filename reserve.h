@@ -36,7 +36,6 @@ enum ButtonType
 };
 
 
-//ヘルプ画像は連続させる
 enum Reserve_TEXTURE
 {
 	rs_vigilance,	//警戒度
@@ -45,6 +44,12 @@ enum Reserve_TEXTURE
 	rs_Button_tx,	//ボタン下地
 	rs_number,		//数字テクスチャ
 	rs_number_w,
+	rs_xpvar_bg,
+	rs_xpvar,
+	rs_rank_0,
+	rs_rank_1,
+	rs_rank_2,
+	rs_rank_3,
 	RESERVE_TEXTURE_MAX
 
 };

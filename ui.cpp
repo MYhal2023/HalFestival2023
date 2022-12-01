@@ -14,6 +14,7 @@
 #include "player.h"
 #include "time.h"
 #include "easing.h"
+#include "sound.h"
 
 //*****************************************************************************
 // É}ÉNÉçíËã`
@@ -173,7 +174,7 @@ void UninitUI(void)
 //=============================================================================
 void UpdateUI(void)
 {
-
+	if (GetSetTime() == 180)PlaySound(SOUND_LABEL_SE_count);
 
 }
 

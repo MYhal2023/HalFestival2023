@@ -55,7 +55,7 @@ char	g_DebugStr[2048] = WINDOW_NAME;		// デバッグ文字表示用
 
 #endif
 
-int	g_Mode = MODE_RESERVE;					// 起動時の画面を設定
+int	g_Mode = MODE_TITLE;					// 起動時の画面を設定
 
 
 //=============================================================================
@@ -230,6 +230,11 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	// サウンドの初期化
 	InitSound(hWnd);
+	SetSourceVolume(SOUND_LABEL_BGM_Title, 0.5f);
+	SetSourceVolume(SOUND_LABEL_BGM_Battle, 0.3f);
+	SetSourceVolume(SOUND_LABEL_BGM_Result, 0.5f);
+	SetSourceVolume(SOUND_LABEL_BGM_Result2, 0.5f);
+	SetSourceVolume(SOUND_LABEL_SE_lock, 0.7f);
 
 	// 影の初期化
 	InitSM();
@@ -254,7 +259,6 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//3Dモデル読み込み
 	InitBoot();
-
 	return S_OK;
 }
 
@@ -455,6 +459,7 @@ void SetMode(int mode)
 		// タイトル画面の初期化
 		InitGame();
 		InitTitle();
+		PlaySound(SOUND_LABEL_BGM_Title);
 		break;
 	case MODE_RESERVE:
 		// 育成画面の初期化
@@ -466,6 +471,7 @@ void SetMode(int mode)
 		// ゲーム画面の初期化
 		InitReward();	//リザルトデータ初期化
 		InitGame();
+		PlaySound(SOUND_LABEL_BGM_Battle);
 		break;
 
 	case MODE_RESULT:

@@ -55,6 +55,7 @@ static Reward g_Reward;
 static BOOL g_Load = FALSE;
 static BOOL once = FALSE;	//一回だけ行う処理で使用
 static BOOL ef_once = FALSE;	//一回だけ行う処理で使用
+static BOOL sound_once = FALSE;	//一回だけ行う処理で使用
 static int sequence = 0;	//リザルトのシーケンス状態
 static int skip = 0;
 static float alpha[10];
@@ -433,7 +434,6 @@ void SetReward(void)
 	if (g_Reward.ef_score < 1)
 		g_Reward.ef_score = 1;
 
-
 	//ランクボーナスの計算
 	if (re->quota <= g_Reward.rescue_num)
 	{
@@ -448,13 +448,19 @@ void SetReward(void)
 		g_Reward.rank_bonus_beat = g_Reward.beatNum / 10 * 5;
 		g_Reward.rank_bonus_rescue = g_Reward.rescue_num * 2;
 		g_Reward.rank_bonus_score += g_Reward.score / 3000 * 2;
+		if (sound_once)
+			PlaySound(SOUND_LABEL_BGM_Result2);
 	}
 	else {
 		g_Reward.rank_bonus_time = 0;
 		g_Reward.rank_bonus_beat = 0;
 		g_Reward.rank_bonus_rescue = -10;
 		g_Reward.rank_bonus_score = 0;
+		if (sound_once)
+			PlaySound(SOUND_LABEL_BGM_Result);
 	}
+	sound_once = TRUE;
+
 	//データの移し替え
 	g_Reward.max_beatNum = g_Reward.beatNum;
 	g_Reward.max_rescue_num = g_Reward.rescue_num;
@@ -467,6 +473,8 @@ void SetReward(void)
 	g_Reward.time = 0;
 	g_Reward.score = 0;
 	//ランクアップ経験値の計算をここでする
+	g_Reward.rank_gauge = re->rank % 100;
+	g_Reward.rank = re->rank / 100;
 	int num = 150;
 	g_Reward.rank_up = g_Reward.rank_bonus_time + g_Reward.rank_bonus_beat + g_Reward.rank_bonus_rescue + g_Reward.rank_bonus_score + 20;
 	g_Reward.base_rank = re->rank;

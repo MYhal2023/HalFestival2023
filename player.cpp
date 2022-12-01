@@ -41,7 +41,7 @@
 #define	VALUE_ROTATE		(XM_PI * 0.02f)					// 回転量
 
 #define PLAYER_SHADOW_SIZE	(1.0f)							// 影の大きさ
-#define PLAYER_OFFSET_Y		(38.5f)							// プレイヤーの足元をあわせる
+#define PLAYER_OFFSET_Y		(30.0f)							// プレイヤーの足元をあわせる
 #define PLAYER_OFFSET_Z		(-300.0f)							// プレイヤーの足元をあわせる
 #define PLAYER_LIFE			(100)								// プレイヤーのライフ
 
@@ -49,6 +49,7 @@
 #define PLAYER_AT_FLAME		(30.0f)							// プレイヤーの攻撃フレーム
 #define PLAYER_SP_FLAME		(30.0f)							// プレイヤーのSPが増える間隔
 #define PLAYER_INVINC_FLAME	(120.0f)						// プレイヤー無敵フレーム
+#define PLAYER_WALK_SOUND_FLAME	(720.0f)						// プレイヤー無敵フレーム
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
@@ -72,6 +73,7 @@ static BOOL			g_Load = FALSE;
 static int			playerNum = 0;
 static int			atNum[MAX_PLAYER];
 static char name[2][64];
+static float ct_sound_frame;
 using namespace std;
 static ofstream fout;
 
@@ -200,6 +202,7 @@ HRESULT InitPlayer(void)
 
 	g_Load = TRUE;
 	playerNum = 0;
+	ct_sound_frame = 0.0f;
 	pArm::SetArmParent(&g_Player[0]);	//親情報をここで引き渡す
 	Normal::SetArmParent(&g_Player[0]);	//親情報をここで引き渡す
 	g_Arm[0] = pArm::GetArm();
@@ -207,6 +210,11 @@ HRESULT InitPlayer(void)
 	for (int i = 0; i < MAX_PLAYER; i++)
 		atNum[i] = 0;
 	fout.open("pos_data.txt");
+	//あらかじめ2つの歩きサウンドを再生開始し、ポーズしておく
+	PlaySound(SOUND_LABEL_SE_run);
+	PlaySound(SOUND_LABEL_SE_walk);
+	PauseSound(SOUND_LABEL_SE_walk);
+	PauseSound(SOUND_LABEL_SE_run);
 
 	return S_OK;
 }
@@ -351,6 +359,8 @@ void IPUpdate(void)
 			PlayerPartsIP(&g_Playerline[k], run_data[k], run_data_size[k]);
 			g_Playerline[k].old_data = run_data[k];
 		}
+		PauseSound(SOUND_LABEL_SE_walk);
+		ReStartSound(SOUND_LABEL_SE_run);
 	}
 	else if (g_Player[0].spd > 0.1f && g_Player[0].spd < VALUE_MOVE * VALUE_MOVE_DASH)
 	{
@@ -362,6 +372,8 @@ void IPUpdate(void)
 			PlayerPartsIP(&g_Playerline[k], walk_data[k], data_size[k]);
 			g_Playerline[k].old_data = walk_data[k];
 		}
+		PauseSound(SOUND_LABEL_SE_run);
+		ReStartSound(SOUND_LABEL_SE_walk);
 	}
 	else
 	{
@@ -373,6 +385,8 @@ void IPUpdate(void)
 			PlayerPartsIP(&g_Playerline[k], stop_data[k], stop_data_size[k]);
 			g_Playerline[k].old_data = stop_data[k];
 		}
+		PauseSound(SOUND_LABEL_SE_walk);
+		PauseSound(SOUND_LABEL_SE_run);
 	}
 }
 void ResultIPUpdate(void)
@@ -651,10 +665,6 @@ void ControlPlayer(void)
 	if (GetKeyboardPress(DIK_B))
 		g_Player[0].spd = VALUE_MOVE * VALUE_MOVE_DASH;
 
-	if (GetKeyboardTrigger(DIK_RETURN))
-	{
-		fout << "座標:(" << g_Player[0].pos.x << "," << g_Player[0].pos.y << "," << g_Player[0].pos.z << ")" << endl;
-	}
 
 }
 
@@ -686,7 +696,7 @@ void ControlCamera(void)
 	}
 	else if (GetKeyboardPress(DIK_DOWN))
 	{
-		if (g_Cam->rot.x > 0.0f)
+		if (g_Cam->rot.x > -0.20f)
 		g_Cam->rot.x -= XM_PI * 0.004f;
 	}
 }
@@ -747,6 +757,19 @@ void ChangePlayerArm(BOOL flag)
 		if (g_Player[0].armType < 0)
 			g_Player[0].armType = ARM_VAR - 1;
 	}
+
+	switch (g_Player[0].armType)
+	{
+	case 0:	//Xgun
+		PlaySound(SOUND_LABEL_SE_xgun_ready1);
+		break;
+	case 1:	//Braster
+		PlaySound(SOUND_LABEL_SE_Braster_ready);
+		break;
+	case 2:	//Saw
+		PlaySound(SOUND_LABEL_SE_Blade_ready);
+		break;
+	}
 }
 
 void UpdateArm(void)
@@ -783,7 +806,7 @@ void UpdateArm(void)
 		pos2.z += cosf(g_Player[0].rot.y - XM_PI * 0.20f) * dist;
 		g_Player[0].rescueBullet[0] = pos;
 		g_Player[0].rescueBullet[1] = pos2;
-
+		PlaySound(SOUND_LABEL_SE_arm_wave);
 	}
 	//アーム別に攻撃処理
 	if (g_Player[0].attack)

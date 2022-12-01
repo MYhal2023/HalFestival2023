@@ -11,6 +11,8 @@
 #include "model.h"
 #include "particle.h"
 #include "camera.h"
+#include "player.h"
+#include "sound.h"
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -71,6 +73,8 @@ HRESULT InitFire(void)
 		g_Fire[i].use = FALSE;
 	}
 	g_Load = TRUE;
+	PlaySound(SOUND_LABEL_SE_fire);
+	SetSourceVolume(SOUND_LABEL_SE_fire, 0.0f);
 	return S_OK;
 }
 
@@ -106,6 +110,9 @@ void UninitFire(void)
 //=============================================================================
 void UpdateFire(void)
 {
+	const float volume_line = 1000.0f;
+	float dist = volume_line;
+	BOOL ct = FALSE;
 	for (int i = 0; i < MAX_FIRE_EFFECT; i++)
 	{
 		if (!g_Fire[i].use)continue;
@@ -127,6 +134,25 @@ void UpdateFire(void)
 		}
 		g_Fire[i].interval = 0;
 		SetFireParticle(g_Fire[i].pos, g_Fire[i].rot.y);
+		PLAYER *player = GetPlayer();
+		float set_x = fabsf(player[0].pos.x - g_Fire[i].pos.x);
+		float set_z = fabsf(player[0].pos.z - g_Fire[i].pos.z);
+		if (set_x + set_z < dist)
+		{
+			dist = set_x + set_z;
+		}
+		ct = TRUE;
+	}
+	if (ct) 
+	{
+		float volume = 0.0f;
+		if (dist > 100.0f)
+			volume = 1.0f - (dist / volume_line);
+		else if (dist <= 100.0f)
+			volume = 1.0f;
+		if (volume > 1.0f)volume = 1.0f;
+
+		SetSourceVolume(SOUND_LABEL_SE_fire, volume);
 	}
 #ifdef _DEBUG	// デバッグ情報を表示する
 

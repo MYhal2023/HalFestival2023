@@ -48,26 +48,30 @@ enum
 // サウンドファイル
 enum 
 {
-	SOUND_LABEL_SE_Cancel,		// SE
-	SOUND_LABEL_SE_Decision,		// SE
-	SOUND_LABEL_SE_PowerUp,			// SE
-	SOUND_LABEL_SE_Select,			// SE
-	SOUND_LABEL_SE_Cannon,			// SE
-	SOUND_LABEL_SE_Hit,			// SE
-	SOUND_LABEL_SE_HitStrong,			// SE
-	SOUND_LABEL_SE_Kick,			// SE
-	SOUND_LABEL_SE_KickStrong,			// SE
-	SOUND_LABEL_SE_Panch,			// SE
-	SOUND_LABEL_SE_PanchStrong,			// SE
-	SOUND_LABEL_SE_MachineGun,			// SE
-	SOUND_LABEL_SE_MachinGunLong,			// SE
+	SOUND_LABEL_SE_Blade_hit,		// SE
+	SOUND_LABEL_SE_Blade_ready,		// SE
+	SOUND_LABEL_SE_arm_wave,		// SE
+	SOUND_LABEL_SE_Braster_hit,		// SE
+	SOUND_LABEL_SE_Braster_hits,		// SE
+	SOUND_LABEL_SE_Braster_ready,		// SE
+	SOUND_LABEL_SE_xgun_hit,		// SE
+	SOUND_LABEL_SE_xgun_ready,		// SE
+	SOUND_LABEL_SE_xgun_ready1,		// SE
+	SOUND_LABEL_SE_count,		// SE
+	SOUND_LABEL_SE_decision,		// SE
+	SOUND_LABEL_SE_select,		// SE
+	SOUND_LABEL_SE_earthquake,		// SE
+	SOUND_LABEL_SE_game_over,		// SE
+	SOUND_LABEL_SE_glass,		// SE
+	SOUND_LABEL_SE_lock,		// SE
+	SOUND_LABEL_SE_run,		// SE
+	SOUND_LABEL_SE_walk,		// SE
+	SOUND_LABEL_SE_fire,		// SE
 	SOUND_LABEL_BGM_Title,			// BGM
-	SOUND_LABEL_BGM_Normal,			// BGM
-	SOUND_LABEL_BGM_Normal2,			// BGM
-	SOUND_LABEL_BGM_Battle1,			// BGM
-	SOUND_LABEL_BGM_Battle2,			// BGM
-	SOUND_LABEL_BGM_Win,			// BGM
-	SOUND_LABEL_BGM_Lose,			// BGM
+	SOUND_LABEL_BGM_Battle,			// BGM
+	SOUND_LABEL_BGM_Result,			// BGM
+	SOUND_LABEL_BGM_Result2,			// BGM
+	SOUND_LABEL_BGM_Clear,			// BGM
 	SOUND_LABEL_MAX,
 };
 

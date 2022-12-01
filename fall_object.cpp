@@ -5,6 +5,7 @@
 #include "result.h"
 #include "reserve.h"
 #include "camera.h"
+#include "sound.h"
 static FallObject g_Obstacle[MAX_FALL_OBSTACLE];
 static DX11_MODEL g_Model[MAX_FALL_OBSTACLE_NUM];
 static float fall_cool_time = 0.0f;
@@ -53,6 +54,7 @@ void FallObject::Update(void)
 	{
 		fall_switch = TRUE;
 		SetVibTime(60);
+		PlaySound(SOUND_LABEL_SE_earthquake);
 	}
 
 	if (fall_switch) 
@@ -80,7 +82,8 @@ void FallObject::Update(void)
 
 		if (fall_time <= 0.0f)
 		{
-			fall_interval = FALL_INTERVAL;
+			Reserve* re = GetReserve();
+			fall_interval = FALL_INTERVAL - (re->rank * 2);
 			fall_time = FALL_TIME;
 			fall_switch = FALSE;
 		}
@@ -126,6 +129,8 @@ void FallObject::Distract(FallObject* p)
 	if (p->pos.y <= 0.0f)
 	{
 		p->use = FALSE;
+		PlaySound(SOUND_LABEL_SE_lock);
+		p->efSwitch = TRUE;
 		return;
 	}
 
@@ -133,6 +138,7 @@ void FallObject::Distract(FallObject* p)
 	if (p->durability > 0)
 		return;		
 	
+	PlaySound(SOUND_LABEL_SE_lock);
 	Reward* re = GetReward();
 	re->beatNum++;
 	p->use = FALSE;

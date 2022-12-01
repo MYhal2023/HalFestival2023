@@ -26,7 +26,7 @@
 #define FALL_SPEED	(3.0f)
 #define FALL_COOL_TIME_BASE	(60.0f)
 #define FALL_RAND_TIME	(30)
-#define FALL_INTERVAL	(600.0f)
+#define FALL_INTERVAL	(1200.0f)
 #define FALL_TIME (340.0f)
 #define	MODEL_CEILING			"data/MODEL/ceiling.obj"			// ì«Ç›çûÇﬁÉÇÉfÉãñº
 #define	MODEL_ROCK			"data/MODEL/fallingrock.obj"			// ì«Ç›çûÇﬁÉÇÉfÉãñº

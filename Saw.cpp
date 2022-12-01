@@ -4,6 +4,7 @@
 #include "particle.h"
 #include "camera.h"
 #include "debugproc.h"
+#include "sound.h"
 static Saw g_PlayerArm;
 static XMFLOAT3 efPos[3];
 static XMFLOAT3 efRot[3];
@@ -42,7 +43,13 @@ void Saw::Action(void)
 	g_PlayerArm.ct_frame += 1.0f;
 	PrintDebugProc("アクションフレーム数:%f", g_PlayerArm.ct_frame);
 
-	if (g_PlayerArm.ct_frame <= 5.0f ||(g_PlayerArm.ct_frame >= 20.0f && g_PlayerArm.ct_frame <= 60.0f) || g_PlayerArm.ct_frame >= 85.0f)return;
+	if (g_PlayerArm.ct_frame <= 5.0f || (g_PlayerArm.ct_frame >= 20.0f && g_PlayerArm.ct_frame <= 60.0f) || g_PlayerArm.ct_frame >= 85.0f) 
+	{ 
+		if(g_PlayerArm.ct_frame == 1.0f || g_PlayerArm.ct_frame == 30.0f || g_PlayerArm.ct_frame == 85.0f)
+		PlaySound(SOUND_LABEL_SE_arm_wave);
+
+		return; 
+	}
 
 	if (g_PlayerArm.atCount >= g_PlayerArm.atInterval)
 	{
@@ -60,6 +67,7 @@ void Saw::Action(void)
 				g_PlayerArm.atCount = 0.0f;
 				SetEffect(pos, camera->rot.y, 10.0f);
 				pArm::SetIntervalAt();
+				PlaySound(SOUND_LABEL_SE_Blade_hit);
 			}
 		}
 	}

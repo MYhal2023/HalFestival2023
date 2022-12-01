@@ -176,18 +176,23 @@ void UpdateBullet(void)
 	{
 		if (!g_Bullet[i].efSwitch)continue;
 
-		g_Bullet[i].p_time--;
+
 		//エフェクトコード記述
 		switch (g_Bullet[i].model_num)
 		{
 		case Bullet_XGun:
+			if (g_Bullet[i].p_time == 5)PlaySound(SOUND_LABEL_SE_Braster_hits);
 			XgunParticle(g_Bullet[i].pos);
 			break;
 		case Bullet_Braster:
+			if (g_Bullet[i].p_time == 5)PlaySound(SOUND_LABEL_SE_Braster_hits);
 			BrasterParticle(g_Bullet[i].pos);
 			break;
 
 		}
+
+		g_Bullet[i].p_time--;
+
 		if (g_Bullet[i].p_time <= 0)
 			g_Bullet[i].efSwitch = FALSE;
 	}

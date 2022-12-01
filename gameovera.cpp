@@ -13,6 +13,7 @@
 #include "text_texture.h"
 #include "debugproc.h"
 #include "easing.h"
+#include "sound.h"
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -35,6 +36,7 @@ static char* g_TextureName[] = {
 static Over g_Over[MAX_OVER_TEXTURE];
 static BOOL g_Load = FALSE; 
 static BOOL next_mode = FALSE;
+static BOOL sound_once = FALSE;
 static int g_Overtype = 1;		//この変数は別モードに移行したときも保持したいので初期化処理に入れない
 static XMFLOAT2 pos = { 0.0f, 0.0f };
 static float hazard_pos_x = 0.0f;
@@ -94,6 +96,7 @@ HRESULT InitOver(void)
 
 	g_Load = TRUE;
 	next_mode = FALSE;
+	sound_once = FALSE;
 	pos = { -200.0f, 0.0f };
 	hazard_pos_x = 0.0f;
 	cnt_frame = 0;
@@ -132,7 +135,18 @@ void UninitOver(void)
 void UpdateOver(void)
 {
 	if (!CheckGameover())return;
-
+	if (!sound_once)
+	{
+		switch (g_Overtype)
+		{
+		case OVER_WIN:
+			break;
+		case OVER_LOSE:
+			PlaySound(SOUND_LABEL_SE_game_over);
+			break;
+		}
+		sound_once = TRUE;
+	}
 	cnt_frame++;
 	//ここからはゲームオーバーとなった時に入る
 	switch (g_Overtype)
