@@ -236,6 +236,12 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	SetSourceVolume(SOUND_LABEL_BGM_Result2, 0.5f);
 	SetSourceVolume(SOUND_LABEL_SE_lock, 0.7f);
 
+#ifdef _DEBUG
+	SetSourceVolume(SOUND_LABEL_BGM_Title, 0.0f);
+	SetSourceVolume(SOUND_LABEL_BGM_Battle, 0.0f);
+	SetSourceVolume(SOUND_LABEL_BGM_Result2, 0.0f);
+	SetSourceVolume(SOUND_LABEL_BGM_Result, 0.0f);
+#endif
 	// ‰e‚Ì‰Šú‰»
 	InitSM();
 
@@ -459,7 +465,6 @@ void SetMode(int mode)
 		// ƒ^ƒCƒgƒ‹‰æ–Ê‚Ì‰Šú‰»
 		InitGame();
 		InitTitle();
-		PlaySound(SOUND_LABEL_BGM_Title);
 		break;
 	case MODE_RESERVE:
 		// ˆç¬‰æ–Ê‚Ì‰Šú‰»

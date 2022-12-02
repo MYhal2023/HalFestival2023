@@ -111,12 +111,19 @@ HRESULT InitReserve(void)
 	g_Button[rs_start].pos = { SCREEN_WIDTH * 0.80f , SCREEN_HEIGHT * 0.80f };
 	g_Button[rs_start].size = { 100.0f * 3.0f , 100.0f * 2.0f };
 
+	//Œx‰ú“xŽZo
 	int base = (int)((float)(g_Reserve.rank) *0.01f);
 	if (g_Reserve.vigilance >= ((float)(base)+ 1.0f) * 30.0f)
 		g_Reserve.vigilance = ((float)(base) + 1.0f) * 30.0f;
 	else if(g_Reserve.vigilance < ((float)(base)) * 30.0f)
 		g_Reserve.vigilance = (float)(base) * 30.0f;
 
+	//Œx‰ú“x‚É‚¿‚å‚Á‚Æƒ‰ƒ“ƒ_ƒ€«‚ðŽ‚½‚¹‚é
+	g_Reserve.vigilance += rand() % 6;
+
+	//ƒmƒ‹ƒ}‹~•ŽÒ”‚ÌŽZo
+	int quota_base = (int)((g_Reserve.vigilance) / 15.0f);
+	g_Reserve.quota = BASE_RESCUE_NUM + quota_base;
 	cursol = 0;
 	cursolAlpha = 0.5f;
 	alphaSpeed = 0.02f;
@@ -157,7 +164,7 @@ void UninitReserve(void)
 //=============================================================================
 void UpdateReserve(void)
 {
-	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_A))
+	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_C))
 	{
 		SetFade(FADE_BOX_OUT, MODE_GAME, WhiteBox);
 		PlaySound(SOUND_LABEL_SE_decision);

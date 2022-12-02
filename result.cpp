@@ -409,7 +409,7 @@ void SetReward(void)
 	if (re->vigilance < 0)
 		re->vigilance = 0;
 
-	int base = (int)((re->vigilance) /30.0f);
+	int base = (int)((re->vigilance) /15.0f);
 	re->quota = BASE_RESCUE_NUM + base;
 
 	//ここでデータ引継ぎを行う

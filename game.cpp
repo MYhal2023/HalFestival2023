@@ -431,8 +431,9 @@ void DrawGameTitle(void)
 	XMFLOAT3 pos;
 	XMFLOAT3 rot;
 	// プレイヤー視点
-	pos = cam_pos;
-	pos.y += 0.0f;
+	pos = XMFLOAT3{-716.0f, -1.0f, 97.0f};
+	cam->rot.y = 1.9f;
+	cam->rot.x = 0.36f;
 	const float dist = 0.0f;
 	pos.x += sinf(cam->rot.y)*dist;
 	pos.z += cosf(cam->rot.y)*dist;

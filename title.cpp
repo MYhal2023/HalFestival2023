@@ -38,6 +38,7 @@ static char* g_TextureName[] = {
 };
 static Title g_Title[TEXTURE_MAX];
 static BOOL g_Load = FALSE;
+static BOOL sound_once = FALSE;
 static float speed[TEXTURE_MAX];
 static int cursol;
 HRESULT InitTitle(void)
@@ -119,6 +120,7 @@ HRESULT InitTitle(void)
 	}
 	cursol = 0;
 	g_Load = TRUE;
+	sound_once = FALSE;
 	return S_OK;
 }
 
@@ -154,7 +156,10 @@ void UninitTitle(void)
 //=============================================================================
 void UpdateTitle(void)
 {
-
+	if (!sound_once) {
+		PlaySound(SOUND_LABEL_BGM_Title);
+		sound_once = TRUE;
+	}
 	//カーソルの変色
 	if (g_Title[title_cursol].color.w > 0.8f || g_Title[title_cursol].color.w < 0.2f)
 		speed[title_cursol] *= -1;
@@ -178,7 +183,7 @@ void UpdateTitle(void)
 	int num = title_start + cursol;
 	g_Title[title_cursol].pos = g_Title[num].pos;
 	
-	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_A))
+	if (GetKeyboardTrigger(DIK_RETURN) || IsButtonTriggered(0, BUTTON_C))
 	{
 		switch (cursol) {
 		case 0://はじめから

@@ -480,6 +480,9 @@ HRESULT InitializePad(void)			// パッド初期化
 		//右スティックX軸の無効ゾーンを設定
 		dipdw.diph.dwObj = DIJOFS_Z;
 		pGamePad[i]->SetProperty(DIPROP_DEADZONE, &dipdw.diph);
+		//右スティックY軸の無効ゾーンを設定
+		dipdw.diph.dwObj = DIJOFS_RZ;
+		pGamePad[i]->SetProperty(DIPROP_DEADZONE, &dipdw.diph);
 
 		//デバイスの振動プロパティの設定
 		pGamePad[i]->EnumObjects(EnumAxesCallback, (VOID*)&padForceFeedbackAxis[i], DIDFT_AXIS);
@@ -553,40 +556,40 @@ void UpdatePad(void)
 				result = pGamePad[i]->Acquire();
 		}
 
-		if (measureCntST && !measureST && oldStickY[i] < dijs.lRz)	//計測開始
-		{
-			measureST = TRUE;
-			countY[i] = 0;
-			countTime[i] = 0;
-		}
-		//Y方向のスティックに下変化があり、計測開始指示が出ているなら速度計測
-		if ((oldStickY[i] < dijs.lRz) && measureST)
-		{
-			countY[i] += (dijs.lRz - oldStickY[i]);  //差分を加算
-			countTime[i] += 1;						 //1フレーム単位で計測していく
-			padForceY[i] = FORCE_NON;
-		}
-		else//変化が無いか下にはじき終わっているなら計測を終了し、初期化
-		{
-			if (countY[i] != 0 && countTime[i] >= 3 && countY[i] >= 30)//計測終了に制限を付ける事で操作性を高める
-			{
-				forceStickY = countY[i] / countTime[i];
-				countY[i] = 0;
-				countTime[i] = 0;
-				measureST = FALSE;
-				measureCntST = FALSE;
-				if (forceStickY <= 80)			padForceY[i] = FORCE_SLOW;
-				else if (forceStickY > 280)		padForceY[i] = FORCE_FAST;
-				else if (forceStickY > 80)		padForceY[i] = FORCE_MIDDLE;
-			}
-			else
-			{
-				countY[i] = 0;
-				countTime[i] = 0;
-				measureST = FALSE;
-				measureCntST = FALSE;
-			}
-		}
+		//if (measureCntST && !measureST && oldStickY[i] < dijs.lRz)	//計測開始
+		//{
+		//	measureST = TRUE;
+		//	countY[i] = 0;
+		//	countTime[i] = 0;
+		//}
+		////Y方向のスティックに下変化があり、計測開始指示が出ているなら速度計測
+		//if ((oldStickY[i] < dijs.lRz) && measureST)
+		//{
+		//	countY[i] += (dijs.lRz - oldStickY[i]);  //差分を加算
+		//	countTime[i] += 1;						 //1フレーム単位で計測していく
+		//	padForceY[i] = FORCE_NON;
+		//}
+		//else//変化が無いか下にはじき終わっているなら計測を終了し、初期化
+		//{
+		//	if (countY[i] != 0 && countTime[i] >= 3 && countY[i] >= 30)//計測終了に制限を付ける事で操作性を高める
+		//	{
+		//		forceStickY = countY[i] / countTime[i];
+		//		countY[i] = 0;
+		//		countTime[i] = 0;
+		//		measureST = FALSE;
+		//		measureCntST = FALSE;
+		//		if (forceStickY <= 80)			padForceY[i] = FORCE_SLOW;
+		//		else if (forceStickY > 280)		padForceY[i] = FORCE_FAST;
+		//		else if (forceStickY > 80)		padForceY[i] = FORCE_MIDDLE;
+		//	}
+		//	else
+		//	{
+		//		countY[i] = 0;
+		//		countTime[i] = 0;
+		//		measureST = FALSE;
+		//		measureCntST = FALSE;
+		//	}
+		//}
 
 		// ３２の各ビットに意味を持たせ、ボタン押下に応じてビットをオンにする
 		//* y-axis (forward)
@@ -601,6 +604,10 @@ void UpdatePad(void)
 		if (dijs.lZ > 0)					padState[i] |= BUTTON_R_RIGHT;
 		//* x-axis left(Rstick)
 		if (dijs.lZ < 0)					padState[i] |= BUTTON_R_LEFT;
+
+		if (dijs.lRz < 0)					padState[i] |= RGDW_UP;
+
+		if (dijs.lRz > 0)					padState[i] |= RGDW_DOWN;
 		//* Ａボタン
 		if ( dijs.rgbButtons[0] & 0x80 )	padState[i] |= BUTTON_A;
 		//* Ｂボタン
@@ -637,14 +644,6 @@ void UpdatePad(void)
 				padState[i] |= RGDW_RIGHT;
 			}
 
-			if (y > 0.01f)
-			{
-				padState[i] |= RGDW_UP;
-			}
-			else if (y < -0.01f)
-			{
-				padState[i] |= RGDW_DOWN;
-			}
 		}
 		// Trigger設定
 		padTrigger[i] = ((lastPadState ^ padState[i])	// 前回と違っていて

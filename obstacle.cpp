@@ -237,7 +237,7 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 
 		break;
 	case om_box:			//“ä‚Ì‚ª‚ç‚­‚½
-		set_x = 55.0f;
+		set_x = 65.0f;
 		ob->mesh_wall[i++] = GetMeshWallNum();
 		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
@@ -277,7 +277,7 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
 		break; 
 	case om_steel:		//“S|
-		set_x = 60.0f;
+		set_x = 65.0f;
 		ob->mesh_wall[i++] = GetMeshWallNum();
 		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);

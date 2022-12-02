@@ -11,6 +11,7 @@
 #include "player.h"
 #include "collision.h"
 #include "debugproc.h"
+#include "fire.h"
 
 //*****************************************************************************
 // ƒ}ƒNƒ’è‹`
@@ -212,6 +213,53 @@ HRESULT InitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT4 col,
 
 	if (pMesh->rot.x == XM_PI * 0.5f || pMesh->rot.z == XM_PI * 0.5f)
 		g_CeilingWall = g_nNumMeshWall;
+
+	if (pMesh->texNo != WALL_RAY && (pMesh->rot.x != XM_PI * 0.5f && pMesh->rot.z != XM_PI * 0.5f))
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			XMFLOAT3 rand_pos = (pMesh->pos);
+			XMFLOAT3 rand_rot = { 0.0f, 0.0f, 0.0f };
+			//‰ñ“]—Ê‚ðŒ³‚ÉxŽ²‚ÆzŽ²•ûŒü‚Ì•‚ðŒvŽZ
+			float rotatew = cosf(pMesh->rot.y);
+			float rotatez = sinf(pMesh->rot.y);
+			float width = pMesh->fBlockSizeX * fabsf(rotatew) * pMesh->nNumBlockX;
+			float thickness = pMesh->fBlockSizeX * fabsf(rotatez) * pMesh->nNumBlockX;
+			int rand_scale = (int)(pMesh->fBlockSizeX * 0.5f);
+			if (pMesh->rot.y == XM_PI * 0.0f || pMesh->rot.y == XM_PI * 1.0f) {
+				rand_pos.x += (float)((rand() % (rand_scale * 2)) - rand_scale);
+				int fire_rand = rand() % 2;
+				switch (fire_rand)
+				{
+				case 0:
+					rand_pos.z += 3.0f;
+					rand_rot.y = XM_PI * 1.0f;
+					break;
+				case 1:
+					rand_pos.z -= 3.0f;
+					rand_rot.y = XM_PI * 0.0f;
+					break;
+				}
+			}
+			else if (pMesh->rot.y == XM_PI * 0.5f || pMesh->rot.y == XM_PI * 1.5f) {
+				rand_pos.z += (float)((rand() % (rand_scale * 2)) - rand_scale);
+				int fire_rand = rand() % 2;
+				switch (fire_rand)
+				{
+				case 0:
+					rand_pos.x += 3.0f;
+					rand_rot.y = XM_PI * 1.5f;
+					break;
+				case 1:
+					rand_pos.x -= 3.0f;
+					rand_rot.y = XM_PI * 0.5f;
+					break;
+				}
+			}
+			rand_pos.y = (float)((rand() % 150) + 50);
+			SetFireEffect(rand_pos, rand_rot);
+		}
+	}
 
 	g_Load = TRUE;
 	return S_OK;

@@ -175,18 +175,21 @@ void Map::InitMap(void)
 	// 会議室
 
 	// 書庫
-	Obstacle::SetObstacle(XMFLOAT3{ 530.0f, 0.0f, -765.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 970.0f, 0.0f, -765.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 530.0f, 0.0f, -475.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 970.0f, 0.0f, -475.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 630.0f, 0.0f, -900.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 870.0f, 0.0f, -900.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 530.0f, 50.0f, -765.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 970.0f, 50.0f, -765.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 530.0f, 50.0f, -475.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 970.0f, 50.0f, -475.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 630.0f, 50.0f, -900.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
-	Obstacle::SetObstacle(XMFLOAT3{ 870.0f, 50.0f, -900.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	// 書庫
+	Obstacle::SetObstacle(XMFLOAT3{ 530.0f, 0.0f, -337.5f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 970.0f, 0.0f, -337.5f }, XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 530.0f, 0.0f, -525.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 970.0f, 0.0f, -525.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 630.0f, 0.0f, -970.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 870.0f, 0.0f, -970.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+
+	Obstacle::SetObstacle(XMFLOAT3{ 530.0f, 0.0f, -712.5f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 970.0f, 0.0f, -712.5f }, XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 530.0f, 0.0f, -900.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 970.0f, 0.0f, -900.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 630.0f, 0.0f, -625.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 870.0f, 0.0f, -625.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+
 	Obstacle::SetObstacle(XMFLOAT3{ 840.0f, 0.0f, -450.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 1.5f, 1.5f, 1.5f }, 100.0f, 50.0f, om_book);
 	Obstacle::SetObstacle(XMFLOAT3{ 630.0f, 0.0f, -800.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 1.5f, 1.5f, 1.5f }, 100.0f, 50.0f, om_book);
 	Obstacle::SetObstacle(XMFLOAT3{ 770.0f, 0.0f, -630.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 1.5f, 1.5f, 1.5f }, 100.0f, 50.0f, om_book);
@@ -257,9 +260,9 @@ void Map::InitMap(void)
 
 	//ランダム設置
 	Reserve *re = GetReserve();
-	//float rand_base = re->vigilance;		//警戒度を基準にランダム性をもたせる
-	//int set_num = (int)(rand_base / 5.0f);	//追加設置数
-	int set_num = 14;
+	float rand_base = re->vigilance;		//警戒度を基準にランダム性をもたせる
+	int set_num = (int)(rand_base / 10.0f) + 5;	//追加設置数
+	//int set_num = 14;
 	while (set_num > 0)
 	{
 		if (set_num > 11)
@@ -296,7 +299,7 @@ void Map::InitMap(void)
 
 	//設置救助者
 	//RescueLife()
-	set_num = MAX_RESCUE_RAND_POS;	//設置数
+	set_num = re->quota + 5;	//設置数
 	while (set_num > 0)
 	{
 		if (set_num > MAX_RESCUE_RAND_POS - 2)
@@ -357,16 +360,27 @@ void Map::InitBootMap(void)
 	g_Map.set_res_pos[7] = XMFLOAT3(-1141.0f, 0.0f, -969.0f);
 	g_Map.set_res_pos[8] = XMFLOAT3(-57.0f, 0.0f, -829.0f);
 	g_Map.set_res_pos[9] = XMFLOAT3(41.0f, 0.0f, -921.0f);
-	g_Map.set_res_pos[10] = XMFLOAT3(-0.0f, 0.0f, 0.0f);
-	g_Map.set_res_pos[11] = XMFLOAT3(-50.0f, 0.0f, 9.0f);
-	g_Map.set_res_pos[12] = XMFLOAT3(-100.0f, 0.0f, 0.0f);
-	g_Map.set_res_pos[13] = XMFLOAT3(-1918.0f, 0.0f, 294.0f);
-	g_Map.set_res_pos[14] = XMFLOAT3(-1930.0f, 0.0f, 928.0f);
-	g_Map.set_res_pos[15] = XMFLOAT3(-1848.f, 0.0f, -226.0f);
-	g_Map.set_res_pos[16] = XMFLOAT3(-1970.f, 0.0f, -459.0f);
-	g_Map.set_res_pos[17] = XMFLOAT3(-1141.0f, 0.0f, -969.0f);
-	g_Map.set_res_pos[18] = XMFLOAT3(-57.0f, 0.0f, -829.0f);
-	g_Map.set_res_pos[19] = XMFLOAT3(41.0f, 0.0f, -921.0f);
+	g_Map.set_res_pos[10] = XMFLOAT3(750.0f, 0.0f, -900.0f);
+	g_Map.set_res_pos[11] = XMFLOAT3(750.0f, 0.0f, -490.0f);
+	g_Map.set_res_pos[12] = XMFLOAT3(430.0f, 0.0f, 900.0f);
+	g_Map.set_res_pos[13] = XMFLOAT3(530.0f, 0.0f, 900.0f);
+	g_Map.set_res_pos[14] = XMFLOAT3(750.0f, 0.0f, 500.0f);
+	g_Map.set_res_pos[15] = XMFLOAT3(1900.f, 0.0f, 950.0f);
+	g_Map.set_res_pos[16] = XMFLOAT3(1500.f, 0.0f, 700.0f);
+	g_Map.set_res_pos[17] = XMFLOAT3(1220.0f, 0.0f, 620.0f);
+	g_Map.set_res_pos[18] = XMFLOAT3(1680.0f, 0.0f, 420.0f);
+	g_Map.set_res_pos[19] = XMFLOAT3(830.0f, 0.0f, 700.0f);
+	g_Map.set_res_pos[20] = XMFLOAT3(550.0f, 0.0f, 940.0f);
+	g_Map.set_res_pos[21] = XMFLOAT3(940.0f, 0.0f, 940.0f);
+	g_Map.set_res_pos[22] = XMFLOAT3(550.0f, 0.0f, 270.0f);
+	g_Map.set_res_pos[23] = XMFLOAT3(1050.0f, 0.0f, 300.0f);
+	g_Map.set_res_pos[24] = XMFLOAT3(1250.0f, 0.0f, 815.0f);
+	g_Map.set_res_pos[25] = XMFLOAT3(1440.0f, 0.0f, 950.0f);
+	g_Map.set_res_pos[26] = XMFLOAT3(1985.0f, 0.0f, 975.0f);
+	g_Map.set_res_pos[27] = XMFLOAT3(1900.0f, 0.0f, 690.0f);
+	g_Map.set_res_pos[28] = XMFLOAT3(1980.0f, 0.0f, 225.0f);
+	g_Map.set_res_pos[29] = XMFLOAT3(950.0f, 0.0f, 375.0f);
+
 	for (int i = 0; i < MAX_OBSTACLE_RAND_POS; i++)
 	{
 		g_Map.use[i] = FALSE;

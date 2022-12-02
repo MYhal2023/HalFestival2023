@@ -331,7 +331,7 @@ void DrawFade(void)
 
 
 	//”wŒi‚ð•`‰æ
-	if(g_Fade == FADE_IN || FADE_OUT)
+	if(g_Fade == FADE_IN || g_Fade == FADE_OUT)
 	{
 		// ƒeƒNƒXƒ`ƒƒÝ’è
 		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
@@ -344,7 +344,7 @@ void DrawFade(void)
 		// ƒ|ƒŠƒSƒ“•`‰æ
 		GetDeviceContext()->Draw(4, 0);
 	}
-	else if (g_Fade == FADE_BOX_OUT || FADE_BOX_IN)
+	else if (g_Fade == FADE_BOX_OUT || g_Fade == FADE_BOX_IN)
 	{
 		int width = (int)(FADE_BOX_WIDTH_NUM);
 		int height = (int)(FADE_BOX_HEIGHT_NUM);

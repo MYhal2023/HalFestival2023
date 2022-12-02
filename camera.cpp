@@ -109,12 +109,12 @@ void UpdateCamera(void)
 	}
 	if (GetKeyboardPress(DIK_UP))
 	{
-		if (g_Cam.rot.x < XM_PI * 0.2f)
+		if (g_Cam.rot.x < XM_PI * 1.0f)
 			g_Cam.rot.x += XM_PI * 0.004f;
 	}
 	else if (GetKeyboardPress(DIK_DOWN))
 	{
-		if (g_Cam.rot.x > 0.0f)
+		if (g_Cam.rot.x > XM_PI * -1.0f)
 			g_Cam.rot.x -= XM_PI * 0.004f;
 	}
 
