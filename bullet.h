@@ -14,6 +14,8 @@
 
 #define	BULLET_WH		(5.0f)	// “–‚½‚è”»’è‚Ì‘å‚«‚³
 #define MODEL_BULLET_SAW	"data/MODEL/neutrophils.obj"			// “Ç‚İ‚Şƒ‚ƒfƒ‹–¼
+#define MODEL_BULLET_Braster	"data/MODEL/syouka_bullet.obj"			// “Ç‚İ‚Şƒ‚ƒfƒ‹–¼
+#define MODEL_BULLET_Xgun	"data/MODEL/Xgun_bullet.obj"			// “Ç‚İ‚Şƒ‚ƒfƒ‹–¼
 
 enum BULLET_VAR
 {

@@ -140,6 +140,7 @@ void UpdateOver(void)
 		switch (g_Overtype)
 		{
 		case OVER_WIN:
+			PlaySound(SOUND_LABEL_SE_clear);
 			break;
 		case OVER_LOSE:
 			PlaySound(SOUND_LABEL_SE_game_over);

@@ -32,8 +32,8 @@ void Braster::Action(void)
 		rot.y = cam->rot.y;
 		rot.x = cam->rot.x;
 
-		SetBullet(pos, rot, 8.0f, 50.0f, 40, Bullet_Braster);
-		SetBullet(pos2, rot, 8.0f, 50.0f, 40, Bullet_Braster);
+		SetBullet(pos, rot, 8.0f, 20.0f, 40, Bullet_Braster);
+		SetBullet(pos2, rot, 8.0f, 20.0f, 40, Bullet_Braster);
 
 		pos.y += 8.0f;
 		pos2.y += 8.0f;

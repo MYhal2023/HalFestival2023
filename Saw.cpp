@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "debugproc.h"
 #include "sound.h"
+#include "meshwall.h"
 static Saw g_PlayerArm;
 static XMFLOAT3 efPos[3];
 static XMFLOAT3 efRot[3];
@@ -61,13 +62,26 @@ void Saw::Action(void)
 			float dist = 30.0f;
 			pos.x += sinf(player[0].rot.y) * dist;
 			pos.z += cosf(player[0].rot.y) * dist;
-			if (CollisionBC(pos, ob[k].pos, 15.0f, ob[k].size))
+			if (ob->model_num != om_break_wall) {
+				if (CollisionBC(pos, ob[k].pos, 15.0f, ob[k].size))
+				{
+					ob[k].durability -= g_PlayerArm.attack_damage;
+					g_PlayerArm.atCount = 0.0f;
+					SetEffect(pos, camera->rot.y, 10.0f);
+					pArm::SetIntervalAt();
+					PlaySound(SOUND_LABEL_SE_Blade_hit);
+				}
+			}
+			else
 			{
-				ob[k].durability -= g_PlayerArm.attack_damage;
-				g_PlayerArm.atCount = 0.0f;
-				SetEffect(pos, camera->rot.y, 10.0f);
-				pArm::SetIntervalAt();
-				PlaySound(SOUND_LABEL_SE_Blade_hit);
+				if (MeshRayWallHitObj(pos, 15.0f))
+				{
+					ob[k].durability -= g_PlayerArm.attack_damage;
+					g_PlayerArm.atCount = 0.0f;
+					SetEffect(pos, camera->rot.y, 10.0f);
+					pArm::SetIntervalAt();
+					PlaySound(SOUND_LABEL_SE_Blade_hit);
+				}
 			}
 		}
 	}

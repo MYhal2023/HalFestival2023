@@ -428,6 +428,71 @@ void MeshWallHit(XMFLOAT3 pos, float size, float old_x, float old_z)
 
 }
 
+//当たり判定用じゃない壁との当たり判定
+BOOL MeshWallHitObj(XMFLOAT3 pos, float size)
+{
+	MESH_WALL *pMesh;
+	BOOL ans = FALSE;
+	for (int i = 0; i < g_nNumMeshWall; i++)
+	{
+		pMesh = &g_aMeshWall[i];
+		if (pMesh->use != TRUE || pMesh->texNo == WALL_RAY)continue;
+
+		//回転量を元にx軸とz軸方向の幅を計算
+		float rotatew = cosf(pMesh->rot.y);
+		float rotatez = sinf(pMesh->rot.y);
+		float width = pMesh->fBlockSizeX * fabsf(rotatew) * pMesh->nNumBlockX;
+		float thickness = pMesh->fBlockSizeX * fabsf(rotatez) * pMesh->nNumBlockX;
+		if (width >= pMesh->fBlockSizeX)width += 10.0f;
+		if (thickness >= pMesh->fBlockSizeX)thickness += 10.0f;
+
+		PLAYER *player = GetPlayer();
+
+		//壁との当たり判定。BBで行うため、y座標は現状考慮していない。
+		if (CollisionBB(pos, size, size, pMesh->pos, width, thickness) == TRUE
+			&& pMesh->rot.x != XM_PI * 0.5f && pMesh->rot.z != XM_PI * 0.5f)
+		{
+			ans = TRUE;
+		}
+
+	}
+
+	return ans;
+}
+
+//当たり判定用の壁との当たり判定
+BOOL MeshRayWallHitObj(XMFLOAT3 pos, float size)
+{
+	MESH_WALL *pMesh;
+	BOOL ans = FALSE;
+	for (int i = 0; i < g_nNumMeshWall; i++)
+	{
+		pMesh = &g_aMeshWall[i];
+		if (pMesh->use != TRUE || pMesh->texNo != WALL_RAY)continue;
+
+		//回転量を元にx軸とz軸方向の幅を計算
+		float rotatew = cosf(pMesh->rot.y);
+		float rotatez = sinf(pMesh->rot.y);
+		float width = pMesh->fBlockSizeX * fabsf(rotatew) * pMesh->nNumBlockX;
+		float thickness = pMesh->fBlockSizeX * fabsf(rotatez) * pMesh->nNumBlockX;
+		if (width >= pMesh->fBlockSizeX)width += 10.0f;
+		if (thickness >= pMesh->fBlockSizeX)thickness += 10.0f;
+
+		PLAYER *player = GetPlayer();
+
+		//壁との当たり判定。BBで行うため、y座標は現状考慮していない。
+		if (CollisionBB(pos, size, size, pMesh->pos, width, thickness) == TRUE
+			&& pMesh->rot.x != XM_PI * 0.5f && pMesh->rot.z != XM_PI * 0.5f)
+		{
+			ans = TRUE;
+		}
+
+	}
+
+	return ans;
+}
+
+
 BOOL MeshWallHit(XMFLOAT3 pos, float size)
 {
 	MESH_WALL *pMesh;

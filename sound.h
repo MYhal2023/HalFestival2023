@@ -55,9 +55,13 @@ enum
 	SOUND_LABEL_SE_Braster_hits,		// SE
 	SOUND_LABEL_SE_Braster_ready,		// SE
 	SOUND_LABEL_SE_xgun_hit,		// SE
+	SOUND_LABEL_SE_xgun_impact,		// SE
 	SOUND_LABEL_SE_xgun_ready,		// SE
 	SOUND_LABEL_SE_xgun_ready1,		// SE
 	SOUND_LABEL_SE_count,		// SE
+	SOUND_LABEL_SE_clear,		// SE
+	SOUND_LABEL_SE_sc_add,		// SE
+	SOUND_LABEL_SE_gauge,		// SE
 	SOUND_LABEL_SE_decision,		// SE
 	SOUND_LABEL_SE_select,		// SE
 	SOUND_LABEL_SE_earthquake,		// SE

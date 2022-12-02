@@ -41,8 +41,8 @@ void Xgun::Action(void)
 		player[0].rot.y = cam->rot.y;
 		rot.y = cam->rot.y;
 		rot.x = cam->rot.x;
-		SetBullet(pos, rot, 10.0f, 50.0f, 60, Bullet_XGun);
-		SetBullet(pos2, rot, 10.0f, 50.0f, 60, Bullet_XGun);
+		SetBullet(pos, rot, 10.0f, 30.0f, 70, Bullet_XGun);
+		SetBullet(pos2, rot, 10.0f, 30.0f, 70, Bullet_XGun);
 		PlaySound(SOUND_LABEL_SE_xgun_hit);
 		g_PlayerArm.attack = TRUE;
 		g_PlayerArm.atCount = INTERVAL;

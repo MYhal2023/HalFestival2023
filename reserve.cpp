@@ -66,7 +66,7 @@ HRESULT InitReserve(void)
 		g_Reserve.vigilance = 0.0f;
 		g_Reserve.old_vigi = 0.0f;
 		g_Reserve.quota = BASE_RESCUE_NUM;
-		g_Reserve.rank = 0;
+		g_Reserve.rank = 160;
 #ifdef _DEBUG
 
 #endif
@@ -172,13 +172,17 @@ void UpdateReserve(void)
 	if (!once)
 	{
 		g_Button[rs_start].nIndex = Easing::SetEase(SCREEN_HEIGHT * 0.0f, SCREEN_HEIGHT * 0.4f, 100.0f);
-		g_Button[rs_rank].nIndex = Easing::SetEase(SCREEN_HEIGHT * 0.0f, SCREEN_HEIGHT * 0.9f, 80.0f);
+		g_Button[rs_rank_0].nIndex = Easing::SetEase(SCREEN_HEIGHT * 0.0f, SCREEN_HEIGHT * 0.9f, 80.0f);
 		g_Button[rs_vigilance].nIndex = Easing::SetEase(SCREEN_HEIGHT * 0.0f, SCREEN_HEIGHT * 0.9f, 60.0f);
+		g_Button[rs_xpvar_bg].nIndex = Easing::SetEase(SCREEN_HEIGHT * 0.0f, SCREEN_HEIGHT * 0.9f, 80.0f);
+		g_Button[rs_xpvar].nIndex = Easing::SetEase(SCREEN_HEIGHT * 0.0f, SCREEN_HEIGHT * 0.9f, 80.0f);
 		once = TRUE;
 	}
 	g_Button[rs_start].set_pos.y = Easing::GetEase(g_Button[rs_start].nIndex);
-	g_Button[rs_rank].set_pos.x = Easing::GetEase(g_Button[rs_rank].nIndex);
+	g_Button[rs_rank_0].set_pos.x = Easing::GetEase(g_Button[rs_rank_0].nIndex);
 	g_Button[rs_vigilance].set_pos.x = Easing::GetEase(g_Button[rs_vigilance].nIndex);
+	g_Button[rs_xpvar_bg].set_pos.x = Easing::GetEase(g_Button[rs_xpvar_bg].nIndex);
+	g_Button[rs_xpvar].set_pos.x = Easing::GetEase(g_Button[rs_xpvar].nIndex);
 }
 
 //=============================================================================
@@ -223,6 +227,35 @@ void DrawReserve(void)
 	g_Button[rs_rank].size = { 530 * 0.9f, 100 * 1.0f };
 	g_Button[rs_rank].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	DrawTexture(&g_Button[rs_rank]);
+
+	int rank = rs_rank_0 + (g_Reserve.rank /100);
+	if (rank > rs_rank_3) {
+		rank = rs_rank_3;
+	}
+	g_Button[rank].pos = { SCREEN_WIDTH * 1.25f - g_Button[rs_rank_0].set_pos.x , SCREEN_HEIGHT * 0.55f };
+	g_Button[rank].size = { 1900.0f * 0.75f * 0.5f, 800.0f *0.75f*0.5f };
+	g_Button[rank].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawTexture(&g_Button[rank]);
+
+	g_Button[rs_xpvar_bg].pos = { SCREEN_WIDTH * 1.25f - g_Button[rs_rank_0].set_pos.x , SCREEN_HEIGHT * 0.55f };
+	g_Button[rs_xpvar_bg].size = { 810.0f * 0.75f, 80.0f *0.75f};
+	g_Button[rs_xpvar_bg].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DrawTexture(&g_Button[rs_xpvar_bg]);
+
+	float par = (float)(g_Reserve.rank % 100) / 100.0f;
+	if (g_Reserve.rank > 300)par = 1.0f;
+	g_Button[rs_xpvar].size = { 800.0f *0.75f* par , 72.0f *0.75f};
+	g_Button[rs_xpvar].pos = { (SCREEN_WIDTH * 1.25f - g_Button[rs_xpvar].set_pos.x) + (800.0f *0.75f * (par - 1.0f)) * 0.5f, SCREEN_HEIGHT * 0.55f };
+	g_Button[rs_xpvar].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	// テクスチャ設定
+	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Button[rs_xpvar].g_Texture);
+
+	// １枚のポリゴンの頂点とテクスチャ座標を設定
+	SetSpriteColor(g_VertexBuffer, g_Button[rs_xpvar].pos.x, g_Button[rs_xpvar].pos.y, g_Button[rs_xpvar].size.x, g_Button[rs_xpvar].size.y, 0.0f, 0.0f, 1.0f, 1.0f,
+		g_Button[rs_xpvar].color);
+
+	// ポリゴン描画
+	GetDeviceContext()->Draw(4, 0);
 
 	SetDepthEnable(TRUE);
 

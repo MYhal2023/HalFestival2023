@@ -95,6 +95,7 @@ HRESULT InitResult(void)
 	g_Load = TRUE;
 	once = FALSE;
 	ef_once = FALSE;
+	skip = -30;
 	return S_OK;
 }
 
@@ -168,6 +169,9 @@ void FirstSeq(void)
 		g_Reward.time += g_Reward.ef_time;
 	else
 		g_Reward.time = g_Reward.max_time;
+
+	PlaySound(SOUND_LABEL_SE_sc_add);
+
 	if (g_Reward.time == g_Reward.max_time) {
 		sequence++;
 		skip = 0;
@@ -181,6 +185,8 @@ void SecondSeq(void)
 	else
 		g_Reward.beatNum = g_Reward.max_beatNum;
 
+	PlaySound(SOUND_LABEL_SE_sc_add);
+
 	if (g_Reward.beatNum == g_Reward.max_beatNum) {
 		sequence++;
 		skip = 0;
@@ -193,6 +199,9 @@ void ThirdSeq(void)
 		g_Reward.rescue_num += g_Reward.ef_rescue_num;
 	else
 		g_Reward.rescue_num = g_Reward.max_rescue_num;
+
+	PlaySound(SOUND_LABEL_SE_sc_add);
+
 	if (g_Reward.rescue_num == g_Reward.max_rescue_num) {
 		sequence++;
 		skip = 0;
@@ -200,10 +209,14 @@ void ThirdSeq(void)
 }
 void ForthSeq(void)
 {
-	if (g_Reward.score < g_Reward.max_score)
+	if (g_Reward.score < g_Reward.max_score) {
 		g_Reward.score += g_Reward.ef_score;
+		PlaySound(SOUND_LABEL_SE_sc_add);
+	}
 	else
 		g_Reward.score = g_Reward.max_score;
+
+
 	if (g_Reward.score == g_Reward.max_score && GetKeyboardTrigger(DIK_RETURN)) { 
 		sequence++; 
 		g_Reward.nEaseIndex = Easing::SetEase(-500.0f, SCREEN_CENTER_Y, 30.0f);
@@ -224,14 +237,14 @@ void FifthSeq(void)
 
 		g_Reward.rank_gauge += (int)(g_Reward.ef_rank_up);
 		g_Reward.rank_up -= (int)(g_Reward.ef_rank_up);
-
+		PlaySound(SOUND_LABEL_SE_gauge);
 		if (g_Reward.rank_gauge >= g_Reward.rank_gauge_max) {
 			g_Reward.rank++;
 			g_Reward.rank_gauge -= g_Reward.rank_gauge_max;
 		}
 	}
 	if (g_Reward.rank_up <= 0 && !ef_once) {
-		skip = -40;
+		skip = -60;
 		ef_once = TRUE;
 		return;
 	}

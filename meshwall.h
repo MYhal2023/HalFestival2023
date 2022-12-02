@@ -39,6 +39,8 @@ void UpdateMeshWall(void);
 void DrawMeshWall(void);
 void MeshWallHit(XMFLOAT3 pos, float size, float old_x, float old_z);
 BOOL MeshWallHit(XMFLOAT3 pos, float size);
+BOOL MeshWallHitObj(XMFLOAT3 pos, float size);
+BOOL MeshRayWallHitObj(XMFLOAT3 pos, float size);
 BOOL MeshWallPointHitCheck(int pos[], XMFLOAT3 player_pos);
 void InitFieldMeshWall(void);
 XMFLOAT3 GetMeshWallStPosition(int i);

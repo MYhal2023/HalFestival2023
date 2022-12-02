@@ -76,9 +76,13 @@ SOUNDPARAM g_aParam[SOUND_LABEL_MAX] =
 	{ (char*)"data/SE/Braster_hits.wav", 0 },		// cursol select‰¹
 	{ (char*)"data/SE/Braster_ready.wav", 0 },		// cannon‰¹
 	{ (char*)"data/SE/xgun_hit.wav", 0 },		// cannon‰¹
+	{ (char*)"data/SE/Impact.wav", 0 },		// cannon‰¹
 	{ (char*)"data/SE/xgun_ready.wav", 0 },		// cannon‰¹
 	{ (char*)"data/SE/xgun_ready1.wav", 0 },		// cannon‰¹
 	{ (char*)"data/SE/count.wav", 0 },		// hit‰¹
+	{ (char*)"data/SE/clear.wav", 0 },		// hit‰¹
+	{ (char*)"data/SE/Score_add.wav", 0 },		// hit‰¹
+	{ (char*)"data/SE/Gauge_rise.wav", 0 },		// hit‰¹
 	{ (char*)"data/SE/decision.wav", 0 },		// hit-strong‰¹
 	{ (char*)"data/SE/select.wav", 0 },		// hit-strong‰¹
 	{ (char*)"data/SE/earthquake.wav", 0 },		// kick‰¹

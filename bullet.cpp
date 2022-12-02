@@ -14,6 +14,7 @@
 #include "obstacle.h"
 #include "player.h"
 #include "particle.h"
+#include "meshwall.h"
 
 
 //*****************************************************************************
@@ -98,8 +99,8 @@ HRESULT InitBullet(void)
 //起動時の処理
 void InitBulletBoot(void)
 {
-	LoadModel(MODEL_BULLET_SAW, &model[Bullet_XGun]);
-	LoadModel(MODEL_BULLET_SAW, &model[Bullet_Braster]);
+	LoadModel(MODEL_BULLET_Xgun, &model[Bullet_XGun]);
+	LoadModel(MODEL_BULLET_Braster, &model[Bullet_Braster]);
 	LoadModel(MODEL_BULLET_SAW, &model[Bullet_Saw]);
 }
 //=============================================================================
@@ -156,15 +157,28 @@ void UpdateBullet(void)
 		for (int k = 0; k < MAX_OBSTACLE; k++)
 		{
 			if (!ob[k].use)continue;
-			if (CollisionBC(ob[k].pos, g_Bullet[i].pos, ob[k].size, g_Bullet[i].size))
+
+			if (ob[k].model_num != om_break_wall) {
+				if (CollisionBC(ob[k].pos, g_Bullet[i].pos, ob[k].size, g_Bullet[i].size))
+				{
+					g_Bullet[i].life = 0;
+					ob[k].durability -= g_Bullet[i].attack;
+					g_Bullet[i].efSwitch = TRUE;
+				}
+			}
+			else
 			{
-				g_Bullet[i].life = 0;
-				ob[k].durability -= g_Bullet[i].attack;
-				g_Bullet[i].efSwitch = TRUE;
+				if (MeshRayWallHitObj(g_Bullet[i].pos, g_Bullet[i].size))
+				{
+					g_Bullet[i].life = 0;
+					ob[k].durability -= g_Bullet[i].attack;
+					g_Bullet[i].efSwitch = TRUE;
+				}
 			}
 		}
+
 		//弾を消す処理
-		if (g_Bullet[i].life <= 0)
+		if ((g_Bullet[i].life <= 0) || MeshWallHitObj(g_Bullet[i].pos, 5.0f))
 		{
 			g_Bullet[i].use = FALSE;
 			g_Bullet[i].efSwitch = TRUE;
@@ -181,7 +195,7 @@ void UpdateBullet(void)
 		switch (g_Bullet[i].model_num)
 		{
 		case Bullet_XGun:
-			if (g_Bullet[i].p_time == 5)PlaySound(SOUND_LABEL_SE_Braster_hits);
+			if (g_Bullet[i].p_time == 5)PlaySound(SOUND_LABEL_SE_xgun_impact);
 			XgunParticle(g_Bullet[i].pos);
 			break;
 		case Bullet_Braster:
@@ -314,6 +328,7 @@ void DrawBulletModel(void)
 	// カリング設定を戻す
 	SetCullingMode(CULL_MODE_BACK);
 
+#ifdef _DEBUG
 	//ノーマルアームの当たり判定可視化
 	{
 		// カリング無効
@@ -329,7 +344,7 @@ void DrawBulletModel(void)
 			mtxWorld = XMMatrixIdentity();
 
 			// スケールを反映
-			mtxScl = XMMatrixScaling(1.0f, 1.0f, 1.0f);
+			mtxScl = XMMatrixScaling(1.5f, 1.5f, 1.5f);
 			mtxWorld = XMMatrixMultiply(mtxWorld, mtxScl);
 
 			// 回転を反映
@@ -346,14 +361,14 @@ void DrawBulletModel(void)
 			XMStoreFloat4x4(&g_Bullet[k].mtxWorld, mtxWorld);
 
 			// モデル描画
-			DrawModel(&model[0]);
+			DrawModel(&model[Bullet_Saw]);
 			k++;
 		}
 
 		// カリング設定を戻す
 		SetCullingMode(CULL_MODE_BACK);
 	}
-
+#endif
 }
 //=============================================================================
 // 頂点情報の作成
