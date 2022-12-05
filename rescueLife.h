@@ -3,6 +3,7 @@
 #define MODEL_VAR (3)
 #define	MODEL_RESCUE001	"data/MODEL/helper1.obj"			// “Ç‚İ‚Şƒ‚ƒfƒ‹–¼
 #define	MODEL_RESCUE002	"data/MODEL/helper2.obj"			// “Ç‚İ‚Şƒ‚ƒfƒ‹–¼
+#define	MODEL_RESCUE003	"data/MODEL/rescuee1.obj"			// “Ç‚İ‚Şƒ‚ƒfƒ‹–¼
 #include "main.h"
 #include "model.h"
 

@@ -5,9 +5,9 @@
 //
 //=============================================================================
 #include "main.h"
+#include "renderer.h"
 #include "input.h"
 #include "meshwall.h"
-#include "renderer.h"
 #include "player.h"
 #include "collision.h"
 #include "debugproc.h"
@@ -461,9 +461,9 @@ BOOL MeshWallHitObj(XMFLOAT3 pos, float size)
 }
 
 //“–‚½‚è”»’è—p‚Ì•Ç‚Æ‚Ì“–‚½‚è”»’è
-BOOL MeshRayWallHitObj(XMFLOAT3 pos, float size)
+BOOL MeshRayWallHitObj(XMFLOAT3 pos, float size, Obstacle* ob)
 {
-	MESH_WALL *pMesh;
+	MESH_WALL *pMesh = nullptr;
 	BOOL ans = FALSE;
 	for (int i = 0; i < g_nNumMeshWall; i++)
 	{
@@ -484,12 +484,20 @@ BOOL MeshRayWallHitObj(XMFLOAT3 pos, float size)
 		if (CollisionBB(pos, size, size, pMesh->pos, width, thickness) == TRUE
 			&& pMesh->rot.x != XM_PI * 0.5f && pMesh->rot.z != XM_PI * 0.5f)
 		{
-			ans = TRUE;
+			if (ob->mesh_wall[0] == i ||
+				ob->mesh_wall[1] == i ||
+				ob->mesh_wall[2] == i ||
+				ob->mesh_wall[3] == i) {
+				ans = TRUE;
+				break;
+			}
 		}
-
 	}
-
 	return ans;
+}
+
+void MeshRayWallHitSaw(XMFLOAT3 pos, float size, Obstacle * ob, float attack, BULLET * bullet)
+{
 }
 
 

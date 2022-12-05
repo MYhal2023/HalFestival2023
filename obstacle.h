@@ -18,6 +18,8 @@
 #define	MODEL_STEEL		"data/MODEL/steelframe.obj"			// 読み込むモデル名
 #define	MODEL_BREAK_WALL	"data/MODEL/breakwall.obj"			// 読み込むモデル名
 #define	MODEL_TERMINAL	"data/MODEL/terminal.obj"			// 読み込むモデル名
+#define	MODEL_CEILING_BEAM	"data/MODEL/ceilingbeam.obj"			// 読み込むモデル名
+#define	MODEL_CEILING_FAN	"data/MODEL/ceilingfan.obj"			// 読み込むモデル名
 #define	MODEL_TEST			"data/MODEL/neutrophils.obj"			// 読み込むモデル名
 
 #define MAX_OBSTACLE (150)
@@ -46,6 +48,8 @@ enum ObstacleModel
 	om_steel,		//鉄鋼
 	om_break_wall,	//破壊できる壁
 	om_terminal,		//テスト用のモデル
+	om_ceiling_beam,
+	om_ceiling_fan,
 	om_test,		//テスト用のモデル
 	MAX_OBSTACLE_MODEL
 };

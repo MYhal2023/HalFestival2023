@@ -43,6 +43,8 @@ void Obstacle::InitBoot(void)
 	LoadModel(MODEL_STEEL, &model[om_steel]);
 	LoadModel(MODEL_TEST, &model[om_test]);
 	LoadModel(MODEL_BREAK_WALL, &model[om_break_wall]);
+	LoadModel(MODEL_CEILING_BEAM, &model[om_ceiling_beam]);
+	LoadModel(MODEL_CEILING_FAN, &model[om_ceiling_fan]);
 	//LoadModel(MODEL_TERMINAL, &model[om_terminal]);
 }
 //I—¹ˆ—
@@ -294,13 +296,13 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 		break; 
 	case om_break_wall:	//”j‰ó‚Å‚«‚é•Ç
 		if (rot.y == 0.0f) {
-			set_x = 120.0f;
+			set_x = 140.0f;
 			set_z = 10.0f;
 		}
 		else
 		{
 			set_x = 10.0f;
-			set_z = 120.0f;
+			set_z = 140.0f;
 		}
 		ob->mesh_wall[i++] = GetMeshWallNum();
 		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),

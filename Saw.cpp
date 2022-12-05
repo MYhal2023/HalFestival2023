@@ -59,11 +59,11 @@ void Saw::Action(void)
 			if (!ob[k].use)continue;
 
 			XMFLOAT3 pos = player[0].pos;
-			float dist = 30.0f;
+			float dist = 50.0f;
 			pos.x += sinf(player[0].rot.y) * dist;
 			pos.z += cosf(player[0].rot.y) * dist;
-			if (ob->model_num != om_break_wall) {
-				if (CollisionBC(pos, ob[k].pos, 15.0f, ob[k].size))
+			if (ob[k].model_num != om_break_wall) {
+				if (CollisionBC(pos, ob[k].pos, 25.0f, ob[k].size))
 				{
 					ob[k].durability -= g_PlayerArm.attack_damage;
 					g_PlayerArm.atCount = 0.0f;
@@ -74,8 +74,7 @@ void Saw::Action(void)
 			}
 			else
 			{
-				if (MeshRayWallHitObj(pos, 15.0f))
-				{
+				if (MeshRayWallHitObj(pos, 25.0f, &ob[k])) {
 					ob[k].durability -= g_PlayerArm.attack_damage;
 					g_PlayerArm.atCount = 0.0f;
 					SetEffect(pos, camera->rot.y, 10.0f);

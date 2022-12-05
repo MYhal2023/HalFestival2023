@@ -10,8 +10,8 @@
 //*****************************************************************************
 // É}ÉNÉçíËã`
 //*****************************************************************************
-#define GAME_FOG_ST (50.0f)
-#define GAME_FOG_ED (100.0f)
+#define GAME_FOG_ST (100.0f)
+#define GAME_FOG_ED (1500.0f)
 #define GAME_LFOG_ST (100.0f)
 #define GAME_LFOG_ED (300.0f)
 #define DEBUG_FOG_ST (1000.0f)

@@ -25,6 +25,8 @@
 #include "player.h"
 #include "playerArms.h"
 #include "easing.h"
+#include "fire.h"
+#include "particle.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -324,6 +326,8 @@ void Update(void)
 	switch (g_Mode)
 	{
 	case MODE_TITLE:		// タイトル画面の更新
+		UpdateFire();
+		UpdateParticle();
 		UpdateTitle();
 		break;
 

@@ -20,7 +20,7 @@ void RescueLife::InitBootRescue(void)
 {
 	for (int i = 0; i < MODEL_VAR; i++)
 	{
-		LoadModel(MODEL_RESCUE001, &model[i]);
+		LoadModel(MODEL_RESCUE003, &model[i]);
 	}
 }
 

@@ -168,7 +168,7 @@ void UpdateBullet(void)
 			}
 			else
 			{
-				if (MeshRayWallHitObj(g_Bullet[i].pos, g_Bullet[i].size))
+				if(MeshRayWallHitObj(g_Bullet[i].pos, 15.0f, &ob[k]))
 				{
 					g_Bullet[i].life = 0;
 					ob[k].durability -= g_Bullet[i].attack;
