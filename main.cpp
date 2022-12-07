@@ -332,6 +332,8 @@ void Update(void)
 		break;
 
 	case MODE_RESERVE:
+		UpdateFire();
+		UpdateParticle();
 		UpdateReserve();
 		break;
 	case MODE_GAME:			// ƒQ[ƒ€‰æ–Ê‚ÌXV

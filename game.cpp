@@ -65,6 +65,7 @@ static 	XMFLOAT3 cam_pos = { 0.0f, 0.0f, 0.0f };
 static 	XMFLOAT3 cam_rot = { 0.0f, 0.0f, 0.0f };
 static int set_time = LEAD_TIME + 10;
 static 	int random = 1;
+static BOOL UpdateCam = FALSE;
 //=============================================================================
 // ‰Šú‰»ˆ—
 //=============================================================================
@@ -388,7 +389,49 @@ void DrawGame(void)
 	const float dist = 250.0f;
 	pos.x += sinf(cam->rot.y)*dist;
 	pos.z += cosf(cam->rot.y)*dist;
-	SetCameraAT(pos);
+#ifdef _DEBUG
+	if (IsMouseLeftTriggered())
+	{
+		if (!UpdateCam) {
+			cam_pos = pos;
+			UpdateCam = TRUE;
+		}
+		else
+		{
+			UpdateCam = FALSE;
+		}
+	}
+	if (GetKeyboardPress(DIK_2))
+	{
+		cam_pos.y -= 1.0f;
+	}
+	if (GetKeyboardPress(DIK_8))
+	{
+		cam_pos.y += 1.0f;
+	}
+	if (GetKeyboardPress(DIK_6))
+	{
+		cam_pos.x += 1.0f;
+	}
+	if (GetKeyboardPress(DIK_4))
+	{
+		cam_pos.x -= 1.0f;
+	}
+	if (GetKeyboardPress(DIK_9))
+	{
+		cam_pos.z += 1.0f;
+	}
+	if (GetKeyboardPress(DIK_0))
+	{
+		cam_pos.z -= 1.0f;
+	}
+
+#endif
+	if (!UpdateCam)
+		SetCameraAT(pos);
+	else
+		SetCameraAT(cam_pos);
+
 	SetCamera();
 
 	switch(g_ViewPortType_Game)
@@ -810,4 +853,9 @@ int GetSpeedMode(void)
 int GetSetTime(void)
 {
 	return set_time;
+}
+
+BOOL GetUpdateCam(void)
+{
+	return UpdateCam;
 }

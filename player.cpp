@@ -699,6 +699,8 @@ void ControlCamera(void)
 		if (g_Cam->rot.x > -0.10f)
 		g_Cam->rot.x -= XM_PI * 0.004f;
 	}
+	if (GetKeyboardTrigger(DIK_R))
+		g_Cam->rot.x = 0.0f;
 }
 
 void ControlChangeArm(void)

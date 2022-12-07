@@ -3,6 +3,7 @@
 #include "camera.h"
 #include "particle.h"
 #include "sound.h"
+#include "game.h"
 
 #define INTERVAL (10.0f)
 #define EFFECT_FRME (5)
@@ -38,9 +39,11 @@ void Xgun::Action(void)
 		pos2.x += sinf(XMConvertToRadians(rot_y - POS_ROT_VAL)) * dist;
 		pos2.y += high;
 		pos2.z += cosf(XMConvertToRadians(rot_y - POS_ROT_VAL)) * dist;
+
+		if(!GetUpdateCam())
 		player[0].rot.y = cam->rot.y;
-		rot.y = cam->rot.y;
-		rot.x = cam->rot.x;
+		rot.y = player[0].rot.y;
+		rot.x = player[0].rot.x;
 		SetBullet(pos, rot, 10.0f, 30.0f, 70, Bullet_XGun);
 		SetBullet(pos2, rot, 10.0f, 30.0f, 70, Bullet_XGun);
 		PlaySound(SOUND_LABEL_SE_xgun_hit);

@@ -92,6 +92,18 @@ void Obstacle::Distract(Obstacle* p)
 	p->efSwitch = TRUE;
 	if (p->model_num == om_tankglass)
 		PlaySound(SOUND_LABEL_SE_glass);
+
+	if (p->model_num == om_tankglass || p->model_num == om_tank)
+	{
+		for (int i = 0; i < MAX_OBSTACLE; i++)
+		{
+			if (g_Obstacle[i].pos.x == p->pos.x && g_Obstacle[i].pos.z == p->pos.z)
+			{
+				g_Obstacle[i].durability = 0;
+				break;
+			}
+		}
+	}
 	for (int i = 0; i < 4; i++)
 		DeleteMeshWall(p->mesh_wall[i]);
 	for (int i = 0; i < 4; i++) {

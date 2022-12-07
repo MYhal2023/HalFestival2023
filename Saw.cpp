@@ -6,6 +6,7 @@
 #include "debugproc.h"
 #include "sound.h"
 #include "meshwall.h"
+#include "game.h"
 static Saw g_PlayerArm;
 static XMFLOAT3 efPos[3];
 static XMFLOAT3 efRot[3];
@@ -40,6 +41,7 @@ void Saw::Action(void)
 	g_PlayerArm.atCount += 1.0f;
 	g_PlayerArm.motionTime += 1.0f;
 	CAMERA *cam = GetCamera();
+	if (!GetUpdateCam())
 	player[0].rot.y = cam->rot.y;
 	g_PlayerArm.ct_frame += 1.0f;
 	PrintDebugProc("アクションフレーム数:%f", g_PlayerArm.ct_frame);

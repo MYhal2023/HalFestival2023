@@ -348,47 +348,6 @@ void DrawBulletModel(void)
 	// カリング設定を戻す
 	SetCullingMode(CULL_MODE_BACK);
 
-#ifdef _DEBUG
-	//ノーマルアームの当たり判定可視化
-	{
-		// カリング無効
-		SetCullingMode(CULL_MODE_NONE);
-
-		XMMATRIX mtxScl, mtxRot, mtxTranslate, mtxWorld;
-		PLAYER *player = GetPlayer();
-		int k = 0;
-		for (int i = 0; i < 2; i++)
-		{
-			if (player[0].rescue != TRUE)continue;
-			// ワールドマトリックスの初期化
-			mtxWorld = XMMatrixIdentity();
-
-			// スケールを反映
-			mtxScl = XMMatrixScaling(1.5f, 1.5f, 1.5f);
-			mtxWorld = XMMatrixMultiply(mtxWorld, mtxScl);
-
-			// 回転を反映
-			mtxRot = XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f);
-			mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
-
-			// 移動を反映
-			mtxTranslate = XMMatrixTranslation(player[0].rescueBullet[i].x, player[0].rescueBullet[i].y, player[0].rescueBullet[i].z);
-			mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
-
-			// ワールドマトリックスの設定
-			SetWorldMatrix(&mtxWorld);
-
-			XMStoreFloat4x4(&g_Bullet[k].mtxWorld, mtxWorld);
-
-			// モデル描画
-			DrawModel(&model[Bullet_Saw]);
-			k++;
-		}
-
-		// カリング設定を戻す
-		SetCullingMode(CULL_MODE_BACK);
-	}
-#endif
 }
 //=============================================================================
 // 頂点情報の作成

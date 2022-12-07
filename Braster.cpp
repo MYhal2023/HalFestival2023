@@ -3,6 +3,7 @@
 #include "camera.h"
 #include "particle.h"
 #include "sound.h"
+#include "game.h"
 static Braster g_PlayerArm;
 
 void Braster::InitArm(void)
@@ -28,9 +29,10 @@ void Braster::Action(void)
 		pos2.x += sinf(player[0].rot.y - XM_PI * 0.30f) * dist;
 		pos2.y += high;
 		pos2.z += cosf(player[0].rot.y - XM_PI * 0.30f) * dist;
+		if (!GetUpdateCam())
 		player[0].rot.y = cam->rot.y;
-		rot.y = cam->rot.y;
-		rot.x = cam->rot.x;
+		rot.y = player[0].rot.y;
+		rot.x = player[0].rot.x;
 
 		SetBullet(pos, rot, 8.0f, 20.0f, 40, Bullet_Braster);
 		SetBullet(pos2, rot, 8.0f, 20.0f, 40, Bullet_Braster);

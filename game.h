@@ -63,3 +63,4 @@ BOOL CheckGameover(void);
 int DamageFunc(int attacker, int diffender);
 BOOL GetSpeedMode(void);
 int GetSetTime(void);
+BOOL GetUpdateCam(void);
