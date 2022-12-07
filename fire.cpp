@@ -133,10 +133,13 @@ void UpdateFire(void)
 			break;
 		}
 		g_Fire[i].interval = 0;
-		SetFireParticle(g_Fire[i].pos, g_Fire[i].rot.y);
 		PLAYER *player = GetPlayer();
 		float set_x = fabsf(player[0].pos.x - g_Fire[i].pos.x);
 		float set_z = fabsf(player[0].pos.z - g_Fire[i].pos.z);
+
+		if(set_x + set_z <= 300.0f)
+		SetFireParticle(g_Fire[i].pos, g_Fire[i].rot.y);
+
 		if (set_x + set_z < dist)
 		{
 			dist = set_x + set_z;
@@ -259,7 +262,8 @@ void SetFireParticle(XMFLOAT3 pos, float y_rot)
 	float cam_rot_y = XMConvertToDegrees(cam->rot.y);
 	float fab = fabsf(fabsf(p_rot_y) - fabsf(cam_rot_y));
 	if (fab < 75)return;
-	for (int i = 0; i < 3; i++) {
+
+	for (int i = 0; i < 2; i++) {
 		XMFLOAT3 move = { 0.0f, 0.0f, 0.0f, };
 		float fAngle = (float)(rand() % 30) + 40;	//‰ÁŽZ‚·‚é•ûŒü(”Ž®Œ‹‰Ê‚Ì”Žš‚ª‘å‚«‚¢‚Ù‚ÇA¶‰E‚É‚Î‚ç‚Â‚«‚ªo‚é)
 		fAngle = XMConvertToRadians(fAngle);
@@ -337,4 +341,9 @@ HRESULT MakeVertexFire(void)
 		}
 	}
 	return S_OK;
+}
+
+FireEffect * GetFireEffect(void)
+{
+	return &g_Fire[0];
 }

@@ -13,6 +13,8 @@ private:
 public:
 	static void InitMap(void);
 	static void InitBootMap(void);
+	static void InitMap001(void);
+	static void InitBootMap001(void);
 	static void InitReserveMap(void);
 	static void InitResultMap(void);
 };

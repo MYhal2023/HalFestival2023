@@ -15,6 +15,8 @@
 #include "player.h"
 #include "particle.h"
 #include "meshwall.h"
+#include "fire.h"
+#include "result.h"
 
 
 //*****************************************************************************
@@ -164,6 +166,7 @@ void UpdateBullet(void)
 					g_Bullet[i].life = 0;
 					ob[k].durability -= g_Bullet[i].attack;
 					g_Bullet[i].efSwitch = TRUE;
+					break;
 				}
 			}
 			else
@@ -173,10 +176,27 @@ void UpdateBullet(void)
 					g_Bullet[i].life = 0;
 					ob[k].durability -= g_Bullet[i].attack;
 					g_Bullet[i].efSwitch = TRUE;
+					break;
 				}
 			}
 		}
-
+		//è¡âªÇ≈Ç´ÇÈ
+		if (g_Bullet[i].model_num == Bullet_Braster) {
+			FireEffect* fe = GetFireEffect();
+			for (int k = 0; k < MAX_FIRE_EFFECT; k++)
+			{
+				if (!fe[k].use)continue;
+				if (CollisionBC(fe[k].pos, g_Bullet[i].pos, 40.0f, g_Bullet[i].size))
+				{
+					g_Bullet[i].life = 0;
+					fe[k].use = FALSE;
+					Reward* re = GetReward();
+					re->beatNum++;
+					g_Bullet[i].efSwitch = TRUE;
+					break;
+				}
+			}
+		}
 		//íeÇè¡Ç∑èàóù
 		if ((g_Bullet[i].life <= 0) || MeshWallHitObj(g_Bullet[i].pos, 5.0f))
 		{

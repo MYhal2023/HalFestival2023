@@ -45,7 +45,7 @@ void Obstacle::InitBoot(void)
 	LoadModel(MODEL_BREAK_WALL, &model[om_break_wall]);
 	LoadModel(MODEL_CEILING_BEAM, &model[om_ceiling_beam]);
 	LoadModel(MODEL_CEILING_FAN, &model[om_ceiling_fan]);
-	//LoadModel(MODEL_TERMINAL, &model[om_terminal]);
+	LoadModel(MODEL_BED, &model[om_bed]);
 }
 //I—¹ˆ—
 void Obstacle::Uninit(void)
@@ -317,8 +317,38 @@ void Obstacle::SetHitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, int model_num, Obstacl
 		InitMeshWall(XMFLOAT3(pos.x + set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
 		break;
-	}
+	case om_bed:	//”j‰ó‚Å‚«‚é•Ç
+		if (rot.y == 0.0f) {
+			set_x = 27.0f;
+			set_z = 45.0f;
+		}
+		else
+		{
+			set_x = 45.0f;
+			set_z = 27.0f;
+		}
+		ob->mesh_wall[i++] = GetMeshWallNum();
 
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z - set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->p_fire[0] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 20.0f, pos.z - set_x), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f));
+
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x - set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->p_fire[1] = SetFireEffect(XMFLOAT3(pos.x - set_z, pos.y + 20.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f));
+
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x, pos.y, pos.z + set_x), XMFLOAT3(0.0f, XM_PI*0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_z * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->p_fire[2] = SetFireEffect(XMFLOAT3(pos.x, pos.y + 20.0f, pos.z + set_x), XMFLOAT3(0.0f, XM_PI * 1.0f, 0.0f));
+
+		ob->mesh_wall[i++] = GetMeshWallNum();
+		InitMeshWall(XMFLOAT3(pos.x + set_z, pos.y, pos.z), XMFLOAT3(0.0f, XM_PI*0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+			1, 1, set_x * 2.0f - 15.0f, set_x * 2.0f - 1.0f, WALL_RAY);
+		ob->p_fire[3] = SetFireEffect(XMFLOAT3(pos.x + set_z, pos.y + 20.0f, pos.z), XMFLOAT3(0.0f, XM_PI * 1.5f, 0.0f));
+		break;
+	}
 }
 
 void Obstacle::Draw(void)

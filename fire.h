@@ -38,3 +38,4 @@ void DrawFire(void);
 FireEffect* SetFireEffect(XMFLOAT3 pos, XMFLOAT3 rot);
 void SetFireParticle(XMFLOAT3 pos, float y_rot);
 HRESULT MakeVertexFire(void);
+FireEffect* GetFireEffect(void);

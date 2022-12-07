@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "input.h"
 #include "easing.h"
+#include "file.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -66,12 +67,10 @@ HRESULT InitReserve(void)
 		g_Reserve.vigilance = 0.0f;
 		g_Reserve.old_vigi = 0.0f;
 		g_Reserve.quota = BASE_RESCUE_NUM;
-		g_Reserve.rank = 160;
-#ifdef _DEBUG
+		g_Reserve.rank = 0;
 
-#endif
+		LoadData();
 	}
-
 	ID3D11Device *pDevice = GetDevice();
 
 	// テクスチャ生成
@@ -326,4 +325,14 @@ void DrawTexture(Button* bt)
 
 	// ポリゴン描画
 	GetDeviceContext()->Draw(4, 0);
+}
+
+void SetRank(int data)
+{
+	g_Reserve.rank = data;
+}
+
+int GetRank(void)
+{
+	return g_Reserve.rank;
 }

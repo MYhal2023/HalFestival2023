@@ -22,6 +22,7 @@
 #include "meshfield.h"
 #include "mapWallModel.h"
 #include "meshwall.h"
+#include "file.h"
 //*****************************************************************************
 // É}ÉNÉçíËã`
 //*****************************************************************************
@@ -243,7 +244,7 @@ void FifthSeq(void)
 			g_Reward.rank_gauge -= g_Reward.rank_gauge_max;
 		}
 	}
-	if (g_Reward.rank_up <= 0 && !ef_once) {
+	if ((g_Reward.rank_up) <= 0 && !ef_once) {
 		skip = -60;
 		ef_once = TRUE;
 		return;
@@ -442,7 +443,11 @@ void SetReward(void)
 	if (g_Reward.ef_time < 1)
 		g_Reward.ef_time = 1;
 
-	g_Reward.score = (int)((float)(g_Reward.beatNum * 100 + g_Reward.rescue_num * 200 + GetTime() * 150) * (re->vigilance + 1.0f));
+	g_Reward.score = (int)((float)(g_Reward.beatNum * 100 + g_Reward.rescue_num * 200) * (re->vigilance + 1.0f));
+	if (re->quota <= g_Reward.rescue_num)
+	{
+		g_Reward.score += GetTime()*50;
+	}
 	g_Reward.ef_score = g_Reward.score / 100;
 	if (g_Reward.ef_score < 1)
 		g_Reward.ef_score = 1;
@@ -467,7 +472,7 @@ void SetReward(void)
 	else {
 		g_Reward.rank_bonus_time = 0;
 		g_Reward.rank_bonus_beat = 0;
-		g_Reward.rank_bonus_rescue = -10;
+		g_Reward.rank_bonus_rescue = 0;
 		g_Reward.rank_bonus_score = 0;
 		if (sound_once)
 			PlaySound(SOUND_LABEL_BGM_Result);
@@ -489,10 +494,14 @@ void SetReward(void)
 	g_Reward.rank_gauge = re->rank % 100;
 	g_Reward.rank = re->rank / 100;
 	int num = 150;
-	g_Reward.rank_up = g_Reward.rank_bonus_time + g_Reward.rank_bonus_beat + g_Reward.rank_bonus_rescue + g_Reward.rank_bonus_score + 20;
+	g_Reward.rank_up = g_Reward.rank_bonus_time + g_Reward.rank_bonus_beat + g_Reward.rank_bonus_rescue + g_Reward.rank_bonus_score;
+	if (re->quota <= g_Reward.rescue_num)
+		g_Reward.rank_up += 10;
+
 	g_Reward.base_rank = re->rank;
 	g_Reward.increase_rank = 0;
 	re->rank += g_Reward.rank_up;
+	SaveData();
 }
 
 

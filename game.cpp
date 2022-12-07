@@ -64,6 +64,7 @@ static int mode = 1;
 static 	XMFLOAT3 cam_pos = { 0.0f, 0.0f, 0.0f };
 static 	XMFLOAT3 cam_rot = { 0.0f, 0.0f, 0.0f };
 static int set_time = LEAD_TIME + 10;
+static 	int random = 1;
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -89,9 +90,6 @@ void InitSystem(void)
 	Normal::InitArm();
 
 	InitBullet();	
-
-	// フィールドの初期化
-	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD_X, FIELD_Z, BLOCK_SIZE, BLOCK_SIZE, GROUND);
 
 
 	InitTime();
@@ -138,19 +136,47 @@ void InitBoot(void)
 void InitMap(void)
 {
 	UninitMeshWall();	//メッシュウォールはここで逐一初期化
+	UninitMeshField();
 
 	switch (GetMode())
 	{
 	case MODE_TITLE:
+		// フィールドの初期化
+		InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD_X, FIELD_Z, BLOCK_SIZE, BLOCK_SIZE, GROUND);
 		Map::InitMap();
 		break;
 	case MODE_RESERVE:
-		Map::InitMap();
+		random = rand() % 2;
+		switch (random)
+		{
+		case 0:
+			// フィールドの初期化
+			InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD_X, FIELD_Z, BLOCK_SIZE, BLOCK_SIZE, GROUND);
+			Map::InitMap();
+			break;
+		case 1:
+			InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 50, 50, BLOCK_SIZE, BLOCK_SIZE, GROUND);
+			Map::InitMap001();
+			break;
+		}
 		break;
 	case MODE_GAME:
-		Map::InitMap();
+		switch (random)
+		{
+		case 0:
+			// フィールドの初期化
+			InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD_X, FIELD_Z, BLOCK_SIZE, BLOCK_SIZE, GROUND);
+			Map::InitMap();
+			break;
+		case 1:
+			InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD001_X, FIELD001_Z, BLOCK_SIZE, BLOCK_SIZE, GROUND);
+			Map::InitMap001();
+			break;
+		}
 		break;
 	case MODE_RESULT:
+		// フィールドの初期化
+		InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), FIELD_X, FIELD_Z, BLOCK_SIZE, BLOCK_SIZE, GROUND);
 		Map::InitResultMap();
 		break;
 	}
@@ -239,34 +265,35 @@ void UpdateGame(void)
 	if (GetHelpButton())return;
 
 
-		UpdateCamera();
+	UpdateCamera();
 
-		UpdatePlayer();
+	UpdatePlayer();
 
-		UpdateLight();
+	UpdateLight();
 
-		UpdateMeshWall();
+	UpdateMeshWall();
 
-		MapWallModel::Update();
+	MapWallModel::Update();
 
-		UpdateBullet();
+	UpdateBullet();
 
-		Obstacle::Update();
+	Obstacle::Update();
 
+	if (GetMode() == MODE_GAME)
 		FallObject::Update();
 
-		UpdateTime();
+	UpdateTime();
 
-		UpdateFire();
+	UpdateFire();
 
-		UpdateParticle();
-		UpdateCharFade();
-		//// 影の更新処理
-		//UpdateShadow();
+	UpdateParticle();
+	UpdateCharFade();
+	//// 影の更新処理
+	//UpdateShadow();
 
-		//UpdateFog();
+	//UpdateFog();
 
-		//UpdateSound();
+	//UpdateSound();
 
 }
 

@@ -212,7 +212,7 @@ void Map::InitMap(void)
 	//Obstacle::SetObstacle(XMFLOAT3{ 1100.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
 	//Obstacle::SetObstacle(XMFLOAT3{ 700.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 4.0f, 4.0f, 4.0f }, 100.0f, 50.0f, om_break_wall);
 	//Obstacle::SetObstacle(XMFLOAT3{ 900.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 4.0f, 4.0f, 4.0f }, 100.0f, 50.0f, om_test);
-	////Obstacle::SetObstacle(XMFLOAT3{ 900.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 1.0f, 1.0f, 1.0f }, 100.0f, 50.0f, om_terminal);
+	//Obstacle::SetObstacle(XMFLOAT3{ 900.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 1.5f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bed);
 
 	// 会議室
 
@@ -324,12 +324,18 @@ void Map::InitMap(void)
 
 	// 人体ポット
 	Obstacle::SetObstacle(XMFLOAT3{ -1060.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
+	Obstacle::SetObstacle(XMFLOAT3{ -1060.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
 	Obstacle::SetObstacle(XMFLOAT3{ -860.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
+	Obstacle::SetObstacle(XMFLOAT3{ -860.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
 	Obstacle::SetObstacle(XMFLOAT3{ -660.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
+	Obstacle::SetObstacle(XMFLOAT3{ -660.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
 
 	Obstacle::SetObstacle(XMFLOAT3{ -1230.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
 	Obstacle::SetObstacle(XMFLOAT3{ -1430.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
 	Obstacle::SetObstacle(XMFLOAT3{ -1630.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
+	Obstacle::SetObstacle(XMFLOAT3{ -1230.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
+	Obstacle::SetObstacle(XMFLOAT3{ -1430.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
+	Obstacle::SetObstacle(XMFLOAT3{ -1630.0f, 0.0f, -920.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
 
 
 	// 障害物
@@ -480,6 +486,282 @@ void Map::InitBootMap(void)
 	g_Map.set_res_pos[27] = XMFLOAT3(1900.0f, 0.0f, 690.0f);
 	g_Map.set_res_pos[28] = XMFLOAT3(1980.0f, 0.0f, 225.0f);
 	g_Map.set_res_pos[29] = XMFLOAT3(950.0f, 0.0f, 375.0f);
+
+	for (int i = 0; i < MAX_OBSTACLE_RAND_POS; i++)
+	{
+		g_Map.use[i] = FALSE;
+	}
+
+	for (int i = 0; i < MAX_RESCUE_RAND_POS; i++)
+	{
+		g_Map.use_res[i] = FALSE;
+	}
+
+}
+
+void Map::InitMap001(void)
+{
+	//メッシュウォールの設置
+	//InitMeshWall();
+	InitBootMap001();
+
+	InitMeshWall(XMFLOAT3(0.0f, 330.0f, 0.0f), XMFLOAT3(XM_PI * 0.5f, XM_PI * 0.0f, XM_PI *0.5f),
+		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), WALL_XZ * 2, WALL_Y * 6, FIELD001_Z_LIMIT * 1.0f, WALL_BLOCK_SIZE_Y* 1.1f, WALL_GRAY);
+	InitMeshWall(XMFLOAT3(2200.0f, 330.0f, 0.0f), XMFLOAT3(XM_PI * 0.5f, XM_PI * 0.0f, XM_PI *0.5f),
+		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), WALL_XZ * 2, WALL_Y * 6, FIELD001_Z_LIMIT * 1.0f, WALL_BLOCK_SIZE_Y* 1.1f, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(FIELD001_X_LIMIT, WAVE_POS_Y, 0.0f), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f),
+		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), WALL_XZ, WALL_Y, FIELD001_Z_LIMIT * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(-FIELD001_X_LIMIT, WAVE_POS_Y, 0.0f), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, FIELD001_Z_LIMIT * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(0.0f, WAVE_POS_Y, FIELD001_Z_LIMIT), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, FIELD001_X_LIMIT * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(0.0f, WAVE_POS_Y, -FIELD001_Z_LIMIT), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, FIELD001_X_LIMIT * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	// 真ん中の部屋
+	InitMeshWall(XMFLOAT3(-350.0f, WAVE_POS_Y, 400.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 50 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(100.0f, WAVE_POS_Y, 400.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 300 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(-100.0f, WAVE_POS_Y, -400.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 300 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(350.0f, WAVE_POS_Y, -400.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 50 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(400.0f, WAVE_POS_Y, 0.0f), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 400 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(-400.0f, WAVE_POS_Y, 0.0f), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 400 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	// 廊下側の壁
+	InitMeshWall(XMFLOAT3(-750.0f, WAVE_POS_Y, 600.0f), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 150 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(-600.0f, WAVE_POS_Y, 750.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 150 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(-750.0f, WAVE_POS_Y, -475.0f), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 775 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(225.0f, WAVE_POS_Y, 750.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 525 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(-600.0f, WAVE_POS_Y, -750.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 150 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(225.0f, WAVE_POS_Y, -750.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 525 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(750.0f, WAVE_POS_Y, -700.0f), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 550 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(750.0f, WAVE_POS_Y, 950.0f), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 300 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(750.0f, WAVE_POS_Y, 250.0f), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 250 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	// 部屋の仕切り
+	InitMeshWall(XMFLOAT3(0.0f, WAVE_POS_Y, 1000.0f), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 250 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(0.0f, WAVE_POS_Y, -1000.0f), XMFLOAT3(0.0f, XM_PI * 0.5f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 250 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(-1000.0f, WAVE_POS_Y, 0.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 250 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	// 壊れる壁の場所
+	InitMeshWall(XMFLOAT3(-1000.0f, WAVE_POS_Y, 750.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 250 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(1000.0f, WAVE_POS_Y, 350.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 250 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+	InitMeshWall(XMFLOAT3(575.0f, WAVE_POS_Y, 0.0f), XMFLOAT3(0.0f, XM_PI * 0.0f, 0.0f),
+		XMFLOAT4(0.0f, 1.0f, 0.0f, 0.5f), WALL_XZ, WALL_Y, 175 * 2.0f, WALL_BLOCK_SIZE_Y, WALL_GRAY);
+
+
+	//設置障害物
+	//SetObstacle();
+	XMFLOAT3 p = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 r = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 m = { 1.0f, 1.0f, 1.0f };
+
+	////モデル表示用のやつ
+
+
+	//Obstacle::SetObstacle(XMFLOAT3{ -40.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	//Obstacle::SetObstacle(XMFLOAT3{ -60.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 1.5f, 1.5f, 1.5f }, 100.0f, 50.0f, om_book);
+	//Obstacle::SetObstacle(XMFLOAT3{ -50.0f, 30.0f, 0.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 3.0f, 2.5f, 5.0f }, 100.0f, 50.0f, om_Ldesk);
+	//Obstacle::SetObstacle(XMFLOAT3{ -70.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
+	//Obstacle::SetObstacle(XMFLOAT3{ -30.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 3.0f, 3.0f, 3.0f }, 100.0f, 50.0f, om_box);
+
+
+	Obstacle::SetObstacle(XMFLOAT3{ 25.0f, 0.0f, -25.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
+	Obstacle::SetObstacle(XMFLOAT3{ 25.0f, 0.0f, -25.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
+	Obstacle::SetObstacle(XMFLOAT3{ -380.0f, 0.0f, -15.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ 380.0f, 0.0f, -15.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+
+	Obstacle::SetObstacle(XMFLOAT3{ -1000.0f, 0.0f, 1000.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
+	Obstacle::SetObstacle(XMFLOAT3{ -1000.0f, 0.0f, 1000.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
+	Obstacle::SetObstacle(XMFLOAT3{ -600.0f, 0.0f, 1000.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
+	Obstacle::SetObstacle(XMFLOAT3{ -600.0f, 0.0f, 1000.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
+	Obstacle::SetObstacle(XMFLOAT3{ -780.0f, 0.0f, 830.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ -195.0f, 0.0f, 1170.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ -90.0f, 0.0f, 1050.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+
+	Obstacle::SetObstacle(XMFLOAT3{ 200.0f, 0.0f, 480.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ 90.0f, 0.0f, 675.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ 220.0f, 0.0f, 580.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+
+	Obstacle::SetObstacle(XMFLOAT3{ -1235.0f, 0.0f, 120.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ -1235.0f, 0.0f, 290.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ -1235.0f, 0.0f, 460.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ -1130.0f, 30.0f, 700.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 3.0f, 2.5f, 5.0f }, 100.0f, 50.0f, om_Ldesk);
+	Obstacle::SetObstacle(XMFLOAT3{ -990.0f, 30.0f, 380.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 3.0f, 2.5f, 5.0f }, 100.0f, 50.0f, om_Ldesk);
+
+	Obstacle::SetObstacle(XMFLOAT3{ -150.0f, 0.0f, -1230.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 1.8f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bookshelf);
+	Obstacle::SetObstacle(XMFLOAT3{ -360.0f, 0.0f, -770.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+
+	Obstacle::SetObstacle(XMFLOAT3{ 1000.0f, 0.0f, -300.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
+	Obstacle::SetObstacle(XMFLOAT3{ 1000.0f, 0.0f, -300.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
+	Obstacle::SetObstacle(XMFLOAT3{ 1000.0f, 0.0f, -600.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tank);
+	Obstacle::SetObstacle(XMFLOAT3{ 1000.0f, 0.0f, -600.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 2.0f, 2.0f, 2.0f }, 100.0f, 50.0f, om_tankglass);
+	Obstacle::SetObstacle(XMFLOAT3{ 1000.0f, 30.0f, -1200.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.5f, 0.0f }, XMFLOAT3{ 3.0f, 2.5f, 5.0f }, 100.0f, 50.0f, om_Ldesk);
+	Obstacle::SetObstacle(XMFLOAT3{ 850.0f, 0.0f, -450.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ 1120.0f, 0.0f, -60.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ 840.0f, 0.0f, 95.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ 580.0f, 0.0f, -430.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ 190.0f, 0.0f, -190.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ 250.0f, 0.0f, 260.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ -50.0f, 0.0f, -70.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ -670.0f, 0.0f, 65.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ -320.0f, 0.0f, -520.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ -550.0f, 0.0f, 150.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ -825.0f, 0.0f, 115.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ -1100.0f, 0.0f, 200.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ -970.0f, 0.0f, 600.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ -480.0f, 0.0f, 0.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	Obstacle::SetObstacle(XMFLOAT3{ 190.0f, 0.0f, -660.0f }, XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+
+	Obstacle::SetObstacle(XMFLOAT3{ -640.0f, 0.0f, -1150.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, XMFLOAT3{ 1.5f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bed);
+	Obstacle::SetObstacle(XMFLOAT3{ 865.0f, 0.0f, 1100.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 1.5f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bed);
+	Obstacle::SetObstacle(XMFLOAT3{ 1100.0f, 0.0f, 1100.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 1.5f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bed);
+	Obstacle::SetObstacle(XMFLOAT3{ 1100.0f, 0.0f, 950.0f }, XMFLOAT3{ 0.0f, XM_PI * 1.0f, 0.0f }, XMFLOAT3{ 1.5f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bed);
+	Obstacle::SetObstacle(XMFLOAT3{ 850.0f, 0.0f, 950.0f }, XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 1.5f, 1.5f, 1.5f }, 100.0f, 50.0f, om_bed);
+
+	//ランダム設置
+	Reserve *re = GetReserve();
+	float rand_base = re->vigilance;		//警戒度を基準にランダム性をもたせる
+	int set_num = (int)(rand_base / 10.0f) + 5;	//追加設置数
+	//int set_num = 14;
+	//while (set_num > 0)
+	//{
+	//	if (set_num > 11)
+	//	{
+	//		for (int i = 0; i < MAX_OBSTACLE_RAND_POS; i++)
+	//		{
+	//			g_Map.use[i] = TRUE;
+	//		}
+	//		break;
+	//	}
+	//	int k = rand() % MAX_OBSTACLE_RAND_POS;
+
+	//	if (!g_Map.use[k]) {
+	//		g_Map.use[k] = TRUE;
+	//		set_num--;
+	//	}
+	//}
+	//for (int i = 0; i < MAX_OBSTACLE_RAND_POS; i++) {
+	//	if (!g_Map.use[i])
+	//		continue;
+	//	int rand_obstacle = rand() % 2;
+	//	switch (rand_obstacle)
+	//	{
+	//	case 0:
+	//		Obstacle::SetObstacle(g_Map.set_pos[i], XMFLOAT3{ 0.0f, XM_PI * 0.0f, 0.0f }, XMFLOAT3{ 3.5f, 3.5f, 3.5f }, 100.0f, 50.0f, om_steel);
+	//		break;
+	//	case 1:
+	//		Obstacle::SetObstacle(g_Map.set_pos[i], XMFLOAT3{ 0.0f, 0.0f, 0.0f }, XMFLOAT3{ 3.0f, 3.0f, 3.0f }, 100.0f, 50.0f, om_box);
+	//		break;
+	//	}
+	//}
+
+	////ランダムで破壊できる壁を設置
+
+	//設置救助者
+	//RescueLife()
+	set_num = 30;	//設置数
+	while (set_num > 0)
+	{
+		if (set_num > MAX_RESCUE_RAND_POS - 2)
+		{
+			for (int i = 0; i < MAX_RESCUE_RAND_POS; i++)
+			{
+				g_Map.use_res[i] = TRUE;
+			}
+			break;
+		}
+		int k = rand() % MAX_RESCUE_RAND_POS;
+
+		if (!g_Map.use_res[k]) {
+			g_Map.use_res[k] = TRUE;
+			set_num--;
+		}
+	}
+	for (int i = 0; i < MAX_RESCUE_RAND_POS; i++) {
+		if (!g_Map.use_res[i])
+			continue;
+		int rand_rescue = rand() % 1;
+		switch (rand_rescue)
+		{
+		case 0:
+			XMFLOAT3 pos = g_Map.set_res_pos[i];
+			RescueLife::SetRemain(pos, XMFLOAT3{ 0.0f, XM_PI * 0.5f, 0.0f }, 0);
+			break;
+		}
+	}
+	//設置オブジェクト
+}
+
+void Map::InitBootMap001(void)
+{
+	g_Map.set_res_pos[0] = XMFLOAT3(100.0f, 0.0f, -7.0f);
+	g_Map.set_res_pos[1] = XMFLOAT3(370.0f, 0.0f, 80.0f);
+	g_Map.set_res_pos[2] = XMFLOAT3(-365.0f, 0.0f, -370.0f);
+	g_Map.set_res_pos[3] = XMFLOAT3(-20.0f, 0.0f, 1220.0f);
+	g_Map.set_res_pos[4] = XMFLOAT3(-595.0f, 0.0f, 1075.0f);
+	g_Map.set_res_pos[5] = XMFLOAT3(-1220.f, 0.0f, -1220.0f);
+	g_Map.set_res_pos[6] = XMFLOAT3(-843.0f, 0.0f, 775.0f);
+	g_Map.set_res_pos[7] = XMFLOAT3(-770.0f, 0.0f, 20.0f);
+	g_Map.set_res_pos[8] = XMFLOAT3(-1220.0f, 0.0f, 15.0f);
+	g_Map.set_res_pos[9] = XMFLOAT3(-1220.0f, 0.0f, 370.0f);
+	g_Map.set_res_pos[10] = XMFLOAT3(-1220.0f, 0.0f, 650.0f);
+	g_Map.set_res_pos[11] = XMFLOAT3(-770.0f, 0.0f, 725.0f);
+	g_Map.set_res_pos[12] = XMFLOAT3(-1220.0f, 0.0f, 770.0f);
+	g_Map.set_res_pos[13] = XMFLOAT3(-1070.0f, 0.0f, 1000.0f);
+	g_Map.set_res_pos[14] = XMFLOAT3(770.0f, 0.0f, -1230.0f);
+	g_Map.set_res_pos[15] = XMFLOAT3(-210.0f, 0.0f, 770.0f);
+	g_Map.set_res_pos[16] = XMFLOAT3(780.f, 0.0f, 1200.0f);
+	g_Map.set_res_pos[17] = XMFLOAT3(1220.0f, 0.0f, 1050.0f);
+	g_Map.set_res_pos[18] = XMFLOAT3(-730.0f, 0.0f, 130.0f);
+	g_Map.set_res_pos[19] = XMFLOAT3(440.0f, 0.0f, 18.0f);
+	g_Map.set_res_pos[20] = XMFLOAT3(730.0f, 0.0f, 715.0f);
+	g_Map.set_res_pos[21] = XMFLOAT3(1060.0f, 0.0f, -660.0f);
+	g_Map.set_res_pos[22] = XMFLOAT3(-720.0f, 0.0f, -1220.0f);
+	g_Map.set_res_pos[23] = XMFLOAT3(-250.0f, 0.0f, -1230.0f);
+	g_Map.set_res_pos[24] = XMFLOAT3(-30.0f, 0.0f, -770.0f);
+	g_Map.set_res_pos[25] = XMFLOAT3(995.0f, 0.0f, -375.0f);
+	g_Map.set_res_pos[26] = XMFLOAT3(1200.0f, 0.0f, 320.0f);
 
 	for (int i = 0; i < MAX_OBSTACLE_RAND_POS; i++)
 	{

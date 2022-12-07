@@ -15,6 +15,7 @@
 #include "time.h"
 #include "easing.h"
 #include "sound.h"
+#include "result.h"
 
 //*****************************************************************************
 // ƒ}ƒNƒ’è‹`
@@ -38,7 +39,7 @@ static char* g_TextureName[] = {
 	"data/TEXTURE/rescue_ok.png",
 	"data/TEXTURE/checkmark.png",
 	"data/TEXTURE/arm_UI_tama.png",
-	"data/TEXTURE/number.png",
+	"data/TEXTURE/numbers_w.png",
 	"data/TEXTURE/icon_xgun.png",
 	"data/TEXTURE/icon_braster.png",
 	"data/TEXTURE/icon_saw.png",
@@ -255,6 +256,16 @@ void DrawUI(void)
 	DrawTexture(&g_UI[ic_xgun]);
 	DrawTexture(&g_UI[ic_braster]);
 	DrawTexture(&g_UI[ic_saw]);
+	Reserve* re = GetReserve();		
+	Reward* rw = GetReward();
+
+	int num = re->quota;
+	XMFLOAT4 color = { 1.0f, 0.0f, 0.0f, 1.0f };
+	if (rw->rescue_num >= re->quota)
+		color = { 1.0f,1.0f,1.0f,1.0f };
+	XMFLOAT2 set_pos = {0.0f + 90.0f, SCREEN_HEIGHT - 140.0f};
+	DrawNumber(num, set_pos.x, set_pos.y, 100.0f, 200.0f, color);
+
 
 	SetDepthEnable(TRUE);
 

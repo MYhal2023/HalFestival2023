@@ -20,6 +20,7 @@
 #define	MODEL_TERMINAL	"data/MODEL/terminal.obj"			// 読み込むモデル名
 #define	MODEL_CEILING_BEAM	"data/MODEL/ceilingbeam.obj"			// 読み込むモデル名
 #define	MODEL_CEILING_FAN	"data/MODEL/ceilingfan.obj"			// 読み込むモデル名
+#define	MODEL_BED	"data/MODEL/bed.obj"			// 読み込むモデル名
 #define	MODEL_TEST			"data/MODEL/neutrophils.obj"			// 読み込むモデル名
 
 #define MAX_OBSTACLE (150)
@@ -50,6 +51,7 @@ enum ObstacleModel
 	om_terminal,		//テスト用のモデル
 	om_ceiling_beam,
 	om_ceiling_fan,
+	om_bed,
 	om_test,		//テスト用のモデル
 	MAX_OBSTACLE_MODEL
 };

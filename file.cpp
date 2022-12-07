@@ -9,6 +9,7 @@
 * インクルードファイル****
 *******************************************************************************/
 #include "file.h"
+#include "reserve.h"
 
 
 /*******************************************************************************
@@ -51,7 +52,7 @@ void SaveData(void)
 {
 	// SAVEDATA構造体ごと全部をファイルに出力する
 	FILE *fp;
-
+	save.rank = GetRank();
 	printf("\nセーブ開始・・・");
 	fp = fopen("savedata.bin", "wb");			// ファイルをバイナリ書き込みモードでOpenする
 
@@ -65,7 +66,6 @@ void SaveData(void)
 	{
 		printf("ファイルエラー！\n");
 	}
-
 }
 
 
@@ -94,4 +94,5 @@ void LoadData(void)
 	{
 		printf("ファイルエラー！\n");
 	}
+	SetRank(save.rank);
 }

@@ -63,3 +63,5 @@ Reserve *GetReserve(void);
 void DrawButton(XMFLOAT4 color, float px, float py, float sx, float sy);
 void DrawNumberRe(int numb, float px, float py, float sx, float sy, XMFLOAT4 color);
 void DrawTexture(Button* bt);
+void SetRank(int data);
+int GetRank(void);

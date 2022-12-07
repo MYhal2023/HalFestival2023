@@ -10,9 +10,13 @@
 //*****************************************************************************
 #define	FIELD_X				(80)	// X軸方向のブロック数
 #define	FIELD_Z				(40)	// Z軸方向のブロック数
+#define	FIELD001_X				(50)	// X軸方向のブロック数
+#define	FIELD001_Z				(50)	// Z軸方向のブロック数
 #define	BLOCK_SIZE			(50.0f)	// ブロックサイズ
 #define	FIELD_X_LIMIT		(FIELD_X * BLOCK_SIZE * 0.5f)	// X軸方向の限界座標
 #define	FIELD_Z_LIMIT		(FIELD_Z * BLOCK_SIZE * 0.5f)	// Z軸方向の限界座標
+#define	FIELD001_X_LIMIT	(FIELD001_X * BLOCK_SIZE * 0.5f)	// X軸方向の限界座標
+#define	FIELD001_Z_LIMIT	(FIELD001_Z * BLOCK_SIZE * 0.5f)	// Z軸方向の限界座標
 #define	WAVE_POS_Y			(-20.0f)	// 波が発生している為、壁を少し下げる
 
 #define	WALL_Y				(1)	// メッシュ壁の縦枚数
