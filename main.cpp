@@ -419,7 +419,7 @@ void Draw(void)
 
 #ifdef _DEBUG
 	// デバッグ表示
-	DrawDebugProc();
+	//DrawDebugProc();
 #endif
 
 	// バックバッファ、フロントバッファ入れ替え
