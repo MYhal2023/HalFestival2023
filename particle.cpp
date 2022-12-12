@@ -26,7 +26,7 @@
 #define	PARTICLE_SIZE_Y		(40.0f)		// 頂点サイズ
 #define	VALUE_MOVE_PARTICLE	(5.0f)		// 移動速度
 
-#define	MAX_PARTICLE		(512)		// パーティクル最大数
+#define	MAX_PARTICLE		(700)		// パーティクル最大数
 #define	MAX_PARTICLE_POINTER		(10)		// パーティクル最大数
 
 #define	DISP_SHADOW						// 影の表示
@@ -546,15 +546,16 @@ int SetParticle(XMFLOAT3 pos, XMFLOAT3 move, XMFLOAT3 rot, XMFLOAT3 scl, XMFLOAT
 
 	for(int nCntParticle = 0; nCntParticle < MAX_PARTICLE; nCntParticle++)
 	{
-		if(!g_aParticle[nCntParticle].bUse)
+		if (!g_aParticle[nCntParticle].bUse)
 		{
 			g_aParticle[nCntParticle].pos = pos;
-			g_aParticle[nCntParticle].rot   = rot;
-			g_aParticle[nCntParticle].scale = { 1.0f, 1.0f, 1.0f };
+			g_aParticle[nCntParticle].rot = rot;
+			float rand_scale = ((float)((rand() % 25)+8) / 10.0f);
+			float rand_scale_y = ((float)((rand() % 25)+8) / 10.0f);
 			g_aParticle[nCntParticle].move = move;
 			g_aParticle[nCntParticle].material.Diffuse = col;
 			g_aParticle[nCntParticle].col = col;
-			g_aParticle[nCntParticle].scale = scl;
+			g_aParticle[nCntParticle].scale = { scl.x * rand_scale, scl.y * rand_scale_y,scl.z * rand_scale };
 			g_aParticle[nCntParticle].nLife = nLife;
 			g_aParticle[nCntParticle].nDecay = nDecay;
 			g_aParticle[nCntParticle].g_TexNo = texNo;

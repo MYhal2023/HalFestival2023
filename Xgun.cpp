@@ -71,7 +71,7 @@ void Xgun::Action(void)
 		pos2.y += high;
 		pos2.z += cosf(XMConvertToRadians(rot_y - POS_ROT_VAL)) * dist;
 		g_PlayerArm.ef_frame--;
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 3; i++) {
 			CAMERA *cam = GetCamera();
 			XMFLOAT3 move = { 0.0f, 0.0f, 0.0f, };
 			float fAngle = (float)(rand() % 163) + 30;	//‰ÁŽZ‚·‚é•ûŒü(”Ž®Œ‹‰Ê‚Ì”Žš‚ª‘å‚«‚¢‚Ù‚ÇA¶‰E‚É‚Î‚ç‚Â‚«‚ªo‚é)

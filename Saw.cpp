@@ -107,10 +107,10 @@ void Saw::Effect(void)
 	for (int i = 0; i < 3; i++)
 	{
 		if (!efSwitch[i])continue;
-
+		CAMERA* cam = GetCamera();
 		XMFLOAT3 move = { 2.0f, 2.0f, 2.0f, };			//ˆÚ“®Šî‘b—ÊB¬‚³‚¢‚Ù‚Ç“®‚«‚ª‚ä‚Á‚­‚è‚É‚È‚é
-		float fAngle = (float)(rand() % 90) / 100.0f;	//‰ÁŽZ‚·‚é•ûŒü(”Žš‚ª‘å‚«‚¢‚Ù‚ÇA¶‰E‚É‚Î‚ç‚Â‚«‚ªo‚é)
-		float fLength = (float)(rand() % 10) - 3;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x
+		float fAngle = (float)(rand() % 60) / 100.0f;	//‰ÁŽZ‚·‚é•ûŒü(”Žš‚ª‘å‚«‚¢‚Ù‚ÇA¶‰E‚É‚Î‚ç‚Â‚«‚ªo‚é)
+		float fLength = (float)(rand() % 10)+2;	//x‚Æz•ûŒü‚Ì‰ÁŽZ‘¬“x
 		move.x += sinf(fAngle) * fLength;
 		move.y += (float)(rand() % 5);			//‚‚³‚ÌˆÚ“®‰ÁŽZ—Ê
 		move.z += cosf(fAngle) * fLength;
@@ -120,7 +120,12 @@ void Saw::Effect(void)
 		XMFLOAT3 rot = efRot[i];
 		int nLife = rand() % 100 + 50;
 		rot.z = angle - XM_PI * 0.5f;
-		SetParticle(efPos[i], move, rot, scl, XMFLOAT4(1.0f, 0.3f, 0.3f, 1.0f), nLife, 40, P_T_box, TRUE);
+		rot.y = cam->rot.y;
+		if ((rot.y > XM_PI * 0.25f && rot.y < XM_PI * 0.75f) || (rot.y < XM_PI * -0.25f && rot.y > XM_PI * -0.75f)) {
+			move.z = move.x;
+			move.x = 0.0f;
+		}
+		SetParticle(efPos[i], move, rot, scl, XMFLOAT4(1.0f, 0.2f, 0.2f, 1.0f), nLife, 40, P_T_box, TRUE);
 		efTime[i] -= 1.0f;
 		if (efTime[i] <= 0.0f)
 			efSwitch[i] = FALSE;

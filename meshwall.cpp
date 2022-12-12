@@ -256,7 +256,7 @@ HRESULT InitMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT4 col,
 					break;
 				}
 			}
-			rand_pos.y = (float)((rand() % 150) + 50);
+			rand_pos.y = (float)((rand() % 50) + 30);
 			SetFireEffect(rand_pos, rand_rot);
 		}
 	}
